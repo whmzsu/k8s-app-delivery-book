@@ -1,0 +1,132 @@
+# 第 18 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch18.md 正文角标 [R-18-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-18-1
+  title: "Assigning Pods to Nodes"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.1 反亲和与调度约束；§18.2 调度层职责划分"
+  status: "verified"
+
+- id: R-18-2
+  title: "Pod Topology Spread Constraints"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.1 跨可用区打散；§18.2 域间 maxSkew；§18.4 两条约束"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-18-3
+  title: "Horizontal Pod Autoscaling"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/"
+  version_or_date: "v1.32 (autoscaling/v2)"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.1/§18.2 HPA 指标与 behavior 冷却；§18.4 hpa.yaml"
+  status: "verified"
+  note: "Kubernetes v1.32 任务页"
+
+- id: R-18-4
+  title: "KEDA Documentation"
+  author_or_org: "KEDA"
+  level: "L1"
+  url: "https://keda.sh/"
+  version_or_date: "2.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.1 队列驱动；§18.2 四件套边界；§18.4 ScaledObject"
+  status: "verified"
+
+- id: R-18-5
+  title: "Karpenter Documentation"
+  author_or_org: "Karpenter"
+  level: "L1"
+  url: "https://karpenter.sh/"
+  version_or_date: "1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.2 节点层弹性；§18.3 选型矩阵何时不该用"
+  status: "verified"
+
+- id: R-18-6
+  title: "Vertical Pod Autoscaler"
+  author_or_org: "Kubernetes Autoscaler"
+  level: "L1"
+  url: "https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler"
+  version_or_date: "1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.1 HPA/VPA 打架；§18.2 VPA 用 Off/Initial；§18.3 适用边界"
+  status: "verified"
+  note: "K8s Autoscaler 官方仓库 VPA 目录"
+
+- id: R-18-7
+  title: "Cluster Autoscaler"
+  author_or_org: "Kubernetes Autoscaler"
+  level: "L1"
+  url: ""
+  version_or_date: "1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.2 节点层；§18.3 Karpenter/CA 对比与何时不该用"
+  status: "pending_url"
+  note: "已核验链接池中无此独立页面，保留名称级官方条目，链接待核验"
+
+- id: R-18-8
+  title: "Borg, Omega, and Kubernetes"
+  author_or_org: "Burns, Grant, Oppenheimer, Brewer, Wilkes"
+  level: "L2"
+  url: "https://dl.acm.org/doi/10.1145/2898442.2898444"
+  version_or_date: "ACM Queue 14(1), 2016"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.1 四层混淆；§18.2 抖动来自窗口/冷却/多控制器而非算法"
+  status: "verified"
+  note: "ACM DL DOI 入口，已通过文献页核验"
+
+- id: R-18-9
+  title: "Site Reliability Engineering · Handling Overload"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/"
+  version_or_date: "在线版（全书入口）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.1 缩节点伤 SLO；§18.2 级联扩容与冷却"
+  status: "verified"
+  note: "直连经代理超时、检索核验存在；单章链接待 P4 复核，暂用全书入口"
+
+- id: R-18-10
+  title: "CNCF Cloud Native / FinOps 成本白皮书"
+  author_or_org: "CNCF"
+  level: "L2"
+  url: ""
+  version_or_date: "版本待统稿登记"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.1 先归因再优化；§18.2 归因口径；§18.4 相对比例不含单价"
+  status: "pending_url"
+  note: "卡片列为候选待核验；链接池中无对应正式发布页，保留名称级条目，链接待核验；不作为任何厂商报价依据"
+
+- id: R-18-11
+  title: "CNCF Annual Survey 2023"
+  author_or_org: "CNCF"
+  level: "L3"
+  url: "https://www.cncf.io/reports/cncf-annual-survey-2023/"
+  version_or_date: "2023"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§18.1 成本可见性与弹性配置是常见运维挑战的行业背景"
+  status: "verified"
+  note: "仅作方法论/行业背景，不指向任何具体事故；合成案例不冒充真实事件"
