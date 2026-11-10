@@ -1,0 +1,132 @@
+# 第 9 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch09.md 正文角标 [R-09-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-09-1
+  title: "Secrets"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/configuration/secret/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.1 Secret 只是 base64 编码；§9.2 配置/凭据分界线；§9.4 externalsecret.yaml 与 envFrom"
+  status: "verified"
+
+- id: R-09-2
+  title: "ConfigMaps / Immutable ConfigMaps"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/configuration/configmap/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.1 原地改同名 ConfigMap 的竞态；§9.2 换对象范式；§9.4 immutable: true"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页（含 immutable 语义）"
+
+- id: R-09-3
+  title: "External Secrets Operator Docs"
+  author_or_org: "External Secrets Operator"
+  level: "L1"
+  url: "https://external-secrets.io/latest/"
+  version_or_date: "版本 0.x（apiVersion external-secrets.io/v1beta1）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.1 生产密钥外部托管；§9.3 唯一示例实现；§9.4 SecretStore / ExternalSecret / envFrom"
+  status: "verified"
+  note: "按 book/decisions.md U-05，ESO 0.x + 占位后端 vault 为全书唯一密钥注入实现，第 14、26 章须对齐"
+
+- id: R-09-4
+  title: "NIST SP 800-190 Application Container Security Guide"
+  author_or_org: "NIST"
+  level: "L1"
+  url: "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf"
+  version_or_date: "SP 800-190"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.1 凭据泄露与洗不掉的历史；§9.2 凭据全生命周期；§9.5 审计留痕验收"
+  status: "verified"
+
+- id: R-09-5
+  title: "Sealed Secrets（GitHub 官方仓库）"
+  author_or_org: "Bitnami Labs"
+  level: "L1"
+  url: "https://github.com/bitnami-labs/sealed-secrets"
+  version_or_date: "版本 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.3 选型矩阵对比（与 ESO 竞争的另一条入仓加密路径）"
+  status: "verified"
+  note: "仅在选型矩阵作对比，不给第二套实现"
+
+- id: R-09-6
+  title: "Declarative Object Management"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.2 不可变对象与换对象回滚；§9.5 回到 Git 的声明式回退"
+  status: "verified"
+
+- id: R-09-7
+  title: "Cloud Native Security Whitepaper v2"
+  author_or_org: "CNCF TAG Security"
+  level: "L2"
+  url: "https://github.com/cncf/tag-security"
+  version_or_date: "v2"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.2 凭据全生命周期（分发/轮换/吊销/审计）；§9.2 本书观点论证；§9.5 审计验收"
+  status: "verified"
+  note: "CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）"
+
+- id: R-09-8
+  title: "SOPS（Secrets OPerationS）项目文档"
+  author_or_org: "Mozilla / CNCF"
+  level: "L2"
+  url: "https://github.com/mozilla/sops"
+  version_or_date: "版本 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.3 选型矩阵中文件级加密 vs 运行时注入的取舍"
+  status: "verified"
+  note: "SOPS 官方仓库"
+
+- id: R-09-9
+  title: "The Twelve-Factor App · III. Config"
+  author_or_org: "12factor.net / Heroku"
+  level: "L2"
+  url: "https://12factor.net/config"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.1 配置与凭据分离；§9.2 三问分界线；§9.4 轮换不重建镜像"
+  status: "verified"
+  note: "适用边界：面向无状态 Web 服务，有状态组件见第 16 章"
+
+- id: R-09-10
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "持续更新"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.3 密钥方案取舍"
+  status: "verified"
+  note: "与 R-09-7、R-09-9 来自不同机构、无利益关联，共同支撑共识类论断"
+
+- id: R-09-11
+  title: "密钥泄露类公开复盘（postmortem 合集）"
+  author_or_org: "各机构"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "公开复盘栏目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§9.1 密钥入 Git 反模式；§9.2 反模式方法论"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
