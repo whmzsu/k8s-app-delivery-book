@@ -1,0 +1,82 @@
+# 第 31 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch31.md 正文角标 [R-31-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-31-1
+  title: "CNCF Cloud Native Landscape"
+  author_or_org: "CNCF"
+  level: "L1"
+  url: "https://github.com/cncf/landscape"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §31.4 30 个反模式按坐标系环节归档"
+  status: "verified"
+  note: "CNCF Landscape 官方仓库"
+
+- id: R-31-2
+  title: "Controllers（控制循环）"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/architecture/controller/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §31.1「八个点均非 K8s 缺陷」、§31.2 H2 收口（声明式终态与控制循环）"
+  status: "verified"
+
+- id: R-31-3
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §31.5 成熟度模型、§31.6 ROI 排序与「停手」判据"
+  status: "verified"
+
+- id: R-31-4
+  title: "Site Reliability Engineering《Embracing Risk》"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/sre-book/embracing-risk/"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §31.5 风险与恢复能力口径、§31.6 风险排序；与 R-31-3 来自不同机构、无利益关联"
+  status: "verified"
+
+- id: R-31-5
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §31.1 一次构建与可追溯、§31.2 H1/H6/H7 收口、§31.3 回滚回到 Git"
+  status: "verified"
+
+- id: R-31-6
+  title: "CNCF Annual Survey 2023"
+  author_or_org: "CNCF"
+  level: "L3"
+  url: "https://www.cncf.io/reports/cncf-annual-survey-2023/"
+  version_or_date: "2023 年度报告"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §31.1 行业背景、§31.5「工具数量不等于成熟度」、§31.6「先上全套工具」失败路径；仅作背景"
+  status: "verified"
+
+- id: R-31-7
+  title: "公开 postmortem 合集（名称级候选）"
+  author_or_org: "各机构"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "公开 postmortem 合集（按章择取，待核验）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §31.1 合成案例声明、§31.3 事故重演的方法论；合成案例不冒充真实事件"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
