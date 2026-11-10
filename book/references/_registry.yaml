@@ -1,0 +1,137 @@
+# 引用登记：字段模板与已核验入口总表
+# 版本 v0.1 · 2026-11-10 · 依据《书籍大纲-v3.md》第十节 10.5 / 10.6
+# 逐章登记文件位于仓库根 references/chNN.yaml，P2 开始按本模板生成。
+# 正文只出现 [R-XX-N] 角标，严禁写裸 URL。
+
+schema:
+  required_fields:
+    - id                 # 唯一编号 [R-<章号>-<序号>]，如 R-08-2
+    - title              # 文献或页面标题
+    - author_or_org      # 作者或发布机构
+    - level              # L1 规范官方 / L2 权威人士著作 / L3 案例实证
+    - url                # 正式链接；未核验时留空，status 标 pending_url
+    - version_or_date    # 文档版本 / K8s 版本 / 发表日期
+    - accessed           # 访问日期 YYYY-MM-DD
+    - archive_url        # Wayback 归档链接
+    - supports           # 支撑正文哪条论断（写角标所在小节）
+    - status             # verified / pending_url / archived / rejected
+  optional_fields:
+    - license            # 引用与图表授权说明
+    - note               # 适用边界、版本差异、排除理由
+  rejected_sources:      # 核验时命中的排除项，不得写入书稿
+    - 内容农场与聚合站
+    - 非官方镜像站 / 转载站
+    - 厂商营销落地页（作为 L1 或 L2 时）
+    - 未标注版本或发布日期的二手教程
+
+rules:
+  density_minimum:
+    l1_per_chapter: 1
+    l2_per_chapter: 2
+    l1_for_selection_matrix_chapters: 2   # 需覆盖互相竞争的工具官方文档
+    l3_for_antipattern_chapters: 1
+  claims:
+    spec_or_mandatory: "强制引用 L1 并标注版本"
+    community_consensus: "需 >= 2 个不同机构、无利益关联的 L2，并写明适用边界"
+    book_opinion: "不需背书，禁止硬凑来源；正文显式标注「本书观点」并给论证与反例"
+  numbering: "[R-<章号>-<序号>]，全书唯一；正文角标与章末列表逐一对应"
+  appendix_I: "由 references/*.yaml 自动生成，不在别处手工维护第二份"
+  verification_schedule: "P1 名称级候选 → P2 占位与编号 → P3 逐条核验 → P4 lychee + 版本一致性 + 角标闭环"
+
+verified_entries:
+  - id: R-K8S-PROBE-TASK
+    title: "Configure Liveness, Readiness and Startup Probes"
+    author_or_org: Kubernetes
+    level: L1
+    url: "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/"
+    version_or_date: "访问时适用版本待锁（附录 A）"
+    accessed: "2026-11-10"
+    archive_url: ""
+    supports: "第 8 章探针语义与典型误用"
+    status: verified
+  - id: R-K8S-PROBE-CONCEPT
+    title: "Liveness, Readiness, and Startup Probes"
+    author_or_org: Kubernetes
+    level: L1
+    url: "https://kubernetes.io/docs/concepts/workloads/pods/probes/"
+    version_or_date: "访问时适用版本待锁（附录 A）"
+    accessed: "2026-11-10"
+    archive_url: ""
+    supports: "第 8 章三类探针语义"
+    status: verified
+  - id: R-SRE-SLOS
+    title: "Implementing SLOs"
+    author_or_org: "Google SRE Workbook"
+    level: L2
+    url: "https://sre.google/workbook/implementing-slos/"
+    version_or_date: "在线版"
+    accessed: "2026-11-10"
+    archive_url: ""
+    supports: "第 20 章 SLO 与错误预算"
+    status: verified
+  - id: R-SRE-BOOK
+    title: "Site Reliability Engineering"
+    author_or_org: Google
+    level: L2
+    url: "https://sre.google/"
+    version_or_date: "含第 2 版"
+    accessed: "2026-11-10"
+    archive_url: ""
+    supports: "监控、事件处置、拥抱风险等多章"
+    status: verified
+  - id: R-FOWLER-BG
+    title: "BlueGreenDeployment"
+    author_or_org: "Martin Fowler"
+    level: L2
+    url: "https://martinfowler.com/bliki/BlueGreenDeployment.html"
+    version_or_date: "bliki 条目"
+    accessed: "2026-11-10"
+    archive_url: ""
+    supports: "第 13 章蓝绿部署与 schema 排序"
+    status: verified
+  - id: R-SATO-CANARY
+    title: "CanaryRelease"
+    author_or_org: "Danilo Sato (martinfowler.com)"
+    level: L2
+    url: "https://martinfowler.com/bliki/CanaryRelease.html"
+    version_or_date: "bliki 条目"
+    accessed: "2026-11-10"
+    archive_url: ""
+    supports: "第 13、15 章金丝雀"
+    status: verified
+  - id: R-FOWLER-CD
+    title: "Continuous Delivery"
+    author_or_org: "Martin Fowler"
+    level: L2
+    url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+    version_or_date: "bliki 条目"
+    accessed: "2026-11-10"
+    archive_url: ""
+    supports: "第 3、12 章持续交付与一次构建"
+    status: verified
+  - id: R-CNCF-SEC
+    title: "Cloud Native Security Whitepaper v2"
+    author_or_org: "CNCF TAG Security"
+    level: L2
+    url: ""
+    version_or_date: "v2"
+    accessed: "2026-11-10"
+    archive_url: ""
+    supports: "第 9、24、25、26 章安全护栏"
+    status: pending_url
+    note: "核验时命中贡献站镜像，需换 CNCF 正式发布页"
+  - id: R-BORG-OMEGA-K8S
+    title: "Borg, Omega, and Kubernetes"
+    author_or_org: "Burns, Grant, Oppenheimer, Brewer, Wilkes"
+    level: L2
+    url: ""
+    version_or_date: "ACM Queue 14(1), 2016"
+    accessed: "2026-11-10"
+    archive_url: ""
+    supports: "第 1、2 章声明式与编排系统演进"
+    status: pending_url
+    note: "文献条目，待补 DOI / 正式链接"
+
+pending_by_chapter:
+  source: "《书籍大纲-v3.md》10.6 的 31 章来源映射表"
+  note: "均为名称级候选，未核验者不得写入正文或附录 I；P3 成稿时逐条核验"

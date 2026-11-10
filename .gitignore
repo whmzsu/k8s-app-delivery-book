@@ -1,0 +1,22 @@
+# 工作区内部数据，不纳入版本管理（严禁删除）
+.workbuddy/
+
+# 凭据与本地环境文件，一律不入库
+.env
+.env.*
+*.env
+*credentials*
+*token*.txt
+.secrets/
+gh_*.json
+
+# 编辑器 / 系统 / 缓存
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+*.log
+build/
+dist/
