@@ -1,0 +1,121 @@
+# 第 10 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch10.md 正文角标 [R-10-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-10-1
+  title: "Helm Documentation（含 Chart Template Guide / Best Practices / Provenance and Integrity）"
+  author_or_org: "Helm"
+  level: "L1"
+  url: "https://helm.sh/docs/"
+  version_or_date: "版本 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§10.1 values 爆炸；§10.2 决策树与判据表；§10.3 选型矩阵；§10.4 Chart 骨架"
+  status: "verified"
+  note: "与 R-10-2 为互相竞争工具（模板+包管理 vs 无模板 patch）的官方文档，共同满足选型章 ≥2 条 L1 要求；Chart 刻意不注入 Helm 特有标签以保证与 overlay 渲染产物等价"
+
+- id: R-10-2
+  title: "Kustomize Documentation（含 FAQ）"
+  author_or_org: "Kustomize"
+  level: "L1"
+  url: "https://kustomize.io/"
+  version_or_date: "版本 5.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§10.1 继承链过深；§10.2 判据表；§10.3 选型矩阵；§10.4 overlay 骨架"
+  status: "verified"
+  note: "按 book/decisions.md U-05，Kustomize 5.x overlay 为多环境基线；base + 单层 overlay 两层上限"
+
+- id: R-10-3
+  title: "conftest"
+  author_or_org: "Open Policy Agent"
+  level: "L1"
+  url: "https://www.conftest.dev/"
+  version_or_date: "版本 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§10.1 渲染产物进 CI；§10.3 选型矩阵；§10.4 关卡 4；§10.6 CL-S-03"
+  status: "verified"
+  note: "CI 里的组织策略静态校验，不得称为「准入」；集群侧策略库与准入见第 25 章（SP-16）"
+
+- id: R-10-4
+  title: "Declarative Object Management"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§10.1 清单与提交分离；§10.2 manifests 与 rendered manifests 定义；§10.5 回到 Git"
+  status: "verified"
+  note: "rendered manifests 在本章首次提及并正式定义，深入展开见第 14 章（book/concept-ladder.md）"
+
+- id: R-10-5
+  title: "kubeconform 项目文档"
+  author_or_org: "kubeconform（yannh）"
+  level: "L1"
+  url: "https://github.com/yannh/kubeconform"
+  version_or_date: "版本 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§10.2 语法封闭判据；§10.3 选型矩阵；§10.4 关卡 3"
+  status: "verified"
+  note: "kubeconform 官方仓库"
+
+- id: R-10-6
+  title: "chart-testing（ct）项目文档"
+  author_or_org: "Helm"
+  level: "L1"
+  url: "https://github.com/helm/chart-testing"
+  version_or_date: "版本 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§10.3 选型矩阵；§10.4 关卡 2"
+  status: "verified"
+  note: "Helm chart-testing 官方仓库"
+
+- id: R-10-7
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "持续更新"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§10.2 模板化程度取舍；§10.2 本书观点论证"
+  status: "verified"
+
+- id: R-10-8
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§10.1 只 review 模板；§10.2 差异可归因；§10.5 声明式回退"
+  status: "verified"
+
+- id: R-10-9
+  title: "Continuous Delivery（2010 专著）"
+  author_or_org: "Jez Humble / David Farley"
+  level: "L2"
+  url: "https://continuousdelivery.com/"
+  version_or_date: "2010"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§10.2 代码生成的适用前提；§10.2 本书观点反例"
+  status: "verified"
+  note: "Jez Humble / David Farley 持续交付官方站点"
+
+- id: R-10-10
+  title: "The Twelve-Factor App · III. Config"
+  author_or_org: "12factor.net / Heroku"
+  level: "L2"
+  url: "https://12factor.net/config"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§10.1 配置与产物分离；§10.2 分界线"
+  status: "verified"
+  note: "与 R-10-7、R-10-8 来自不同机构、无利益关联，共同支撑共识类论断"
