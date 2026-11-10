@@ -1,0 +1,106 @@
+# 第 24 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch24.md 正文角标 [R-24-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-24-1
+  title: "SLSA Specification v1.0"
+  author_or_org: "OpenSSF / SLSA"
+  level: "L1"
+  url: "https://slsa.dev/spec/v1.0/"
+  version_or_date: "v1.0"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§24.1 构建级别回答『怎么构建』；§24.2.1 构建层门禁（唯一制品标识）"
+  status: "verified"
+
+- id: R-24-2
+  title: "NIST SP 800-190 Application Container Security Guide"
+  author_or_org: "NIST"
+  level: "L1"
+  url: "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf"
+  version_or_date: "SP 800-190"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§24.1 反模式二（镜像内容与来源可追溯）、反模式三（漏洞分级）；§24.2.2 --ignore-unfixed 护栏"
+  status: "verified"
+
+- id: R-24-3
+  title: "Kyverno Documentation"
+  author_or_org: "Kyverno"
+  level: "L1"
+  url: "https://kyverno.io/docs/"
+  version_or_date: "适用版本 1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§24.2.2 verifyImages / attestors / mutateDigest / validationFailureAction 字段语义"
+  status: "verified"
+
+- id: R-24-4
+  title: "ValidatingAdmissionPolicy"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§24.1 准入在资源进入集群前由 API Server 执行；正式展开见第 25 章"
+  status: "verified"
+
+- id: R-24-5
+  title: "SPDX Specification"
+  author_or_org: "Linux Foundation / SPDX"
+  level: "L1"
+  url: "https://spdx.dev/specifications/"
+  version_or_date: "名称级候选，版本待锁"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§24.1 SBOM 用标准格式列出镜像成分；§24.2.2 Syft 输出 spdx-json 并归档"
+  status: "verified"
+  note: "SPDX 规范站点"
+
+- id: R-24-6
+  title: "Sigstore cosign Documentation"
+  author_or_org: "Sigstore"
+  level: "L1"
+  url: "https://github.com/sigstore/cosign"
+  version_or_date: "适用版本 2.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§24.1 签名回答『是不是那一个』；§24.2.2 sign / attach sbom / download sbom / verify 命令"
+  status: "verified"
+  note: "cosign 官方仓库"
+
+- id: R-24-7
+  title: "Cloud Native Security Whitepaper v2"
+  author_or_org: "CNCF TAG Security"
+  level: "L2"
+  url: "https://github.com/cncf/tag-security"
+  version_or_date: "v2"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§24.1 门禁须同时在 CI 与准入生效；§24.2.1 本书观点的工程背景"
+  status: "verified"
+  note: "CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）"
+
+- id: R-24-8
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "在线 Radar 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§24.1 安全左移与供应链门禁的社区共识；与 R-24-7 不同机构、无利益关联"
+  status: "verified"
+
+- id: R-24-9
+  title: "公开软件供应链攻击复盘（postmortem 合集）"
+  author_or_org: "各机构公开 postmortem"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "名称级候选"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§24.1 三条反模式的方法论支撑（单点校验可绕过、证据不归档无法定界）"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
