@@ -1,0 +1,99 @@
+# 第 22 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch22.md 正文角标 [R-22-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-22-1
+  title: "Prometheus Alerting Rules"
+  author_or_org: "Prometheus"
+  level: "L1"
+  url: "https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/"
+  version_or_date: "Prometheus 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§22.1 告警必须可行动的规范；§22.2 多窗口燃尽率判据与噪音治理决策树；§22.4 for 与 alert 规则模板；§22.5 promtool 门禁"
+  status: "verified"
+  note: "快窗 1h/5m >= 14.4、慢窗 6h >= 6 与第 20 章错误预算同源（SP-06）"
+
+- id: R-22-2
+  title: "Prometheus Recording Rules"
+  author_or_org: "Prometheus"
+  level: "L1"
+  url: "https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/"
+  version_or_date: "Prometheus 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§22.3 ruleSelector 自动挂载 role: alert-rules；§22.4 告警表达式复用第 20 章 sli:... / slo:... 记录规则，不另起命名"
+  status: "verified"
+  note: "与第 20 章 R-20-2 同源；SP-09 命名一致性依据"
+
+- id: R-22-3
+  title: "Prometheus Alertmanager Documentation"
+  author_or_org: "Prometheus"
+  level: "L1"
+  url: "https://prometheus.io/docs/alerting/latest/alertmanager/"
+  version_or_date: "Alertmanager 0.2x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§22.1 直接在 UI 改路由反模式；§22.4 route / receivers / inhibit_rules / mute_time_intervals 配置；§22.5 带 author 与到期时间的 amtool silence add"
+  status: "verified"
+  note: "Prometheus 官方文档"
+
+- id: R-22-4
+  title: "Alerting on SLOs"
+  author_or_org: "Google SRE Workbook"
+  level: "L2"
+  url: "https://sre.google/workbook/alerting-on-slos/"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§22.1 paging 必须基于症状、多窗口燃尽告警；§22.2 分级表与快/慢双窗判据"
+  status: "verified"
+  note: "检索核验存在；适用边界：以「基于 SLO 的告警」为语境，不覆盖具体 Alertmanager 配置语法"
+
+- id: R-22-5
+  title: "Monitoring Distributed Systems（Site Reliability Engineering 章节）"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/sre-book/monitoring-distributed-systems/"
+  version_or_date: "在线版（SRE Book 章节）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§22.1 症状与原因的区分；§22.2 原因型告警只做上下文、不进 paging"
+  status: "verified"
+  note: "检索核验存在、直连经代理超时，P4 复核；与 [R-22-4] 为同机构不同著作，适用边界：监控理念层而非告警配置层"
+
+- id: R-22-6
+  title: "My Philosophy on Alerting"
+  author_or_org: "Rob Ewaschuk"
+  level: "L2"
+  url: ""
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§22.1 可行动告警与「告警即待执行工单」；§22.2 分级路由；§22.5 静默必须留痕"
+  status: "pending_url"
+  note: "卡片列为候选待核验；与 [R-22-4][R-22-5] 不同来源、无利益关联，适用边界：个人实践总结，需按组织值班规模裁剪；链接待核验，不得编造 URL"
+
+- id: R-22-7
+  title: "公开 postmortem 方法论合集（告警疲劳类）"
+  author_or_org: "各机构"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "名称级候选；访问日期 2026-11-10"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§22.1「告警疲劳、值班对告警麻木」为普遍问题的行业背景"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
+
+- id: R-22-8
+  title: "CNCF Annual Survey 2023"
+  author_or_org: "CNCF"
+  level: "L3"
+  url: "https://www.cncf.io/reports/cncf-annual-survey-2023/"
+  version_or_date: "2023"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§22.1 可观测与告警治理为高频运维课题的实证背景"
+  status: "verified"
+  note: "仅作行业背景，不证明某次虚构事故；合成案例不冒充真实事件"
