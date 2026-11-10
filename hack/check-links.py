@@ -39,6 +39,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--max-fail-rate", type=float, default=0.08)
     ap.add_argument("--workers", type=int, default=6)
+    ap.add_argument("--limit", type=int, default=0, help="仅核验前 N 条（本地抽样用，CI 不设）")
     ap.add_argument("--report", default=os.path.join(ROOT, "build", "link-report.tsv"))
     args = ap.parse_args()
 
@@ -50,7 +51,11 @@ def main():
             if e.get("status") == "pending_url":
                 pending += 1
     urls = sorted(urls)
-    print("已登记 URL %d 条（去重），待核验候选 %d 条" % (len(urls), pending))
+    total = len(urls)
+    if args.limit:
+        urls = urls[:args.limit]
+    print("已登记 URL %d 条（去重），待核验候选 %d 条，本次核验 %d 条" % (
+        total, pending, len(urls)))
 
     results = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as pool:
