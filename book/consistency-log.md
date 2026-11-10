@@ -190,6 +190,16 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - 同步回写：根 `README.md` 激活状态段、附录 D.1 脚本注释、`hack/enable-workflows.sh`；章正文不受影响（正文不写凭据激活流程）
 - **D-25（行尾可移植性）**：Windows 工作区 `core.autocrlf=true`，新建 `.sh` 易被写成 CRLF，Linux runner 上会因 `#!/usr/bin/env bash\r` 直接失败（与 D-23 同类问题）。新增根 `.gitattributes`，把 `*.sh / *.py / *.go / *.yml / *.yaml / Dockerfile` 锁定为 `text eol=lf`。全仓 283 个文件实测 CR=0，无需 `--renormalize`，改动前后 blob 不变
 
+### 首跑结论与修复 · 2026-11-11（用 `repo` scope token 读 Actions API 回填）
+
+- 读取方式：用户重提的 `gho_` token scopes 为 `gist, read:org, repo`——读私有仓库 Actions 运行只需 `repo`（缺的 `workflow` 只约束创建/修改 workflow 文件，已由 SSH 通道解决）。`GET /actions/runs`、`/runs/{id}/jobs`、`/jobs/{id}/logs` 均可读；token 只走环境变量与命令行，不落盘
+- 首跑 7 条运行结论：`references.yml` #1 **success**（外链核验通过）；`ci.yml` #1 failure / #2 cancelled（concurrency 被 #3 取代）/ #3 failure；`kind-matrix.yml` #1–#3 全部 **startup failure**（0 个 job，run 名显示为文件路径——workflow YAML 解析失败的典型特征）
+- `ci.yml` 失败定位（日志 223 行）：manuscript（八项一致性 + 物化 + 装配）、example-app（Go vet/test/build + distroless 冒烟）、render（Helm lint/template）三 job **全绿**；失败仅在 4 个版本的「硬闸门 · 全书内置资源」——kubeconform 报 83/84 合法，唯一 Invalid：`examples/by-chapter/ch13/deploy/overlays/prod/rolling-strategy.yaml` 的 Deployment 缺 `spec.selector`。查 `chapters/ch13.md` §13.4：该文件明确是 **Kustomize strategic merge patch**（「只改策略字段，不改镜像与标签」），patch 合并到 base 后才完整，独立校验必然假阳性；且 `check-version-matrix.sh`（P5 通道）本就把 by-chapter 按**软报告 + 阈值**处理，`ci.yml` 却当硬闸门——两通道口径不一致，违背 D-17/D-19
+- **D-26（Kustomize patch 分类）**：`validate-manifests.py` 新增 `patch` 类——`overlays/` 目录下的资源文件（不含 kustomization.yaml）归 patch，只做结构断言，不进 kubeconform / server dry-run。不走「按 kustomization 引用扫描」：ch14 的 kustomization 用相对路径 `patches: [rolling-strategy.yaml, pdb.yaml]` 引用 ch13 的文件，逐章增量下路径不可解析，引用扫描必然漏报。同时把 `kustomize.config.k8s.io`（Kustomization）与 `kind.x-k8s.io`（kind Cluster）归入工具配置 `other`，不再混入 `crd`。新分类实测（PyYAML）：builtin=79 / patch=5 / crd=27 / template=2 / other=18（builtin 79 份全部为首跑已验证合法的文档）；`ci.yml` 汇总与结构断言、`check-version-matrix.sh` 输出同步更新
+- **D-27（kind-matrix 启动失败两处根因，actionlint v1.7.7 实证）**：① `workflow_dispatch.inputs.single_version` 的 `options` 含空字符串 `''`——GitHub 解析期直接拒绝整个 workflow，run 记为文件名、0 job；改用 `'all'` 作「跑全部」哨兵。② job 级 `if` 引用 `matrix` 上下文——官方 Contexts availability 表明确 `jobs.<job_id>.if` 只有 `github/needs/vars/inputs`，`matrix` 仅 step 级可用；删除 job 级 `if`，把「单版本过滤」条件下放到 7 个相关步骤的 step 级 `if`（含 `failure()/always()` 复合条件）。两处均为本地 `python yaml` 解析查不出、只有 actionlint / 真实 GitHub 解析才能暴露的类别，故把 **actionlint 纳入本地闸门建议**（未纳入 CI，避免新增外部依赖时未锁定版本）
+- 修复后验证：actionlint 三个 workflow 零告警；`validate-manifests.py` 在 PyYAML 与降级两种模式下分类一致（builtin/patch 数相同）；`materialize.py --check` 幂等一致（书稿内容未改，patch 按设计合法）；`check-consistency.sh` problem=0；`bash -n` 通过
+- 未决项更新：待修复后 push 触发的重跑结论（ci 快车道约 2–3 分钟；kind 矩阵约 15–25 分钟，含三组真集群部署与演练）；26 条 `pending_url` 季度复核；第 1 章终稿润色；终稿扩写至 30–35 万字
+
 ### 统计快照（v1.0）
 
 | 项 | 值 |

@@ -54,7 +54,8 @@ need python kubectl kind docker
 echo "== 清单预检：拆分内置资源 / CRD 实例 / Helm 模板 =="
 python hack/validate-manifests.py --out "$MANIFESTS"
 BUILTIN_COUNT="$(wc -l < "$MANIFESTS/builtin.txt")"
-echo "内置资源文档：$BUILTIN_COUNT 份（清单见 $MANIFESTS/_index.tsv）"
+PATCH_COUNT="$(wc -l < "$MANIFESTS/patch.txt" 2>/dev/null || echo 0)"
+echo "内置资源文档：$BUILTIN_COUNT 份；Kustomize patch：$PATCH_COUNT 份（不参与 dry-run / schema，见 D-26）"
 
 # ---------- 预建命名空间：server dry-run 要求 namespace 已存在 ----------
 echo "== 预建全书出现的命名空间（幂等） =="
@@ -108,6 +109,7 @@ if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
   {
     echo "### P5 清单校验（K8s ${VERSION:-local}）"
     echo "- 内置资源文档：${BUILTIN_COUNT} 份"
+    echo "- Kustomize patch：${PATCH_COUNT} 份（overlay 片段，仅结构断言，见 D-26）"
     echo "- server dry-run 软失败：${SOFT} 份（阈值 ${SOFT_LIMIT}）"
     echo "- CRD 实例 / Helm 模板：见 \`$MANIFESTS/_index.tsv\`，需对应控制器或渲染器，不在本闸门内"
   } >> "$GITHUB_STEP_SUMMARY"

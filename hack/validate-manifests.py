@@ -10,10 +10,12 @@
 
 输出（默认 build/manifests/）：
   builtin/   内置资源，逐文档一份 YAML —— kubeconform / server dry-run 的输入
+  patch/     Kustomize patch 与 overlay 片段 —— 只做结构断言（合并到 base 后才完整，
+             例如滚动策略 patch 不带 selector，独立 apply 必然假阳性，见 D-26）
   crd/       CRD 实例与工具 CRD —— 只做语法与结构断言（需装对应 CRD 才能进集群）
   template/  Helm 模板原文 —— 由 helm template 渲染后另行复验
-  other/     无 kind 的配置（values.yaml、Chart.yaml、规则测试等）
-  _index.tsv / builtin.txt / crd.txt / template.txt  索引与文件列表
+  other/     工具配置（kustomization、kind Cluster）与无 kind 的文件（values.yaml 等）
+  _index.tsv / builtin.txt / patch.txt / crd.txt / template.txt  索引与文件列表
 
 用法：
   python hack/validate-manifests.py [--out DIR] [--no-clean]
@@ -53,7 +55,15 @@ BUILTIN_GROUPS = {
 
 DOC_SEP = re.compile(r"(?m)^---\s*$")
 TEMPLATE = re.compile(r"\{\{")
-CATEGORIES = ("builtin", "crd", "template", "other")
+CATEGORIES = ("builtin", "patch", "crd", "template", "other")
+
+# 工具自身的配置文件：apiVersion 属于工具命名空间，不是 apiserver 资源，
+# 不进 kubeconform / server dry-run，只做结构断言
+TOOL_GROUPS = {"kustomize.config.k8s.io", "kind.x-k8s.io"}
+
+# overlays/ 目录下的资源文件是 Kustomize patch 或环境片段（D-26 裁决）：
+# 它们与 base 合并后才完整，脱离 overlay 单独校验 schema 会产生假阳性
+OVERLAYS = re.compile(r"(^|/)overlays/")
 
 
 def group_of(api_version):
@@ -143,7 +153,16 @@ def main():
                     is_dict = True
 
             if is_dict and api and kind:
-                cat = "builtin" if group_of(api) in BUILTIN_GROUPS else "crd"
+                base = rel.rsplit("/", 1)[-1]
+                g = group_of(api)
+                if g in TOOL_GROUPS:
+                    cat = "other"      # kustomization / kind Cluster 等工具配置
+                elif OVERLAYS.search(rel) and base != "kustomization.yaml":
+                    cat = "patch"      # overlay 片段（D-26）
+                elif g in BUILTIN_GROUPS:
+                    cat = "builtin"
+                else:
+                    cat = "crd"
             else:
                 cat = "other"
 

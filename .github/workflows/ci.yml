@@ -46,6 +46,7 @@ jobs:
           {
             echo "### 清单分类"
             echo "- 内置资源：$(wc -l < build/manifests/builtin.txt) 份文档"
+            echo "- Kustomize patch：$(wc -l < build/manifests/patch.txt) 份（overlay 片段，合并到 base 后才完整，仅结构断言，不进 schema 硬闸门，见 D-26）"
             echo "- CRD 实例：$(wc -l < build/manifests/crd.txt) 份（需对应控制器，不在本闸门校验）"
             echo "- Helm 模板：$(wc -l < build/manifests/template.txt) 份（由 render job 渲染）"
             echo "- 纯配置：$(wc -l < build/manifests/other.txt) 份"
@@ -101,12 +102,15 @@ jobs:
             -kubernetes-version "${{ matrix.k8s }}" \
             -ignore-missing-schemas "${files[@]}"
 
-      - name: CRD 实例与工具配置的结构断言
+      - name: CRD / patch / 配置的结构断言
         run: |
           python - <<'PY'
           import glob, yaml, sys
           bad = []
-          for f in glob.glob('build/manifests/crd/*.yaml') + glob.glob('build/manifests/other/*.yaml'):
+          files = (glob.glob('build/manifests/crd/*.yaml')
+                   + glob.glob('build/manifests/other/*.yaml')
+                   + glob.glob('build/manifests/patch/*.yaml'))
+          for f in files:
               try:
                   d = yaml.safe_load(open(f, encoding='utf-8'))
               except Exception as e:
@@ -115,8 +119,7 @@ jobs:
                   bad.append((f, '不是映射结构')); continue
               if not d.get('apiVersion') or not d.get('kind'):
                   bad.append((f, '缺 apiVersion / kind'))
-          print('结构断言检查 %d 份，问题 %d 处' % (
-              len(glob.glob('build/manifests/crd/*.yaml')) + len(glob.glob('build/manifests/other/*.yaml')), len(bad)))
+          print('结构断言检查 %d 份，问题 %d 处' % (len(files), len(bad)))
           for f, why in bad[:20]: print('  ', f, why)
           sys.exit(1 if bad else 0)
           PY
