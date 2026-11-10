@@ -1,0 +1,92 @@
+# 第 3 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch03.md 正文角标 [R-03-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-03-1
+  title: "Configuration Best Practices"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/configuration/overview/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §3.2 公理 5「Git 为唯一真相」、配置管理边界"
+  status: "verified"
+  note: "Kubernetes v1.32 配置最佳实践"
+
+- id: R-03-2
+  title: "Best Practices（官方实践汇总）"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/setup/best-practices/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §3.1「latest 是可变指针」、§3.2 公理 2、§3.5 产物一致性通过标准"
+  status: "verified"
+
+- id: R-03-3
+  title: "Secrets"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/configuration/secret/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §3.2 公理 3「密钥不入 Git、凭据走外部注入」"
+  status: "verified"
+
+- id: R-03-4
+  title: "Pod Security Standards"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/security/pod-security-standards/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §3.2 公理 4「非 root 最小镜像」"
+  status: "verified"
+
+- id: R-03-5
+  title: "The Twelve-Factor App · III. Config"
+  author_or_org: "12factor.net / Heroku"
+  level: "L2"
+  url: "https://12factor.net/config"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §3.1 反模式二、§3.2 公理 3「配置与镜像分离」；适用边界：面向无状态 Web 服务"
+  status: "verified"
+
+- id: R-03-6
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §3.1 build once / promote、§3.2 公理 1、§3.3 一次构建与签名要求归属"
+  status: "verified"
+
+- id: R-03-7
+  title: "Site Reliability Engineering（含 Release Engineering / Embracing Risk）"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/"
+  version_or_date: "在线版（含第 2 版）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §3.1 反模式三、§3.2 公理 6「回滚方案先行」与公理 7「SLO 先行于告警」"
+  status: "verified"
+
+- id: R-03-8
+  title: "Implementing SLOs（Google SRE Workbook）"
+  author_or_org: "Google SRE Workbook"
+  level: "L2"
+  url: "https://sre.google/workbook/implementing-slos/"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §3.4 最小 SLO 卡片字段与第 20 章正式体系的口径一致性（SP-02）；SLO 正式定义详见第 20 章"
+  status: "verified"
