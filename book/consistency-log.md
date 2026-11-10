@@ -188,6 +188,7 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - 预期触发：`ci.yml` 对 `push: branches: [main]` 无条件触发；`references.yml` 的路径过滤含 `.github/workflows/references.yml` 自身，故本次也触发；`kind-matrix.yml` 的 `push.paths` 不含 workflow 目录，需靠示例基线变更、每周一 03:23 UTC 定时或网页端 `Run workflow`
 - **尚未取得运行结论**：私有仓库的 Actions API 匿名访问返回 404，本机 `gh` 未登录；SSH 密钥不能调用 HTTPS API。回填方式：`gh auth login` 后 `gh run list --limit 5`，或用具备 `repo` 只读权限的 token 走 `GH_TOKEN=... gh run list`。运行结论、软失败数、真集群演练结果仍列为未决项
 - 同步回写：根 `README.md` 激活状态段、附录 D.1 脚本注释、`hack/enable-workflows.sh`；章正文不受影响（正文不写凭据激活流程）
+- **D-25（行尾可移植性）**：Windows 工作区 `core.autocrlf=true`，新建 `.sh` 易被写成 CRLF，Linux runner 上会因 `#!/usr/bin/env bash\r` 直接失败（与 D-23 同类问题）。新增根 `.gitattributes`，把 `*.sh / *.py / *.go / *.yml / *.yaml / Dockerfile` 锁定为 `text eol=lf`。全仓 283 个文件实测 CR=0，无需 `--renormalize`，改动前后 blob 不变
 
 ### 统计快照（v1.0）
 
