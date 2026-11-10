@@ -41,7 +41,7 @@
 | P2 逐章详纲 | 已完成 | U-01～U-05 一次性裁决（`decisions.md`）；第 6 章终稿作样板章；新增成稿规范 `chapter-spec.md` |
 | P3 按篇成稿 | **已完成（v1.0 完整初稿）** | 31 章全部成篇，约 15.7 万汉字；七段/三段模板、配置、回滚命令、检查清单、引用角标齐全 |
 | P4 全书统稿 | 已完成 | 附录 A–I 生成、`全书目录.md` 与 `README.md` 装配、引用规范化与全书一致性闸门通过；第 1 章建议终稿前最后润色 |
-| P5 技术复核 | 待执行 | 本环境无 docker/kind/kubectl；`hack/check-version-matrix.sh` 已就绪，脚本语法与静态一致性已通过 |
+| P5 技术复核 | **已迁移到 GitHub Actions** | 三条 workflow（`.github/workflows/`）：快车道一致性 + 三版本 kubeconform、真 kind 集群 × 3 版本（server dry-run / 部署 / 演练）、背书外链复核；本地不再依赖 docker/kind/kubectl，验证边界见附录 A.4 / D.7 |
 
 ## P0 扫描裁决摘要
 

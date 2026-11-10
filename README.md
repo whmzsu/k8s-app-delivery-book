@@ -28,7 +28,8 @@ appendices/             附录 A–I
 references/             已核验来源池 + 逐章引用登记（附录 I 由此生成）
 examples/order-demo/    第 6 章最小完整闭环的可运行基线
 examples/by-chapter/    28 章 §N.4 代码块按章物化的可复制形态（144 个文件）
-hack/                   一致性、引用、版本矩阵校验脚本与章节代码块物化工具
+hack/                   一致性、引用、清单预检、版本矩阵、装配与外链核验工具
+.github/workflows/      三条 GitHub Actions 复核流水线（见下节）
 全书目录.md             阅读入口与完整目录
 ```
 
@@ -42,16 +43,37 @@ hack/                   一致性、引用、版本矩阵校验脚本与章节�
 
 全书共用 `order-demo`（`gateway` 8080 / `api` 8081 / `worker` / `db` 5432），从第 1 章的事故现场逐章演进到第 31 章的事故重演。命名空间 `order-demo-{env}`、镜像 `registry.example.com/order-demo/<component>:git-<sha7>`、公共标签 `app.kubernetes.io/*`、探针路径等字段冻结在 `book/case-evolution.md`——**改字段先改资产表，再按强耦合对回写章节**。每章一个 git tag，索引见附录 D。
 
-## 校验
+## GitHub Actions 持续复核（P5 已迁移到 CI）
+
+P5 技术复核不需要本地装 docker/kind/kubectl——三条 workflow 在 GitHub 托管的 Ubuntu runner 上完成：
+
+| Workflow | 触发 | 验证内容 |
+|---|---|---|
+| `ci.yml` 书稿一致性闸门 | 每次 push / PR / 手动 | 八项横扫、附录 I 新鲜度、章内代码块与物化产物一致、清单分类、装配全书稿件；**kubeconform × 1.32.0 / 1.33.0 / 1.34.0 / 1.37.0 schema**；Go 构建、distroless 镜像构建与容器冒烟；Helm lint/template |
+| `kind-matrix.yml` P5 技术复核 | 每周一 / 示例基线变更 / 手动 | 真 kind 集群 × 3 组（**kind 与 node 镜像成对锁定**：v0.27.0/1.32.2、v0.33.0/1.34.11、v0.33.0/1.37.0）：`kubectl apply --dry-run=server` 逐文档校验 84 份内置资源、第 6 章基线真实部署、四判据、**滚动零停机 / SHA 回滚 / readiness 摘流 / Pod 重建**演练；失败自动 dump 集群事件 |
+| `references.yml` 背书链接复核 | 每周一 / 引用登记变更 / 手动 | 引用字段与角标闭环、`pending_url` 清单、272 条已登记 URL 并发可达性（阈值放行，失败清单进 job summary 与 artifact）|
 
 ```bash
+# 本地等价校验（无需集群的部分）
 ./hack/check-consistency.sh                 # 八项横扫 + tag 一致性 + 附录 I 新鲜度 + 脚本语法
+python hack/materialize.py --check          # 章内代码块 vs 可复制产物（CI 用，不改工作区）
+python hack/validate-manifests.py           # 逐文档拆分为 内置 / CRD / 模板 / 配置
+python hack/build_book.py --out dist        # 装配单一 Markdown 稿件
+python hack/check-links.py                  # 外链可达性（阈值放行）
 ./hack/check-references.sh                  # 引用字段 / 角标闭环 / 待核验清单
-./hack/check-references.sh --links          # 追加链接可达性核验
-./hack/check-version-matrix.sh              # P5：kind 三版本矩阵（需 kind + kubectl）
+
+# 本地真集群复核（需 docker + kind + kubectl，先自行起好集群）
+./hack/check-version-matrix.sh --strict
+# CI 模式（集群由 workflow 创建）
+./hack/check-version-matrix.sh --mode ci --version 1.32.2 --cluster p5-1-32-2
+
 python hack/materialize.py --clean          # 重新物化各章代码块到 examples/by-chapter/
 python hack/book_tools.py appendix > appendices/附录I-参考文献.md   # 重新生成附录 I
 ```
+
+**验证边界（重要）**：CI 能证明「清单字段合法、镜像能构建、应用在 kind 里能起来且可回滚」；**不能证明**云厂商 LB/存储/IRSA 的真实行为、跨集群容灾、生产流量下的 HPA/KEDA 效果、长周期证书轮换，以及需要装 CRD 的组件（Argo CD、Kyverno、Gateway API 控制器等）在真实环境中的表现。这些章节的配置仍需读者在自己的集群按「验证与回滚」段演练。另：`examples/by-chapter/` 是逐章增量片段，后一章只给 patch，**按设计不可独立 `kustomize build`**；可独立运行的是 `examples/order-demo/`，完整渲染请在对应章节 tag 检出仓库。
+
+> 私有仓库 Actions 消耗免费分钟额度；`kind-matrix.yml` 默认只在每周、示例基线变更或手动时触发，避免每次改正文都起三个集群。
 
 ## 版本与复核
 
@@ -66,6 +88,6 @@ python hack/book_tools.py appendix > appendices/附录I-参考文献.md   # 重�
 | P2 样板章（第 6 章） | 完成 |
 | P3 按篇成稿 31 章 | 完成（完整初稿 v1.0） |
 | P4 全书统稿、附录生成 | 完成；第 1 章仍建议终稿前最后润色一次以对齐 H1–H8 |
-| P5 kind 多版本矩阵技术复核 | **待在有 kind/kubectl 的环境执行**，脚本已就绪 |
+| P5 kind 多版本矩阵技术复核 | **已迁移到 GitHub Actions**（`kind-matrix.yml`），本地不再需要装工具；首次运行结论见仓库 Actions 记录 |
 
 终稿目标约 30–35 万字；每章末尾的「终稿扩写清单」列出了具体扩写点。当前 v1.0 的验收标准是「31 章 + 附录全部成篇、七段齐全、配置与回滚命令可执行、无空章无占位」，已满足。

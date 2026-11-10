@@ -6,8 +6,8 @@
 
 | 行 | 组件 | 基线版本 | 本书用途 | 对应章 |
 |---|---|---|---|---|
-| A-01 | Kubernetes | 1.32+（CI 矩阵 1.32 / 1.33 / 1.34） | 全部 YAML 的 `apiVersion` 与字段语义 | 全书 |
-| A-02 | kind | 0.x（随矩阵对齐） | 本地集群与多版本验证 | 6、11 |
+| A-01 | Kubernetes | **写作基线 1.32+**；静态 schema 矩阵 1.32.0 / 1.33.0 / 1.34.0 / 1.37.0；真集群矩阵 1.32.2 / 1.34.11 / 1.37.0 | 全部 YAML 的 `apiVersion` 与字段语义 | 全书 |
+| A-02 | kind | **v0.27.0**（配 1.32.2）/ **v0.33.0**（配 1.34.11、1.37.0），与 node 镜像成对锁定 | 本地集群与多版本验证 | 6、11 |
 | A-03 | kubectl | 与集群版本偏差不超过 1 个次版本 | 全部命令示例 | 全书 |
 | A-04 | Go 工具链 | 1.23（仅 `order-demo` 示例） | 第 6 章最小镜像构建 | 6 |
 | A-05 | distroless static | `static-debian12:nonroot`（digest 锁定） | 非 root 运行镜像 | 6、24 |
@@ -39,7 +39,11 @@
 | A-31 | Syft / Trivy / cosign | 1.x / 0.x / 2.x | SBOM / 扫描 / 签名验签 | 24 |
 | A-32 | SLSA | v1.0 | 供应链等级 | 24 |
 | A-33 | OpenSLO | 规范 v1 | SLO 定义 | 20 |
-| A-34 | kubeconform / conftest / kuttl / ct | 各自当前稳定版 | CI 四层校验 | 11 |
+| A-34 | kubeconform | **v0.6.7**（`ci.yml` 的 `KUBECONFORM_VERSION` 锁定） | 三版本 schema 校验 | 11 |
+| A-35 | PyYAML | **6.0.2**（`hack/requirements.txt` 锁定） | 清单逐文档拆分与结构断言 | 11 |
+| A-36 | GitHub Actions runner | `ubuntu-latest`；Go **1.23**、Python **3.12** | 快车道闸门与全书装配 | 11、附录 D |
+| A-37 | kind / kubectl（CI） | kind 版本与 `kindest/node` 镜像**成对锁定**（见 A-02）；kubectl 与集群 patch 版本一致，下载地址 `dl.k8s.io/release/v<k8s>/bin/linux/amd64/kubectl` | P5 真集群复核 | 11 |
+| A-38 | Helm / kustomize（CI） | Helm 3.x（由 `azure/setup-helm@v4` 提供）；kustomize 不作独立渲染闸门，原因见 D.7 | 模板渲染与 overlay 结构报告 | 10、11 |
 
 ## A.2 关键 API 版本与字段
 
@@ -70,9 +74,18 @@
 | Kyverno / cosign 升级 | 24、25 | 策略 schema、验签规则、镜像签名格式 |
 | 官方文档路径迁移 | 8 及引用章 | 探针任务页等官方路径已多次迁移，见 `references/_verified.md` 版本漂移提示 |
 
-## A.4 复核节奏与执行方式
+## A.4 复核节奏与执行方式（P5 已迁移到 GitHub Actions）
 
-1. **每季度**：跑 `hack/check-consistency.sh`，复核 `references/*.yaml` 的可达性（`lychee` 或等价工具），失效链接切 `archive_url` 并在附录 I 标「已归档」。
-2. **K8s 大版本发布后**：按 A.3 表逐项跑 `hack/check-version-matrix.sh`（第 11 章的 kind 三版本矩阵），把结果写回本附录。
-3. **任何工具小版本变更**：只改本附录与配置文件，不改正文；正文出现具体小版本即视为一致性缺陷。
-4. **版权与引用**：只引用与摘要，不整段转载；图表自行重绘并注明数据来源。
+| 频率 | 由谁执行 | 命令 / workflow | 产出 |
+|---|---|---|---|
+| 每次 push / PR | `ci.yml` | `check-consistency.sh`、`materialize.py --check`、`validate-manifests.py`、kubeconform × 4 版本、Go/Docker 冒烟、Helm 渲染 | job summary + 全书 Markdown artifact |
+| 每周一 / 示例基线变更 / 手动 | `kind-matrix.yml` | `check-version-matrix.sh --mode ci` × K8s 1.32.2（kind v0.27.0）/ 1.34.11、1.37.0（kind v0.33.0） | server dry-run 日志、集群事件、演练结论 |
+| 每周一 / 引用登记变更 / 手动 | `references.yml` | `check-references.sh`、`check-links.py` | 外链报告 TSV、失败清单 |
+| 每季度 | 人工 | 复核 `references/*.yaml`、`pending_url` 逐条补正式入口 | 失效链接切 `archive_url` 并在附录 I 标「已归档」 |
+
+1. **K8s 大版本发布后**：改 `ci.yml` 的 `matrix.k8s`、`kind-matrix.yml` 的 `matrix.include`（k8s / kind / role 三项与 dispatch 的 `single_version` 选项），按 A.3 表逐项复核，把结果写回本附录。`kindest/node` 镜像 tag 由 `kind-matrix.yml` 预检步骤强制校验，不存在会直接失败，**不会静默跳过**。
+2. **为什么静态矩阵与真集群矩阵不同**：kubeconform 的 JSON schema 覆盖任意版本，可以完整验证书稿声称的 1.32 / 1.33 / 1.34 窗口并延伸到当前稳定版；而 kind 对旧 K8s 有支持窗口——v0.33.0 只提供 1.34.11 及以上的 node 镜像，1.32 基线必须用 v0.27.0（其 release notes 明确列出 `kindest/node:v1.32.2`）。因此真集群矩阵按「kind 版本 + node 镜像成对锁定」，用 1.32.2 覆盖最低基线、1.34.11 覆盖书稿上界、1.37.0 覆盖当前稳定版。**这是 P5 复核发现的真实版本漂移**：原稿写的 `1.32.0 / 1.33.0 / 1.34.0` 与当前 kind 支持窗口已错位，正文因只写主版本而不受影响。
+3. **清单校验分两层**：`examples/order-demo/deploy/base/` 是硬闸门（strict schema + 真实 apply + 演练）；`examples/by-chapter/` 的逐章增量片段按「软报告」处理，失败清单上传 artifact 并设阈值 `SOFT_LIMIT`，超过阈值才失败——因为它脱离对应章节 tag 的仓库状态本就不保证可独立应用。
+4. **任何工具小版本变更**：只改本附录、CI 环境变量与配置文件，不改正文；正文出现具体小版本即视为一致性缺陷。
+5. **版权与引用**：只引用与摘要，不整段转载；图表自行重绘并注明数据来源。
+6. **CI 不能覆盖的部分**（云厂商 LB/存储/IRSA、跨集群容灾、生产流量下的弹性、长周期证书轮换、需装 CRD 的控制器行为）仍须读者按各章「验证与回滚」段在自有集群演练，不得把 CI 通过等同于生产可用。

@@ -29,12 +29,20 @@
 ├── examples/
 │   ├── order-demo/             # 第 6 章基线可运行代码（见 D.4）
 │   └── by-chapter/             # 各章 §N.4 代码块按章物化的可复制形态（见 D.5）
-└── hack/
-    ├── book_tools.py           # 规范化 / 一致性校验 / 附录 I 生成
-    ├── materialize.py          # 由章节代码块生成 examples/by-chapter/
-    ├── check-consistency.sh
-    ├── check-references.sh
-    └── check-version-matrix.sh
+├── hack/
+│   ├── book_tools.py           # 规范化 / 一致性校验 / 附录 I 生成
+│   ├── materialize.py          # 物化 + --check 一致性比对
+│   ├── validate-manifests.py   # 逐文档分类：内置 / CRD / 模板 / 配置
+│   ├── build_book.py           # 装配全书单一 Markdown
+│   ├── check-links.py          # 外链并发可达性（阈值放行）
+│   ├── requirements.txt        # 依赖锁定（PyYAML 6.0.2）
+│   ├── check-consistency.sh
+│   ├── check-references.sh
+│   └── check-version-matrix.sh # P5：server dry-run + 真实部署 + 演练
+└── .github/workflows/
+    ├── ci.yml                  # 快车道：一致性 + 三版本 schema + 容器冒烟
+    ├── kind-matrix.yml         # P5：真 kind 集群 × 3 版本（见 D.7）
+    └── references.yml          # 背书链接复核
 ```
 
 ## D.2 复现方式
@@ -87,7 +95,7 @@ cat chapters/ch06.md               # 读该章
 
 ## D.4 第 6 章基线代码
 
-`examples/order-demo/` 提供第 6 章的完整可运行基线：`go.mod`、`cmd/gateway/main.go`、`docker/Dockerfile`、`deploy/base/{namespace,configmap,deployment,service}.yaml`、`hack/kind-up.sh`、`hack/verify.sh`。执行方式见第 6 章 §6.4–6.5。第 7–11 章的增量配置在各章 §N.4 给出，按章叠加即可，字段严格沿用 `book/case-evolution.md` 的配置契约。
+`examples/order-demo/` 提供第 6 章的完整可运行基线：`go.mod`、`cmd/gateway/main.go`、`docker/Dockerfile`、`deploy/base/{namespace,configmap,deployment,service}.yaml`、`hack/kind-up.sh`、`hack/verify.sh`、`hack/ci-drill.sh`。执行方式见第 6 章 §6.4–6.5；`ci-drill.sh` 是 P5 的运行时演练（滚动零停机、SHA 回滚、readiness 摘流、Pod 重建），本地与 CI 用同一份脚本。第 7–11 章的增量配置在各章 §N.4 给出，按章叠加即可，字段严格沿用 `book/case-evolution.md` 的配置契约。
 
 ## D.5 按章物化的配置副本
 
@@ -100,10 +108,26 @@ cat chapters/ch06.md               # 读该章
 - 少数章节（第 5、25、27 章）没有带路径标注的代码块，配置与命令仍完整写在章内，不需要物化
 - 第 1 章的 `hack/reproduce-incident.sh` 与第 31 章的 `hack/replay-incident.sh` 是首尾对照的可执行脚本，分别位于 `examples/by-chapter/ch01/` 与 `examples/by-chapter/ch31/`
 
-> **技术复核状态**：本环境无 docker / kind / kubectl，P5 的 kind 多版本矩阵与实际起集群验证尚未执行。`hack/check-version-matrix.sh` 已就绪，在有这些工具的环境中运行即可逐章验收；脚本语法与静态一致性已通过 `hack/check-consistency.sh`。
+> **技术复核状态**：P5 已迁移到 GitHub Actions（`kind-matrix.yml`），无需本地安装 docker / kind / kubectl；真集群结论见仓库 Actions 记录。本地若已起好集群，仍可执行 `./hack/check-version-matrix.sh --strict` 得到同一套结论。
 
 ## D.6 tag 命名变更记录
 
 - D-04：`ch15-gitops` → `ch14-gitops`，新增 `ch15-canary`（第 14/15 章内容互换）
 - D-05：`ch06-image` → `ch06-first-loop`（第 6 章改为最小完整闭环，供应链内容并入第 24 章）
 - 附录 D 由 `book/case-evolution.md` 生成，禁止在其他文件维护第二份 tag 表
+
+## D.7 CI 持续复核与验证边界
+
+三条 workflow 与本地脚本共用同一套口径，不另起一套校验逻辑：
+
+| Workflow | 本地等价命令 | 触发 |
+|---|---|---|
+| `ci.yml` | `check-consistency.sh`、`materialize.py --check`、`validate-manifests.py`、`build_book.py`、kubeconform × 3 版本、`go vet/test/build`、`docker build/run` | push / PR / 手动 |
+| `kind-matrix.yml` | `check-version-matrix.sh --mode ci --version V --cluster C` | 每周 / 基线变更 / 手动 |
+| `references.yml` | `check-references.sh`、`check-links.py` | 每周 / 引用登记变更 / 手动 |
+
+**清单分层的理由**：`validate-manifests.py` 把全书 YAML 按 `apiVersion` group 拆成逐文档文件。实测 91 个源文件拆出 131 份文档，其中内置资源 84 份、CRD 实例 37 份、Helm 模板 2 份、纯配置 8 份。只有内置资源能直接交给 kube-apiserver 的 server dry-run；CRD 实例需要先装控制器，Helm 模板要先渲染，`kind`/`Kustomization`/`Chart.yaml` 根本不是 K8s 对象。不分类就全量校验会产生大量假阳性，这在 `ci.yml` 里是硬失败来源。
+
+**为什么 `kustomize build` 不进闸门**：`examples/by-chapter/` 是逐章增量，例如 `ch10/deploy/base/kustomization.yaml` 引用的 12 个资源分散在前面几章的目录里，按设计不可独立渲染。`ci.yml` 的 render job 只输出「引用 / 缺失」结构报告并写进 job summary，不计入闸门；可独立运行与渲染的是 `examples/order-demo/`，完整渲染请在对应章节 tag 检出仓库。
+
+**CI 不覆盖的部分**：云厂商 LB / 存储 / IRSA 的真实行为、跨集群容灾、生产流量下的 HPA / KEDA 效果、长周期证书轮换，以及 Argo CD / Kyverno / Gateway API 控制器等需装 CRD 组件的运行时表现。这些章节的配置仍须按各章「验证与回滚」段在自有集群演练。**CI 通过 ≠ 生产可用**。

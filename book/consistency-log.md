@@ -158,6 +158,26 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - 未决项：第 1 章终稿前最后润色（对齐 H1–H8 与 31 章钩子）、终稿扩写至 30–35 万字、26 条 `pending_url` 季度复核
 - 是否放行：**是，完整初稿 v1.0 放行**
 
+### P5 扫描 · 2026-11-11（技术复核迁移到 CI）
+
+- 范围：`.github/workflows/{ci,kind-matrix,references}.yml`、`hack/validate-manifests.py`、`materialize.py --check`、`build_book.py`、`check-links.py`、`requirements.txt`、`check-version-matrix.sh`、`examples/order-demo/hack/ci-drill.sh`；同步回写根 `README.md`、附录 A.4、附录 D.1/D.4/D.5/D.7、本文件与 `book/README.md`
+- 改动：P5 不再要求本地安装 docker / kind / kubectl，改由 GitHub Actions 的 Ubuntu runner 起真集群；本地脚本与 CI 共用同一套口径（`check-version-matrix.sh --mode ci`），不另起一套校验逻辑
+- 新增闸门：章内代码块与物化产物一致性（144 文件 / 28 章，`--check` 幂等通过）、清单逐文档分类、kubeconform 四版本 schema（1.32.0 / 1.33.0 / 1.34.0 / 1.37.0）、Go/Docker 冒烟、Helm lint/template、全书装配（31 章 + 9 附录 = 184,565 汉字）、外链并发核验
+- 新增演练：`ci-drill.sh` 在真集群里验证滚动期间 Endpoint 始终非空、`rollout undo` 回到明确 git SHA、readiness 失败只摘 Endpoint 不重启容器、Pod 重建后服务可用
+- 新裁决：
+  - **D-16**：P5 的执行环境由「本地自备工具」改为「GitHub Actions 托管 runner」；本地保留等价入口，结论以 Actions 记录为准
+  - **D-17**：原 `check-version-matrix.sh` 在缺工具或集群创建失败时 `exit 0`，属**假通过**；CI 模式强制失败，`--strict` 供本地使用，跳过时明确打印 `SKIPPED：本次未执行任何校验`
+  - **D-18**：清单按 `apiVersion` group 逐文档分类（实测 91 源文件 → 131 文档：内置 84 / CRD 37 / Helm 模板 2 / 纯配置 8）；只有内置资源进 kubeconform 与 server dry-run 硬闸门，CRD 实例与 Helm 模板按结构报告处理，避免假阳性
+  - **D-19**：`examples/by-chapter/` 是逐章增量片段，`kustomization.yaml` 引用的资源分散在前几章，**按设计不可独立 `kustomize build`**；render job 只出结构报告不计闸门，逐文档 server dry-run 设软阈值 `SOFT_LIMIT=12`，可独立运行的是 `examples/order-demo/`
+  - **D-20**：外链可达性是监控型检查（反爬 / 临时维护会返回 4xx），失败率阈值 8% 放行，失败清单进 job summary 与 artifact；附录 I 新鲜度仍是硬闸门
+  - **D-21**：CI 通过 ≠ 生产可用；云厂商 LB/存储/IRSA、跨集群容灾、生产流量弹性、长周期证书轮换、需装 CRD 的控制器行为不纳入 CI，已写入附录 A.4 与 D.7
+  - **D-22（版本漂移，联网预检发现）**：实测 kind 最新为 **v0.33.0**（默认 K8s 1.37.0，node 仅提供 1.34.11 / 1.35.8 / 1.36.4 / 1.37.0），而附录 A 原写 CI 矩阵 `1.32.0 / 1.33.0 / 1.34.0`，与当前 kind 支持窗口错位。裁决：静态 schema 保留 1.32.0 / 1.33.0 / 1.34.0 并补 1.37.0；真集群改为**kind 版本与 node 镜像成对锁定**——v0.27.0 × 1.32.2（写作基线）、v0.33.0 × 1.34.11（书稿上界）、v0.33.0 × 1.37.0（当前稳定）。正文只写主版本，不受影响；差异与升级方式集中写在附录 A.1 / A.4
+- 外部依赖预检（联网核验）：kubeconform v0.6.7 release asset 200；四个版本的 `kubernetes-json-schema` 目录 200；`dl.k8s.io` 上 1.32.2 / 1.33.0 / 1.34.11 / 1.35.8 / 1.36.4 / 1.37.0 的 kubectl 二进制均 200；kind v0.27.0 / v0.33.0 二进制均 200；两组 node 镜像 tag 均在各 kind release notes 中明确列出
+- 静态验证：`bash -n` 6 个脚本通过；`py_compile` 5 个工具通过；三个 workflow YAML 可解析；`materialize.py --check` 幂等通过；`validate-manifests.py` 在有无 PyYAML 两种环境下均可用；`build_book.py` 装配成功
+- **权限阻塞**：用户提供的 `gho_` token 缺 `workflow` scope，git push 被 GitHub 明确拒绝（`refusing to allow an OAuth App to create or update workflow ... without workflow scope`）；REST Contents API 返回 404、GraphQL `createCommitOnBranch` 返回 FORBIDDEN。脚本与文档已单独推送，三个 workflow 文件保留在本地待推送提交中，需具备 `workflow` 权限的凭据执行一次 `git push origin main` 即激活
+- 未决项：workflow 激活与首次 Actions 运行结果待回填（含软失败数、演练结论）；26 条 `pending_url` 季度复核；第 1 章终稿润色；终稿扩写至 30–35 万字
+- 是否放行：**是（工程就绪）**；真集群结论以 `kind-matrix.yml` 的运行记录为准
+
 ### 统计快照（v1.0）
 
 | 项 | 值 |

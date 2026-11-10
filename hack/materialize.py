@@ -6,13 +6,17 @@
 后面的章给的是「增量 / patch」而非完整文件；按章物化可避免互相覆盖，
 并与附录 D 的章节 tag 一一对应。
 
-用法：python hack/materialize.py [--clean]
+用法：
+  python hack/materialize.py --clean     # 重新生成（默认行为）
+  python hack/materialize.py --check     # CI：生成到临时目录并比对，不改动工作区
 """
+import filecmp
 import glob
 import os
 import re
 import shutil
 import sys
+import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "examples", "by-chapter")
@@ -41,9 +45,8 @@ def is_match(path, lang):
     return lang in LANG_BY_EXT.get(ext, {"", "text"})
 
 
-def main():
-    if "--clean" in sys.argv and os.path.isdir(OUT):
-        shutil.rmtree(OUT)
+def generate(out_dir):
+    """把章内代码块写到 out_dir，返回 (manifest, skipped)。"""
     manifest, skipped, seen = [], [], set()
     for ch in sorted(glob.glob(os.path.join(CHAPTERS, "ch*.md"))):
         n = os.path.basename(ch)[2:4]
@@ -70,12 +73,12 @@ def main():
             if key in seen:
                 continue
             seen.add(key)
-            dest = os.path.join(OUT, "ch" + n, path)
+            dest = os.path.join(out_dir, "ch" + n, path)
             os.makedirs(os.path.dirname(dest), exist_ok=True)
             with open(dest, "w", encoding="utf-8", newline="\n") as f:
                 f.write(body.rstrip() + "\n")
             manifest.append((n, path, len(body.splitlines())))
-    with open(os.path.join(OUT, "_manifest.md"), "w", encoding="utf-8", newline="\n") as f:
+    with open(os.path.join(out_dir, "_manifest.md"), "w", encoding="utf-8", newline="\n") as f:
         f.write("# 章节配置物化清单\n\n")
         f.write("> 由 `hack/materialize.py` 从 `chapters/chNN.md` 的路径标注与相邻代码块生成；\n")
         f.write("> 与附录 D 的章节 tag 一一对应。章内代码块是权威副本，本目录是其可复制形态。\n\n")
@@ -85,10 +88,64 @@ def main():
         f.write("\n## 跳过（%d）\n\n" % len(skipped))
         for n, path, why in skipped:
             f.write("- ch%s `%s`：%s\n" % (n, path, why))
+    return manifest, skipped
+
+
+def rel_files(base):
+    out = {}
+    for root, _, files in os.walk(base):
+        for name in files:
+            p = os.path.join(root, name)
+            out[os.path.relpath(p, base).replace("\\", "/")] = p
+    return out
+
+
+def compare(expected_dir, actual_dir):
+    """返回差异描述列表；空列表表示一致。"""
+    e, a = rel_files(expected_dir), rel_files(actual_dir)
+    diff = []
+    for k in sorted(set(a) - set(e)):
+        diff.append("多出：" + k)
+    for k in sorted(set(e) - set(a)):
+        diff.append("缺失：" + k)
+    for k in sorted(set(e) & set(a)):
+        with open(e[k], "rb") as f1, open(a[k], "rb") as f2:
+            if f1.read().replace(b"\r\n", b"\n") != f2.read().replace(b"\r\n", b"\n"):
+                diff.append("内容不同：" + k)
+    return diff
+
+
+def main():
+    check = "--check" in sys.argv
+    if check:
+        work = tempfile.mkdtemp(prefix="book-materialize-")
+        target = work
+    else:
+        work = None
+        target = OUT
+        if "--clean" in sys.argv and os.path.isdir(OUT):
+            shutil.rmtree(OUT)
+
+    manifest, skipped = generate(target)
     print("物化 %d 个文件，覆盖 %d 章；跳过 %d 个标签" % (
         len(manifest), len({x[0] for x in manifest}), len(skipped)))
-    print("清单：examples/by-chapter/_manifest.md")
+
+    if check:
+        try:
+            diff = compare(target, OUT)
+            if diff:
+                print("examples/by-chapter/ 与章内代码块不一致（%d 处）：" % len(diff), file=sys.stderr)
+                for d in diff[:30]:
+                    print("  " + d, file=sys.stderr)
+                print("修复：python hack/materialize.py --clean", file=sys.stderr)
+                return 1
+            print("一致性：examples/by-chapter/ 与章节代码块完全一致")
+        finally:
+            shutil.rmtree(work, ignore_errors=True)
+    else:
+        print("清单：examples/by-chapter/_manifest.md")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
