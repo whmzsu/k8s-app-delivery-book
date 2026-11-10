@@ -1,0 +1,123 @@
+# 第 21 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch21.md 正文角标 [R-21-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-21-1
+  title: "OpenTelemetry Specification"
+  author_or_org: "CNCF OpenTelemetry"
+  level: "L1"
+  url: "https://opentelemetry.io/docs/specs/otel/"
+  version_or_date: "语义约定 1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§21.1 trace_id 跨信号关联前提与语义约定；§21.2 统一采集拓扑；§21.4 结构化日志字段与 exemplar；§21.5 verify-signal-chain.sh"
+  status: "verified"
+  note: "已核验池中 OpenTelemetry Specification 条目；语义约定规定 trace_id/span_id/service.name 在三类信号中同名"
+
+- id: R-21-2
+  title: "OpenTelemetry Collector Documentation"
+  author_or_org: "CNCF OpenTelemetry"
+  level: "L1"
+  url: "https://opentelemetry.io/docs/collector/"
+  version_or_date: "Collector 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§21.1 统一采集层与日志采样反模式；§21.4 receivers/processors/exporters/service 三类 pipeline 与 tail_sampling；§21.5 采集端应急降采样与 rollout undo"
+  status: "verified"
+  note: "OTel 官方文档"
+
+- id: R-21-3
+  title: "Prometheus Instrumentation Practices"
+  author_or_org: "Prometheus"
+  level: "L1"
+  url: "https://prometheus.io/docs/practices/instrumentation/"
+  version_or_date: "Prometheus 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§21.1 cardinality 与 label 白名单反模式；§21.4 observability/metric-naming.md 命名规范；§21.5 promtool check metrics 与命名一致性；§21.3 小版本锁附录 A"
+  status: "verified"
+  note: "指标命名后缀 _total / _seconds_bucket 与 label 基数控制出自该官方实践页"
+
+- id: R-21-4
+  title: "Prometheus Recording Rules"
+  author_or_org: "Prometheus"
+  level: "L1"
+  url: "https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/"
+  version_or_date: "Prometheus 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§21.2 与第 20 章 SLI 同源口径；§21.4 Prometheus CR 的 ruleSelector 自动挂载 role: alert-rules 规则"
+  status: "verified"
+  note: "第 20 章 PrometheusRule 与本条同源，SP-06 / SP-09 的命名一致性依据"
+
+- id: R-21-5
+  title: "Grafana Loki Documentation"
+  author_or_org: "Grafana Labs"
+  level: "L1"
+  url: ""
+  version_or_date: "Loki 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§21.1 全量日志不采样反模式；§21.3 选型矩阵保留期/查询能力/何时不该用；§21.4 Loki ConfigMap 与 Service"
+  status: "pending_url"
+  note: "已核验链接池中无 Loki 官方文档独立条目，保留名称级官方条目，链接待核验；不得编造 URL"
+
+- id: R-21-6
+  title: "Grafana Tempo Documentation"
+  author_or_org: "Grafana Labs"
+  level: "L1"
+  url: ""
+  version_or_date: "Tempo 2.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§21.1 只采指标不采链路反模式；§21.3 选型矩阵；§21.4 Tempo OTLP grpc 4317 接收；§21.5 按 trace_id 取瀑布"
+  status: "pending_url"
+  note: "已核验链接池中无 Tempo 官方文档独立条目，保留名称级官方条目，链接待核验；不得编造 URL"
+
+- id: R-21-7
+  title: "Thanos Documentation"
+  author_or_org: "Thanos / CNCF"
+  level: "L1"
+  url: "https://thanos.io/tip/thanos/getting-started.md/"
+  version_or_date: "0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§21.2 长期指标分层；§21.3 选型矩阵与「何时不该用」；§21.4 Prometheus remoteWrite 到 thanos-receive"
+  status: "verified"
+  note: "Thanos 官方文档"
+
+- id: R-21-8
+  title: "Monitoring Distributed Systems（Site Reliability Engineering 章节）"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/sre-book/monitoring-distributed-systems/"
+  version_or_date: "在线版（SRE Book 章节）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§21.1 白盒监控与为什么只看资源指标不够；§21.2 四大黄金信号；§21.6 仪表盘分层反例"
+  status: "verified"
+  note: "检索核验存在、直连经代理超时，P4 复核；适用边界：面向分布式在线服务，不规定具体工具选型"
+
+- id: R-21-9
+  title: "The RED Method"
+  author_or_org: "Tom Wilkie（Grafana Labs 博文）"
+  level: "L2"
+  url: "https://grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/"
+  version_or_date: "2018-08-02"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§21.2 请求型服务 Rate / Errors / Duration 视角"
+  status: "verified"
+  note: "适用边界：面向请求/响应型服务，资源型组件不适用；与 [R-21-10] 为不同作者与机构、无利益关联"
+
+- id: R-21-10
+  title: "The USE Method"
+  author_or_org: "Brendan Gregg"
+  level: "L2"
+  url: "https://www.brendangregg.com/usemethod.html"
+  version_or_date: "方法页"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§21.2 利用率/饱和度/错误检查法；§21.4 order_demo_db_pool_wait_seconds_bucket 指标登记"
+  status: "verified"
+  note: "适用边界：面向系统资源而非请求链路；与 [R-21-9] 共同支撑「RED 与 USE 是两种视角而非互斥清单」"
