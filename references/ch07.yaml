@@ -1,0 +1,131 @@
+# 第 7 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch07.md 正文角标 [R-07-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-07-1
+  title: "StatefulSets"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.1 稳定标识/有序启停/PVC 残留；§7.2 决策树与四组件落位；§7.4 headless Service 与 volumeClaimTemplates"
+  status: "verified"
+  note: "适用小版本见附录 A；本章 db 为教学用最小形态，生产能力评估见第 16、29 章"
+
+- id: R-07-2
+  title: "Init Containers"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/pods/init-containers/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.2 initContainer 只用于启动前一次性准备；§7.4 init-schema"
+  status: "verified"
+
+- id: R-07-3
+  title: "Controllers（控制循环）"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/architecture/controller/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.1 裸 Pod 不会重建；§7.2 工作负载的可验证定义；§7.5 结构性回退回到 Git"
+  status: "verified"
+
+- id: R-07-4
+  title: "Service"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/services-networking/service/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.1 稳定入口由 Service 提供；§7.2 判据；§7.4 Service 与 headless Service"
+  status: "verified"
+
+- id: R-07-5
+  title: "Operator pattern"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/extend-kubernetes/operator/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.2 本书观点里自建责任可转移到 Operator 的论证；§7.3 单一示例实现收敛"
+  status: "verified"
+  note: "Operator 正式定义章为第 27 章，本章仅作白话引用"
+
+- id: R-07-6
+  title: "KEP-753 Sidecar Containers"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://github.com/kubernetes/enhancements/tree/master/keps/sig-node/753-sidecar-containers"
+  version_or_date: "适用最低 K8s 版本见附录 A"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.1 任务型 Pod 永不 Completed；§7.2 原生 sidecar 语义；§7.4 restartPolicy: Always"
+  status: "verified"
+  note: "Kubernetes Enhancement Proposal 原文"
+
+- id: R-07-7
+  title: "Deployments / Jobs / DaemonSet / Pod Lifecycle 概念页"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.1/§7.2 决策树 Job/DaemonSet 分支与生命周期钩子边界"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-07-8
+  title: "The Twelve-Factor App · III. Config"
+  author_or_org: "12factor.net / Heroku"
+  level: "L2"
+  url: "https://12factor.net/config"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.2 进程无状态、配置外置"
+  status: "verified"
+  note: "适用边界：面向无状态 Web 服务，有状态组件见第 16 章"
+
+- id: R-07-9
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.2 可重复部署是工作负载自由选型前提；§7.5 声明式回退"
+  status: "verified"
+
+- id: R-07-10
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "持续更新"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.3 先把原生语义用对再引入模板工具"
+  status: "verified"
+  note: "与 R-07-9 来自不同机构、无利益关联，共同支撑社区共识类论断"
+
+- id: R-07-11
+  title: "Borg, Omega, and Kubernetes"
+  author_or_org: "Burns, Grant, Oppenheimer, Brewer, Wilkes"
+  level: "L2"
+  url: "https://dl.acm.org/doi/10.1145/2898442.2898444"
+  version_or_date: "ACM Queue 14(1), 2016"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§7.2 可丢弃进程是编排系统基本假设"
+  status: "verified"
+  note: "ACM DL DOI 入口，已通过文献页核验"
