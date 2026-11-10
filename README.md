@@ -75,13 +75,13 @@ python hack/book_tools.py appendix > appendices/附录I-参考文献.md   # 重�
 
 > 私有仓库 Actions 消耗免费分钟额度；`kind-matrix.yml` 默认只在每周、示例基线变更或手动时触发，避免每次改正文都起三个集群。
 
-**激活状态**：创建 `.github/workflows/` 文件需要凭据具备 `workflow` 权限。当前仓库的推送凭据是缺该 scope 的 OAuth App token，因此三个 workflow 文件保留在**本地待推送提交**中；工具链、脚本与文档已全部推送。换一个带权限的凭据后执行一行即可完成推送并触发首次运行：
+**激活状态（2026-11-11 已激活）**：创建 `.github/workflows/` 文件需要凭据具备 `workflow` 权限，原先使用的 OAuth App token 缺该 scope 而被 GitHub 拒绝。改用**账户级 SSH 密钥**（`~/.ssh/id_ed25519`）走 `git@github.com:...` 通道后，三个 workflow 已随 `f1cc0f6` 推到 `main`；`origin` 已固化为 SSH，日常推送不再依赖任何 token。
 
 ```bash
-GH_TOKEN=<带 workflow 权限的 PAT> bash hack/enable-workflows.sh
+bash hack/enable-workflows.sh    # SSH 推送 + 触发提示；无需 GH_TOKEN
 ```
 
-（classic PAT 勾选 `repo` + `workflow`；fine-grained PAT 给该仓库 Contents / Workflows / Actions 的读写权限。也可在 GitHub 网页端手动创建这三个文件，内容直接取本地 `.github/workflows/`。）
+触发节奏：`ci.yml` 每次 push 到 `main` 都跑；`references.yml` 在引用登记或校验脚本变更时跑；`kind-matrix.yml` 只在示例基线变更、每周一 11:23（北京时间）或网页端手动 `Run workflow` 时跑，避免每次改正文都起三个集群。**SSH 只能推 git 数据**，读取 Actions 运行结论仍需 HTTPS API 凭据：`gh auth login` 后执行 `gh run list --limit 5`，或打开 `https://github.com/whmzsu/k8s-app-delivery-book/actions`。
 
 ## 版本与复核
 
