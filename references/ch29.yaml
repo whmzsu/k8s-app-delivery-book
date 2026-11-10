@@ -1,0 +1,141 @@
+# 第 29 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch29.md 正文角标 [R-29-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-29-1
+  title: "CloudNativePG Documentation"
+  author_or_org: "CloudNativePG"
+  level: "L1"
+  url: "https://cloudnative-pg.io/"
+  version_or_date: "适用版本 1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.1 反模式一、§29.2 数据面与控制面解耦、§29.3 评估对象、§29.4 评估演练 CR、§29.5 停用控制器演练"
+  status: "verified"
+  note: "与 R-16-4 同源不同章；第 29 章为评估对象，不替换第 16 章原生 StatefulSet"
+
+- id: R-29-2
+  title: "Strimzi Documentation"
+  author_or_org: "Strimzi"
+  level: "L1"
+  url: "https://strimzi.io/"
+  version_or_date: "适用版本 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.3 简要对照（多 CR 协同、CRD 数量更多、版本迁移负担更高）"
+  status: "verified"
+
+- id: R-29-3
+  title: "cert-manager Documentation"
+  author_or_org: "cert-manager"
+  level: "L1"
+  url: "https://cert-manager.io/docs/"
+  version_or_date: "适用版本 1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.3 简要对照（不影响在线流量、降级预案可轻）"
+  status: "verified"
+  note: "第二轮低并发复核 200"
+
+- id: R-29-4
+  title: "Velero Documentation（Backup / Restore / Schedule）"
+  author_or_org: "Velero"
+  level: "L1"
+  url: "https://velero.io/docs/"
+  version_or_date: "适用版本 1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.1 反模式二、§29.2 备份恢复维度、§29.3 评估表、§29.4 卸载演练脚本、§29.5 回滚链 3"
+  status: "verified"
+  note: "与 R-16-2 同源不同章；备份恢复兜底沿用第 16 章示例实现"
+
+- id: R-29-5
+  title: "StatefulSets"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.2 自建基线、§29.3 自建 vs 采购 vs 托管对比（第 7/16 章）"
+  status: "verified"
+
+- id: R-29-6
+  title: "Artifact Hub"
+  author_or_org: "CNCF / Artifact Hub"
+  level: "L1"
+  url: ""
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.3 找现成 Operator 的选型入口"
+  status: "pending_url"
+  note: "卡片列为 L1 候选；_verified.md 未登记正式链接，不编造"
+
+- id: R-29-7
+  title: "Prometheus《Alerting Rules》"
+  author_or_org: "Prometheus"
+  level: "L1"
+  url: "https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/"
+  version_or_date: "适用版本 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.1 反模式三、§29.3 自身可观测条件通过项、§29.4 告警规则、§29.6 CL-29-04"
+  status: "verified"
+
+- id: R-29-8
+  title: "CNCF 项目成熟度标准（沙箱 / 孵化 / 毕业）"
+  author_or_org: "CNCF"
+  level: "L2"
+  url: ""
+  version_or_date: "分级条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.1 反模式一/三、§29.2 社区治理维度、§29.3 评估表"
+  status: "pending_url"
+  note: "与 R-05-2 同源；卡片标注「候选待核验」，_verified.md 未登记正式链接，不编造"
+
+- id: R-29-9
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.3 对照表「何时不该用」；与 R-29-8 来自不同机构、无利益关联"
+  status: "verified"
+
+- id: R-29-10
+  title: "Site Reliability Engineering《Embracing Risk》"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/sre-book/embracing-risk/"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.2 降级预案「按故障恢复能力取舍」与错误预算冻结口径（与第 20 章回引）"
+  status: "verified"
+
+- id: R-29-11
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.3 升级/回滚走 PR、§29.5 回滚链 2"
+  status: "verified"
+
+- id: R-29-12
+  title: "Operator 升级事故复盘（名称级候选）"
+  author_or_org: "各机构"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "公开 postmortem 合集（按章择取，待核验）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §29.1 反模式的方法论；合成案例不冒充真实事件"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
