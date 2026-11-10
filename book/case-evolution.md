@@ -77,7 +77,24 @@
 
 这样读者在 31 章的增量里不会迷路，也让 P5 的技术复核有明确验收点。
 
-## 五、tag 命名变更记录
+## 五、唯一示例实现固定值（P2 裁决，见 `decisions.md` U-04 / U-05）
+
+> 本表是 D-08「单一示例实现登记机制」的落地。同一示例全书只用一个实现，其余工具仅在选型矩阵中作对比。**新增字段，不改动第二节已冻结字段。**
+
+| 项 | 固定值 | 影响章 |
+|---|---|---|
+| 准入策略引擎 | `kyverno` 1.x（命名空间 `kyverno`），策略命名 `order-demo-*`；VAP 作内置轻量对比，Gatekeeper 仅入矩阵 | 24、25、26 |
+| 流量入口 | `GatewayClass: eg`、`Gateway` 名 `order-demo-gw`、`HTTPRoute` 名 `gateway-route` | 15、19、21、30 |
+| 渐进式交付 | `argo-rollouts` + Gateway API traffic router 插件；必须同时给「按副本比例金丝雀」退化方案 | 15 |
+| GitOps 引擎 | `Argo CD 2.x` 为示例，`Flux 2.x` 仅作对比 | 14、30 |
+| 配置打包 | `Kustomize 5.x` overlay 为多环境基线；`Helm 3.x` 为对外分发 Chart | 10、14 |
+| 密钥注入 | `External Secrets Operator` + 后端占位 `vault`，键名 `order-demo/db-credentials` | 9、14、26 |
+| 可观测栈 | OTel Collector → Prometheus / Loki / Tempo；长期指标用 Thanos 或兼容远端存储 | 20、21、22 |
+| 演练工具 | `Chaos Mesh` 为示例，`Litmus` 仅作对比 | 23 |
+| 有状态示例 | PostgreSQL；第 16 章先用原生 StatefulSet 讲迁移范式，`CloudNativePG` 是第 29 章的评估对象 | 16、29 |
+| 第 6 章 managed-by | `app.kubernetes.io/managed-by=kubectl`（第 10 章起改 `kustomize`，第 14 章起改 `argocd`） | 6、10、14 |
+
+## 六、tag 命名变更记录
 
 - D-04：`ch15-gitops` → `ch14-gitops`，新增 `ch15-canary`（第 14/15 章互换）
 - D-05：`ch06-image` → `ch06-first-loop`（第 6 章改为最小完整闭环，供应链内容并入第 24 章）

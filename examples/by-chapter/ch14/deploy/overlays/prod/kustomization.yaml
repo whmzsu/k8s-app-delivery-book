@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: order-demo-prod
+resources:
+  - ../../base
+patches:
+  - path: rolling-strategy.yaml
+  - path: pdb.yaml
+images:
+  - name: registry.example.com/order-demo/gateway
+    newTag: git-1a2b3c4
+labels:
+  - pairs:
+      app.kubernetes.io/managed-by: argocd
+    includeSelectors: false

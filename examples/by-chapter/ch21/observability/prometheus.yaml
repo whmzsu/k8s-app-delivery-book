@@ -1,0 +1,103 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: order-demo
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+spec:
+  replicas: 2
+  serviceAccountName: prometheus
+  enableFeatures: ["exemplar-storage"]
+  ruleSelector:
+    matchLabels:
+      role: alert-rules
+  serviceMonitorSelector:
+    matchLabels:
+      team: order-demo
+  ruleNamespaceSelector:
+    matchNames: ["observability", "order-demo-prod"]
+  remoteWrite:
+    - url: http://thanos-receive.observability.svc.cluster.local:19291/api/v1/receive
+      queueConfig:
+        capacity: 10000
+        maxShards: 5
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 50Gi
+  retention: 15d
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  securityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: order-demo
+spec:
+  selector:
+    app.kubernetes.io/name: prometheus
+  ports:
+    - name: web
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: order-demo-gateway
+  namespace: order-demo-prod
+  labels:
+    team: order-demo
+    app.kubernetes.io/name: order-demo
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: gateway
+  namespaceSelector:
+    matchNames: ["order-demo-prod"]
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+  metricRelabelings:
+    - regex: "user_id|order_id|trace_id|span_id|client_ip|pod_ip"
+      action: labeldrop
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: order-demo-api
+  namespace: order-demo-prod
+  labels:
+    team: order-demo
+    app.kubernetes.io/name: order-demo
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: api
+  namespaceSelector:
+    matchNames: ["order-demo-prod"]
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+  metricRelabelings:
+    - regex: "user_id|order_id|trace_id|span_id|client_ip|pod_ip"
+      action: labeldrop

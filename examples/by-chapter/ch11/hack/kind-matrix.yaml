@@ -1,0 +1,9 @@
+# CI 版本矩阵的单一数据源；具体节点镜像小版本以附录 A 锁定的 kind 发布为准
+kubernetes_versions:
+  - "1.32"
+  - "1.33"
+  - "1.34"
+node_images:
+  "1.32": "kindest/node:v1.32.0"
+  "1.33": "kindest/node:v1.33.0"
+  "1.34": "kindest/node:v1.34.0"

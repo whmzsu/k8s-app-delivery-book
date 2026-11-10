@@ -1,0 +1,28 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: gateway-route
+  namespace: order-demo-dev
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/component: gateway
+    app.kubernetes.io/managed-by: argocd
+spec:
+  parentRefs:
+    - name: order-demo-gw
+      sectionName: http
+    - name: order-demo-gw
+      sectionName: https
+  hostnames:
+    - "order-demo.example.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /orders
+      timeouts:
+        request: 5s
+        backendRequest: 4s
+      backendRefs:
+        - name: gateway
+          port: 8080

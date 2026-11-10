@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: gateway-sli
+  namespace: order-demo-prod
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+spec:
+  args:
+    - name: canary-service
+      value: gateway-canary
+  metrics:
+    - name: error-rate
+      interval: 1m
+      count: 5
+      successCondition: "result[0] <= 0.01"
+      failureLimit: 1
+      provider:
+        prometheus:
+          address: http://prometheus.monitoring.svc:9090
+          query: |
+            sum(rate(http_requests_total{service="{{args.canary-service}}",code=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total{service="{{args.canary-service}}"}[5m]))
+    - name: p99-latency
+      interval: 1m
+      count: 5
+      successCondition: "result[0] <= 0.8"
+      failureLimit: 1
+      provider:
+        prometheus:
+          address: http://prometheus.monitoring.svc:9090
+          query: |
+            histogram_quantile(
+              0.99,
+              sum(rate(http_request_duration_seconds_bucket{
+                service="{{args.canary-service}}"
+              }[5m])) by (le)
+            )

@@ -1,0 +1,28 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: gateway-route-policy
+  namespace: order-demo-dev
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/component: gateway
+    app.kubernetes.io/managed-by: argocd
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: gateway-route
+  retry:
+    numRetries: 2
+    retryOn:
+      - "5xx"
+      - "connect-failure"
+      - "reset"
+    perRetryBackOff:
+      baseInterval: 100ms
+      maxInterval: 1s
+  circuitBreaker:
+    maxConnections: 1024
+    maxPendingRequests: 256
+    maxParallelRequests: 512
+    maxParallelRetries: 64

@@ -1,0 +1,44 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-db-auth
+  namespace: order-demo-dev
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+spec:
+  secretTargetRef:
+    - parameter: connection
+      name: db-credentials
+      key: connection
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: worker-scaledobject
+  namespace: order-demo-dev
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/component: worker
+    app.kubernetes.io/managed-by: argocd
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: worker
+  minReplicaCount: 1
+  maxReplicaCount: 8
+  pollingInterval: 15
+  cooldownPeriod: 300
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 300
+  triggers:
+    - type: postgresql
+      metadata:
+        query: "SELECT count(*) FROM orders WHERE status = 'pending'"
+        targetQueryValue: "5"
+      authenticationRef:
+        name: keda-db-auth

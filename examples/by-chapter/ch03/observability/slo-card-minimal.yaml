@@ -1,0 +1,16 @@
+# 1 页最小 SLO 卡片模板（第 3 章）
+# 字段与第 1 章 1.5 引出版、第 20 章正式体系完全一致；此处只给白话与占位。
+# SLO / SLI / 错误预算的正式定义详见第 20 章，本卡片不得被用作发布决策的推理前提。
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-demo-slo-card
+  namespace: order-demo-dev
+  labels:
+    app.kubernetes.io/name: order-demo
+data:
+  service: "gateway"
+  sli: "成功请求数 / 总请求数"            # 白话：可直接测量的好坏比例，详见第 20 章
+  window: "28d"                          # 白话：统计窗口，详见第 20 章
+  objective: "99.9"                      # 白话：目标百分比，详见第 20 章
+  freeze_rule: "错误预算耗尽则冻结非必要发布"  # 白话：冻结规则；错误预算＝允许不可用的额度，详见第 20 章

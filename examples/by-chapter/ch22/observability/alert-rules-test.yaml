@@ -1,0 +1,27 @@
+rule_files:
+  - observability/alert-rules.yaml
+evaluation_interval: 1m
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'slo:order_demo_gateway:burn_rate_1h'
+        values: '0+0x30 20+20x29'
+      - series: 'slo:order_demo_gateway:burn_rate_6h'
+        values: '0+0x30 8+8x29'
+      - series: 'sli:order_demo_http_bad:ratio_rate5m'
+        values: '0+0x30 0.02+0.02x29'
+      - series: 'slo:order_demo_gateway:error_budget_ratio'
+        values: '0.001+0.001x60'
+      - series: 'slo:order_demo_gateway:release_freeze'
+        values: '0+0x60'
+    promql_expr_test:
+      - expr: 'slo:order_demo_gateway:burn_rate_6h >= 6'
+        eval_time: 60m
+        exp_samples:
+          - labels: 'slo:order_demo_gateway:burn_rate_6h'
+            value: 8
+      - expr: 'slo:order_demo_gateway:burn_rate_1h >= 14.4'
+        eval_time: 60m
+        exp_samples:
+          - labels: 'slo:order_demo_gateway:burn_rate_1h'
+            value: 20

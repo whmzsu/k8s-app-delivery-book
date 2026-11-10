@@ -1,0 +1,7 @@
+namespace: order-demo-dev
+replicas: 2
+image:
+  repository: registry.example.com/order-demo/gateway
+  tag: git-1a2b3c4
+greeting: "hello from configmap (dev)"
+managedBy: kustomize

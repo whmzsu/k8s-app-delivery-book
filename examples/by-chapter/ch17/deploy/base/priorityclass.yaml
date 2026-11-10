@@ -1,0 +1,21 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: order-demo-online
+  labels:
+    app.kubernetes.io/name: order-demo
+value: 100000
+globalDefault: false
+preemptionPolicy: PreemptLowerPriority
+description: "在线链路 gateway / api / db，驱逐顺序最后，可抢占离线负载"
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: order-demo-batch
+  labels:
+    app.kubernetes.io/name: order-demo
+value: 10000
+globalDefault: false
+preemptionPolicy: Never
+description: "离线任务 worker，不抢占在线负载，允许被抢占"

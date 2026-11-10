@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  namespace: order-demo-dev
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/component: gateway
+    app.kubernetes.io/managed-by: kubectl
+spec:
+  replicas: 2
+  progressDeadlineSeconds: 120
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: order-demo
+      app.kubernetes.io/component: gateway
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: order-demo
+        app.kubernetes.io/component: gateway
+        version: git-1a2b3c4
+        app.kubernetes.io/managed-by: kubectl
+    spec:
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: gateway
+          image: registry.example.com/order-demo/gateway:git-1a2b3c4
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: GREETING
+              valueFrom:
+                configMapKeyRef:
+                  name: order-demo-config
+                  key: GREETING
+            - name: APP_VERSION
+              value: git-1a2b3c4
+          # liveness 只查进程自身，绝不查数据库（见 8.2 本书观点）
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          # readiness 决定「是否接流量」，查依赖也只摘流不重启
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+            successThreshold: 1
+          lifecycle:
+            preStop:
+              sleep:
+                seconds: 5
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]

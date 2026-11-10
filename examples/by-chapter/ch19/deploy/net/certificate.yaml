@@ -1,0 +1,28 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: order-demo-selfsigned
+  namespace: order-demo-dev
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: order-demo-tls
+  namespace: order-demo-dev
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+spec:
+  secretName: order-demo-tls
+  duration: 2160h
+  renewBefore: 360h
+  dnsNames:
+    - "order-demo.example.com"
+  issuerRef:
+    name: order-demo-selfsigned
+    kind: Issuer

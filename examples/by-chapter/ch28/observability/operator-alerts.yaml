@@ -1,0 +1,43 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: order-demo-operator-health
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+    role: alert-rules
+spec:
+  groups:
+    - name: operator-health
+      rules:
+        - alert: OperatorReconcileErrors
+          expr: |
+            sum(rate(controller_runtime_reconcile_errors_total{job="order-demo-operator"}[5m])) > 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Operator reconcile 持续报错"
+            runbook_url: "docs/runbooks/operator-reconcile-errors.md"
+            description: "近 10 分钟协调错误率大于 0，控制器可能无法收敛 CR；按第 28 章指标表定位"
+        - alert: OperatorQueueDepthHigh
+          expr: |
+            max(workqueue_depth{job="order-demo-operator"}) > 50
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Operator 工作队列堆积"
+            runbook_url: "docs/runbooks/operator-queue-depth.md"
+            description: "队列深度持续超过 50，疑似 reconcile 中存在阻塞慢调用（反模式一）"
+        - alert: OperatorNoSuccessfulReconcile
+          expr: |
+            sum(increase(controller_runtime_reconcile_total{job="order-demo-operator",result="success"}[10m])) == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Operator 超过 10 分钟无成功协调"
+            runbook_url: "docs/runbooks/operator-silent.md"
+            description: "控制器可能已挂但业务静默降级（反模式三）；按第 22 章告警分级路由处置"

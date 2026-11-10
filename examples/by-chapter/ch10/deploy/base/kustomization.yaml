@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - deployment.yaml
+  - deployment-worker.yaml
+  - deployment-api.yaml
+  - service.yaml
+  - service-api.yaml
+  - service-db-headless.yaml
+  - statefulset-db.yaml
+  - pdb.yaml
+  - secretstore.yaml
+  - externalsecret.yaml

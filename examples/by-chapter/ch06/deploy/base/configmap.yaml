@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-demo-config
+  namespace: order-demo-dev
+  labels:
+    app.kubernetes.io/name: order-demo
+data:
+  GREETING: "hello from configmap (dev)"

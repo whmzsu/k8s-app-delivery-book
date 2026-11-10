@@ -1,0 +1,35 @@
+rule_files:
+  - observability/sli-recording-rules.yaml
+evaluation_interval: 1m
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'order_demo_http_requests_total{service="gateway",component="gateway",method="GET",route="/orders",status_code="200"}'
+        values: '0+100x60'
+      - series: 'order_demo_http_requests_total{service="gateway",component="gateway",method="GET",route="/orders",status_code="503"}'
+        values: '0+0x30 1+0x29'
+      - series: 'order_demo_http_requests_total{service="gateway",component="gateway",method="GET",route="/healthz",status_code="200"}'
+        values: '0+50x60'
+    promql_expr_test:
+      - expr: 'sli:order_demo_http_success:ratio_rate5m'
+        eval_time: 35m
+        exp_samples:
+          - labels: 'sli:order_demo_http_success:ratio_rate5m'
+            value: 0.99
+      - expr: 'slo:order_demo_gateway:release_freeze'
+        eval_time: 35m
+        exp_samples:
+          - labels: 'slo:order_demo_gateway:release_freeze'
+            value: 0
+  - interval: 1m
+    input_series:
+      - series: 'order_demo_http_requests_total{service="gateway",component="gateway",method="GET",route="/orders",status_code="200"}'
+        values: '0+0x60'
+      - series: 'order_demo_http_requests_total{service="gateway",component="gateway",method="GET",route="/orders",status_code="503"}'
+        values: '0+100x60'
+    promql_expr_test:
+      - expr: 'slo:order_demo_gateway:burn_rate_1h'
+        eval_time: 60m
+        exp_samples:
+          - labels: 'slo:order_demo_gateway:burn_rate_1h'
+            value: 1000

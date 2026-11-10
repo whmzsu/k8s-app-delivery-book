@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: order-demo
+  namespace: argocd
+spec:
+  description: "order-demo 三环境晋升边界"
+  sourceRepos:
+    - "https://git.example.com/order-demo/gitops.git"
+  destinations:
+    - server: "https://kubernetes.default.svc"
+      namespace: order-demo-dev
+    - server: "https://kubernetes.default.svc"
+      namespace: order-demo-staging
+    - server: "https://kubernetes.default.svc"
+      namespace: order-demo-prod
+  clusterResourceWhitelist: []
+  namespaceResourceBlacklist:
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+  roles:
+    - name: promoter
+      description: "只允许同步，不允许改 Application 定义"
+      policies:
+        - "p, proj:order-demo:promoter, applications, sync, order-demo/*, allow"
+      groups:
+        - "order-demo-promoters"

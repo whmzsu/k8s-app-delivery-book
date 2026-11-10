@@ -1,0 +1,51 @@
+global:
+  resolve_timeout: 5m
+route:
+  receiver: ticket-default
+  group_by: ["alertname", "service"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - receiver: paging-oncall
+      matchers:
+        - severity="paging"
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 30m
+      continue: true
+    - receiver: ticket-default
+      matchers:
+        - severity="ticket"
+    - receiver: record-only
+      matchers:
+        - severity="info"
+receivers:
+  - name: paging-oncall
+    webhook_configs:
+      - url: https://hooks.internal.example.com/oncall/paging
+        send_resolved: true
+        max_alerts: 20
+  - name: ticket-default
+    webhook_configs:
+      - url: https://hooks.internal.example.com/tickets
+        send_resolved: true
+  - name: record-only
+inhibit_rules:
+  - source_matchers:
+      - alertname="GatewayBudgetExhausted"
+    target_matchers:
+      - severity="paging"
+    equal: ["service"]
+  - source_matchers:
+      - alertname="GatewayAvailabilityFastBurnPaging"
+    target_matchers:
+      - severity="ticket"
+    equal: ["service"]
+mute_time_intervals:
+  - name: chaos-drill-window
+    time_intervals:
+      - weekdays: ["wednesday"]
+        times:
+          - start_time: "14:00"
+            end_time: "16:00"

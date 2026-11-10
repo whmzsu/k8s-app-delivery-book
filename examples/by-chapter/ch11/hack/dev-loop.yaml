@@ -1,0 +1,11 @@
+# 仅本地开发回路；CI 不消费此文件，也不得把它 apply 到任何集群
+tool: tilt
+tool_version: "0.x"
+alternative: "skaffold 2.x"
+allowed_namespace: order-demo-dev
+forbidden_targets:
+  - order-demo-staging
+  - order-demo-prod
+  - "任何共享集群"
+start_command: "tilt up --namespace order-demo-dev"
+guard_script: "hack/dev-loop.sh"

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-demo-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: {{ .Values.managedBy }}
+immutable: true
+data:
+  GREETING: {{ .Values.greeting | quote }}

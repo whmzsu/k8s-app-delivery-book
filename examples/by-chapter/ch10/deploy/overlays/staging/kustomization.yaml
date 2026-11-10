@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: order-demo-staging
+resources:
+  - ../../base
+replicas:
+  - name: gateway
+    count: 2
+  - name: api
+    count: 2
+patches:
+  - target:
+      kind: ConfigMap
+      name: order-demo-config
+    patch: |-
+      - op: replace
+        path: /data/GREETING
+        value: "hello from configmap (staging)"

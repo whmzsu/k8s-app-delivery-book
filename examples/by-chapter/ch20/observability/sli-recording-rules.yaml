@@ -1,0 +1,80 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: order-demo-slo-rules
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+    role: alert-rules
+spec:
+  groups:
+    - name: order-demo-sli
+      interval: 30s
+      rules:
+        - record: sli:order_demo_http_good:rate5m
+          expr: >-
+            sum(rate(order_demo_http_requests_total{
+              service="gateway",
+              route!~"/healthz|/readyz|/startup",
+              status_code!~"5.."
+            }[5m]))
+        - record: sli:order_demo_http_valid:rate5m
+          expr: >-
+            sum(rate(order_demo_http_requests_total{
+              service="gateway",
+              route!~"/healthz|/readyz|/startup"
+            }[5m]))
+        - record: sli:order_demo_http_success:ratio_rate5m
+          expr: >-
+            sli:order_demo_http_good:rate5m
+            / clamp_min(sli:order_demo_http_valid:rate5m, 0.0001)
+        - record: sli:order_demo_http_bad:ratio_rate5m
+          expr: '1 - sli:order_demo_http_success:ratio_rate5m'
+    - name: order-demo-error-budget
+      interval: 30s
+      rules:
+        - record: slo:order_demo_gateway:error_budget_ratio
+          expr: '1 - 0.999'
+        - record: slo:order_demo_gateway:burn_rate_1h
+          expr: >-
+            avg_over_time(sli:order_demo_http_bad:ratio_rate5m[1h])
+            / on() group_left() slo:order_demo_gateway:error_budget_ratio
+        - record: slo:order_demo_gateway:burn_rate_6h
+          expr: >-
+            avg_over_time(sli:order_demo_http_bad:ratio_rate5m[6h])
+            / on() group_left() slo:order_demo_gateway:error_budget_ratio
+        - record: slo:order_demo_gateway:burn_rate_3d
+          expr: >-
+            avg_over_time(sli:order_demo_http_bad:ratio_rate5m[3d])
+            / on() group_left() slo:order_demo_gateway:error_budget_ratio
+        - record: slo:order_demo_gateway:budget_consumed_ratio_28d
+          expr: >-
+            sum_over_time(sli:order_demo_http_bad:ratio_rate5m[28d])
+            * 300
+            / on() group_left()
+            (sum_over_time(sli:order_demo_http_valid:rate5m[28d]) * 300 * 0.001)
+        - record: slo:order_demo_gateway:release_freeze
+          expr: 'slo:order_demo_gateway:budget_consumed_ratio_28d >= 1'
+        - alert: GatewayErrorBudgetFastBurn
+          expr: >-
+            slo:order_demo_gateway:burn_rate_1h >= 14.4
+            and slo:order_demo_gateway:burn_rate_5m >= 14.4
+          for: 2m
+          labels:
+            severity: paging
+            service: gateway
+          annotations:
+            summary: "gateway 错误预算快燃尽（1h 燃尽率 >= 14.4）"
+            runbook: "docs/runbooks/gateway-fast-burn.md"
+            slo: "gateway-availability"
+        - alert: GatewayErrorBudgetSlowBurn
+          expr: 'slo:order_demo_gateway:burn_rate_6h >= 6'
+          for: 15m
+          labels:
+            severity: ticket
+            service: gateway
+          annotations:
+            summary: "gateway 错误预算慢燃尽（6h 燃尽率 >= 6）"
+            runbook: "docs/runbooks/gateway-slow-burn.md"
+            slo: "gateway-availability"

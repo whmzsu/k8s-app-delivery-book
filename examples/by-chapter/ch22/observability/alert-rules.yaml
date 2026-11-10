@@ -1,0 +1,91 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: order-demo-symptom-alerts
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+    role: alert-rules
+spec:
+  groups:
+    - name: order-demo-symptom-alerts
+      interval: 30s
+      rules:
+        - alert: GatewayAvailabilityFastBurnPaging
+          expr: >-
+            slo:order_demo_gateway:burn_rate_1h >= 14.4
+            and avg_over_time(sli:order_demo_http_bad:ratio_rate5m[5m])
+                / on() group_left() slo:order_demo_gateway:error_budget_ratio >= 14.4
+          for: 2m
+          labels:
+            severity: paging
+            service: gateway
+            slo: gateway-availability
+          annotations:
+            summary: "gateway 错误预算快燃尽，1h 与 5m 双窗燃尽率均 >= 14.4"
+            description: "用户可感 5xx 正在快速消耗 28 天错误预算，需立即止血。"
+            runbook: "docs/runbooks/gateway-fast-burn.md"
+            first_action: "按 runbook §1 执行 kubectl -n order-demo-prod rollout undo deployment/gateway 并观察 SLI 5 分钟。"
+            dashboard: "grafana/internal.example.com/d/order-demo/gateway-总览"
+            escalate: "5 分钟未认领升级至平台负责人；15 分钟未恢复按第 23 章启动事件响应。"
+        - alert: GatewayAvailabilitySlowBurnTicket
+          expr: 'slo:order_demo_gateway:burn_rate_6h >= 6'
+          for: 15m
+          labels:
+            severity: ticket
+            service: gateway
+            slo: gateway-availability
+          annotations:
+            summary: "gateway 错误预算慢燃尽，6h 燃尽率 >= 6"
+            description: "存在慢性劣化，需在工作时段排查，不半夜叫人。"
+            runbook: "docs/runbooks/gateway-slow-burn.md"
+            first_action: "按 runbook §1 拉取 6h 内按 route/status_code 分组的 SLI，定位劣化接口。"
+            dashboard: "grafana/internal.example.com/d/order-demo/gateway-组件下钻"
+        - alert: GatewayBudgetExhausted
+          expr: 'slo:order_demo_gateway:release_freeze == 1'
+          for: 5m
+          labels:
+            severity: ticket
+            service: gateway
+            slo: gateway-availability
+          annotations:
+            summary: "28 天错误预算耗尽，非必要发布已冻结"
+            description: "按第 20 章冻结规则，功能发布/依赖升级/配置重构暂停，仅豁免回滚与安全补丁。"
+            runbook: "docs/runbooks/gateway-budget-exhausted.md"
+            first_action: "按 runbook §1 核对 budget-report.sh 结果与 docs/slo-contract.md 例外登记。"
+            dashboard: "grafana/internal.example.com/d/order-demo/gateway-错误预算"
+        - alert: GatewayLatencyP99Symptom
+          expr: >-
+            histogram_quantile(0.99,
+              sum by (le, service) (
+                rate(order_demo_http_request_duration_seconds_bucket{
+                  service="gateway", route="/orders"
+                }[5m])
+              )) > 1.0
+          for: 10m
+          labels:
+            severity: info
+            service: gateway
+            slo: gateway-availability
+          annotations:
+            summary: "gateway /orders p99 延迟 > 1s，仅记录不通知"
+            description: "延迟症状，若同时触发快燃尽则由 paging 承载，本条只做下钻上下文。"
+            runbook: "docs/runbooks/http-5xx-spike.md"
+            first_action: "按 runbook §1 用 trace_id 在 Tempo 看 api → db 耗时分布。"
+            dashboard: "grafana/internal.example.com/d/order-demo/gateway-排障"
+        - alert: OrderDemoProbeFlapping
+          expr: >-
+            sum(increase(order_demo_http_requests_total{
+              service="gateway", route=~"/healthz|/readyz"
+            }[5m])) > 0
+          for: 20m
+          labels:
+            severity: info
+            service: gateway
+          annotations:
+            summary: "探针路径出现请求，仅记录"
+            description: "原因型上下文，用于核对 SLI 排除项是否生效，绝不 paging。"
+            runbook: "docs/runbooks/crashloop-backoff.md"
+            first_action: "确认探针流量未被计入 sli:order_demo_http_valid:rate5m 分母。"
+            dashboard: "grafana/internal.example.com/d/order-demo/gateway-排障"

@@ -1,0 +1,38 @@
+{
+  "algorithm": "or",
+  "rules": [
+    {
+      "disabled": false,
+      "action": "retain",
+      "template": "nDaysSinceLastPush",
+      "params": { "nDaysSinceLastPush": 90 },
+      "scope_selectors": {
+        "repository": [
+          { "decoration": "matches", "pattern": "order-demo/**" }
+        ]
+      },
+      "tag_selectors": [
+        { "kind": "doublestar", "decoration": "matches", "pattern": "git-**" }
+      ]
+    },
+    {
+      "disabled": false,
+      "action": "retain",
+      "template": "latestPushedK",
+      "params": { "latestPushedK": 30 },
+      "scope_selectors": {
+        "repository": [
+          { "decoration": "matches", "pattern": "order-demo/**" }
+        ]
+      },
+      "tag_selectors": [
+        { "kind": "doublestar", "decoration": "matches", "pattern": "git-**" },
+        { "kind": "doublestar", "decoration": "matches", "pattern": "sha256-**" }
+      ]
+    }
+  ],
+  "trigger": {
+    "kind": "Schedule",
+    "settings": { "cron": "0 3 * * *" }
+  }
+}

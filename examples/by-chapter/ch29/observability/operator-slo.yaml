@@ -1,0 +1,43 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: order-demo-cnp-operator-health
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+    role: alert-rules
+spec:
+  groups:
+    - name: cnpg-operator-health
+      rules:
+        - alert: CnpgOperatorReconcileErrors
+          expr: |
+            sum(rate(cnpg_controller_reconcile_errors_total{job="cnpg-controller-manager"}[5m])) > 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "CloudNativePG 控制器协调持续报错"
+            runbook_url: "docs/operator-degradation-plan.md"
+            description: "按降级预案 L0 观察级处置；30 分钟内未修复升级为 L1"
+        - alert: CnpgOperatorNoSuccessfulReconcile
+          expr: |
+            sum(increase(cnpg_controller_reconcile_total{job="cnpg-controller-manager",result="success"}[10m])) == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "CloudNativePG 控制器超过 10 分钟无成功协调"
+            runbook_url: "docs/operator-degradation-plan.md"
+            description: "数据面仍可能健康但恢复能力归零；按降级预案 L1 执行停用控制器演练"
+        - alert: CnpgBackupNotCompleted
+          expr: |
+            time() - max(cnpg_backup_last_completed_timestamp_seconds{job="cnpg-controller-manager"}) > 93600
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "CloudNativePG 近 26 小时无成功备份"
+            runbook_url: "docs/operator-degradation-plan.md"
+            description: "按第 16 章检查 ScheduledBackup 与存储桶凭据，禁止执行不可逆数据变更"

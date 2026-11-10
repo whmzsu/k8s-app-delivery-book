@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: order-demo-dev
+resources:
+  - ../../base
+  - namespace.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+configMapGenerator:
+  - name: order-demo-config
+    literals:
+      - GREETING=hello from configmap (dev)
+      - PUBLIC_URL=dev.example.com
+images:
+  - name: registry.example.com/order-demo/gateway
+    newTag: git-1a2b3c4
+replicas:
+  - name: gateway
+    count: 2

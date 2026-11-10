@@ -1,0 +1,86 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: gateway
+  namespace: order-demo-prod
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/component: gateway
+    app.kubernetes.io/managed-by: argocd
+spec:
+  replicas: 4
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: order-demo
+      app.kubernetes.io/component: gateway
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: order-demo
+        app.kubernetes.io/component: gateway
+        app.kubernetes.io/managed-by: argocd
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: gateway
+          image: registry.example.com/order-demo/gateway:git-5d6e7f8
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 5"]
+          readinessProbe:
+            httpGet: { path: /readyz, port: 8080 }
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /healthz, port: 8080 }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+  strategy:
+    canary:
+      canaryService: gateway-canary
+      stableService: gateway-stable
+      trafficRouting:
+        plugins:
+          argoproj-labs/gatewayAPI:
+            httpRoute: gateway-route
+            namespace: order-demo-prod
+      steps:
+        - setWeight: 5
+        - pause: { duration: 5m }
+        - analysis:
+            templates:
+              - templateName: gateway-sli
+        - setWeight: 25
+        - pause: { duration: 5m }
+        - analysis:
+            templates:
+              - templateName: gateway-sli
+        - setWeight: 50
+        - pause: {}          # 人工门禁：确认后再继续
+        - analysis:
+            templates:
+              - templateName: gateway-sli
+        - setWeight: 100

@@ -1,0 +1,206 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+data:
+  config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+    extensions:
+      health_check:
+        endpoint: 0.0.0.0:13133
+        path: /healthz
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+        spike_limit_percentage: 20
+      resource:
+        attributes:
+          - key: deployment.environment
+            value: order-demo-prod
+            action: upsert
+          - key: service.namespace
+            value: order-demo-prod
+            action: upsert
+      transform/drop_high_cardinality:
+        error_mode: ignore
+        metric_statements:
+          - context: datapoint
+            statements:
+              - delete_key(attributes, "user_id")
+              - delete_key(attributes, "order_id")
+              - delete_key(attributes, "client_ip")
+              - delete_key(attributes, "trace_id")
+              - delete_key(attributes, "span_id")
+      transform/redact_logs:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            statements:
+              - replace_pattern(body, "Bearer \\S+", "Bearer ***")
+              - replace_pattern(body, "password=\\S+", "password=***")
+              - replace_pattern(body, "card_no=\\d{12,19}", "card_no=***")
+      tail_sampling:
+        decision_wait: 10s
+        num_traces: 100000
+        expected_new_traces_per_sec: 1000
+        policies:
+          - name: errors-always
+            type: status_code
+            status_code:
+              status_codes: [ERROR]
+          - name: slow-always
+            type: latency
+            latency:
+              threshold_ms: 1000
+          - name: baseline-sample
+            type: probabilistic
+            probabilistic:
+              sampling_percentage: 10
+      batch:
+        timeout: 5s
+        send_batch_size: 1024
+        send_batch_max_size: 2048
+    exporters:
+      prometheus:
+        endpoint: 0.0.0.0:8889
+        enable_open_metrics: true
+        resource_to_telemetry_conversion:
+          enabled: true
+      otlp/tempo:
+        endpoint: tempo.observability.svc.cluster.local:4317
+        tls:
+          insecure: true
+      loki:
+        endpoint: http://loki.observability.svc.cluster.local:3100/loki/api/v1/push
+        default_labels_enabled:
+          exporter: false
+          job: true
+    service:
+      extensions: [health_check]
+      pipelines:
+        metrics:
+          receivers: [otlp]
+          processors: [memory_limiter, resource, transform/drop_high_cardinality, batch]
+          exporters: [prometheus]
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, resource, tail_sampling, batch]
+          exporters: [otlp/tempo]
+        logs:
+          receivers: [otlp]
+          processors: [memory_limiter, resource, transform/redact_logs, batch]
+          exporters: [loki]
+      telemetry:
+        logs:
+          level: info
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: otel-collector
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: order-demo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/component: telemetry
+    app.kubernetes.io/managed-by: argocd
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: telemetry
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: order-demo
+        app.kubernetes.io/component: telemetry
+        version: git-1a2b3c4
+    spec:
+      serviceAccountName: otel-collector
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: otel-collector
+          image: otel/opentelemetry-collector-contrib:0.110.0
+          args: ["--config=/etc/otelcol/config.yaml"]
+          ports:
+            - name: otlp-grpc
+              containerPort: 4317
+            - name: otlp-http
+              containerPort: 4318
+            - name: promexp
+              containerPort: 8889
+            - name: health
+              containerPort: 13133
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: health
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: health
+            initialDelaySeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/otelcol
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: otel-collector-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: order-demo
+spec:
+  selector:
+    app.kubernetes.io/component: telemetry
+  ports:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: otlp-grpc
+    - name: otlp-http
+      port: 4318
+      targetPort: otlp-http
+    - name: promexp
+      port: 8889
+      targetPort: promexp

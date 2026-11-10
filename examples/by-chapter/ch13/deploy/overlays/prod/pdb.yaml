@@ -1,0 +1,13 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: gateway
+  namespace: order-demo-prod
+  labels:
+    app.kubernetes.io/name: order-demo
+spec:
+  minAvailable: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: order-demo
+      app.kubernetes.io/component: gateway

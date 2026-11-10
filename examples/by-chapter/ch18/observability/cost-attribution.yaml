@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-demo-cost-attribution
+  namespace: order-demo-dev
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+data:
+  dimensions: "component,environment,namespace"
+  label_key_component: "app.kubernetes.io/component"
+  label_key_environment: "namespace"
+  relative_share_formula: "sum(requests_of_component) / sum(requests_of_namespace)"
+  unit: "millicore / MiB / pod-hour"
+  weight_cpu: "1.0"
+  weight_memory: "1.0"
+  price_policy: "no-cloud-unit-price; only relative ratio is reported"
+  report_script: "hack/cost-report.sh"

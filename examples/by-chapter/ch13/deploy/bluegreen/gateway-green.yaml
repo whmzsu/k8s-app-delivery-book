@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-green
+  namespace: order-demo-prod
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/component: gateway
+    app.kubernetes.io/managed-by: kustomize
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: order-demo
+      app.kubernetes.io/component: gateway
+      version: git-5d6e7f8
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: order-demo
+        app.kubernetes.io/component: gateway
+        version: git-5d6e7f8
+        app.kubernetes.io/managed-by: kustomize
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: gateway
+          image: registry.example.com/order-demo/gateway:git-5d6e7f8
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 5"]
+          readinessProbe:
+            httpGet: { path: /readyz, port: 8080 }
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /healthz, port: 8080 }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]

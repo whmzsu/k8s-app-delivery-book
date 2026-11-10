@@ -1,0 +1,43 @@
+apiVersion: openslo/v1
+kind: SLO
+metadata:
+  name: gateway-availability
+  displayName: "gateway 下单入口可用性"
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: argocd
+spec:
+  service: gateway
+  description: "下单请求经 gateway 到 api 的非 5xx 比例，探针路径不计入有效请求"
+  indicator:
+    metadata:
+      name: gateway-availability-sli
+    spec:
+      ratioMetric:
+        counter: true
+        good:
+          source: prometheus
+          queryType: promql
+          query: >-
+            sum(rate(order_demo_http_requests_total{
+              service="gateway",
+              route!~"/healthz|/readyz|/startup",
+              status_code!~"5.."
+            }[5m]))
+        total:
+          source: prometheus
+          queryType: promql
+          query: >-
+            sum(rate(order_demo_http_requests_total{
+              service="gateway",
+              route!~"/healthz|/readyz|/startup"
+            }[5m]))
+  timeWindow:
+    - duration: 28d
+      isRolling: true
+  budgetingMethod: Occurrences
+  objectives:
+    - displayName: "28 天可用性 99.9%"
+      target: 0.999
+      timeSliceTarget: 0.999
+      timeSliceWindow: 5m
