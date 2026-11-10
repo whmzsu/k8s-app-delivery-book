@@ -1,0 +1,108 @@
+# 第 17 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch17.md 正文角标 [R-17-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-17-1
+  title: "Managing Resources for Containers"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§17.1 requests/limits 语义、CPU 限流与内存 OOMKilled 后果不同；§17.2 QoS 三档判定；§17.4 资源基线"
+  status: "verified"
+
+- id: R-17-2
+  title: "Pod Priority and Preemption"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§17.2 PriorityClass 与抢占/驱逐顺序；§17.3 选型矩阵；§17.4 globalDefault: false"
+  status: "verified"
+
+- id: R-17-3
+  title: "Node-pressure Eviction"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§17.1 BestEffort 最先被驱逐；§17.2 驱逐分档；§17.4 runbook 区分 OOMKilled 与 Evicted；§17.5 事件判读"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-17-4
+  title: "LimitRange"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/policy/limit-range/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§17.2/§17.3 命名空间默认值；§17.4 defaultRequest 对齐基线"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-17-5
+  title: "ResourceQuota"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/policy/resource-quotas/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§17.3 命名空间总量；§17.4 配额上限需覆盖 HPA 峰值"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-17-6
+  title: "Site Reliability Engineering · Handling Overload"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/"
+  version_or_date: "在线版（全书入口）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§17.1 过载由最弱一环决定；§17.2 突发余量"
+  status: "verified"
+  note: "直连经代理超时、检索核验存在；单章链接待 P4 复核，暂用全书入口"
+
+- id: R-17-7
+  title: "Borg, Omega, and Kubernetes"
+  author_or_org: "Burns, Grant, Oppenheimer, Brewer, Wilkes"
+  level: "L2"
+  url: "https://dl.acm.org/doi/10.1145/2898442.2898444"
+  version_or_date: "ACM Queue 14(1), 2016"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§17.2 资源基线来自压测、超卖与突发余量"
+  status: "verified"
+  note: "ACM DL DOI 入口，已通过文献页核验"
+
+- id: R-17-8
+  title: "The USE Method"
+  author_or_org: "Brendan Gregg"
+  level: "L2"
+  url: "https://www.brendangregg.com/usemethod.html"
+  version_or_date: "方法页"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§17.1 只看平均使用率反模式；§17.5 用饱和度与分位数定位"
+  status: "verified"
+
+- id: R-17-9
+  title: "CNCF Annual Survey 2023"
+  author_or_org: "CNCF"
+  level: "L3"
+  url: "https://www.cncf.io/reports/cncf-annual-survey-2023/"
+  version_or_date: "2023"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§17.1 运行时稳定性是高频运维课题、需 runbook 的行业背景"
+  status: "verified"
+  note: "仅作方法论/行业背景，不指向任何具体事故；合成案例不冒充真实事件"
