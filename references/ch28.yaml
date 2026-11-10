@@ -1,0 +1,108 @@
+# 第 28 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch28.md 正文角标 [R-28-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-28-1
+  title: "Kubebuilder Book（Quick Start / envtest / CRD 版本迁移章节）"
+  author_or_org: "Kubebuilder"
+  level: "L1"
+  url: "https://book.kubebuilder.io/"
+  version_or_date: "适用版本 4.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §28.2 envtest 价值、§28.3 脚手架主版本、§28.4 PROJECT 与幂等用例、§28.5 make test"
+  status: "verified"
+
+- id: R-28-2
+  title: "controller-runtime 文档（Reconciler / Client / RequeueAfter）"
+  author_or_org: "Kubernetes SIGs / controller-runtime"
+  level: "L1"
+  url: "https://github.com/kubernetes-sigs/controller-runtime"
+  version_or_date: "适用版本 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §28.1 反模式一、§28.2 幂等判据与五步骨架、§28.4 reconcile 实现"
+  status: "verified"
+  note: "controller-runtime 官方仓库"
+
+- id: R-28-3
+  title: "Operator Lifecycle Manager（OLM）文档（Subscription / CSV / 升级通道）"
+  author_or_org: "Operator Framework / CNCF"
+  level: "L1"
+  url: "https://github.com/operator-framework/operator-lifecycle-manager"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §28.2 OLM 边界、§28.3「何时不该用 OLM」"
+  status: "verified"
+  note: "OLM 官方仓库"
+
+- id: R-28-4
+  title: "Kubernetes API Conventions（spec / status 语义）"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: ""
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §28.1 反模式二、§28.2 status 只表达观测结果、§28.4 类型定义、§28.5 通过标准"
+  status: "pending_url"
+  note: "与 R-27-4 同源不同章；_verified.md 未登记该页 URL，不编造"
+
+- id: R-28-5
+  title: "Kubernetes《CRD 版本与转换 webhook》文档"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §28.2 版本迁移五步顺序、§28.5 逆序回退"
+  status: "verified"
+  note: "Kubernetes v1.32 任务页"
+
+- id: R-28-6
+  title: "Prometheus《Alerting Rules》"
+  author_or_org: "Prometheus"
+  level: "L1"
+  url: "https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/"
+  version_or_date: "适用版本 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §28.1 反模式三、§28.2 指标表、§28.4 告警规则、§28.6 CL-28-03"
+  status: "verified"
+
+- id: R-28-7
+  title: "KubeCon 控制器最佳实践演讲（名称级候选）"
+  author_or_org: "KubeCon / CNCF"
+  level: "L2"
+  url: ""
+  version_or_date: "会议演讲"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §28.1 反模式一/二、§28.2 reconcile 反模式清单"
+  status: "pending_url"
+  note: "卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造"
+
+- id: R-28-8
+  title: "CNCF Operator 相关白皮书（名称级候选）"
+  author_or_org: "CNCF"
+  level: "L2"
+  url: ""
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §28.1 反模式三「控制器静默降级」；与 R-28-7 来自不同机构、无利益关联"
+  status: "pending_url"
+  note: "卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造"
+
+- id: R-28-9
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §28.2 决策树「停手」判据、§28.3 脚手架「何时不该用」"
+  status: "verified"
