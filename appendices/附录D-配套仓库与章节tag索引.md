@@ -38,7 +38,8 @@
 │   ├── requirements.txt        # 依赖锁定（PyYAML 6.0.2）
 │   ├── check-consistency.sh
 │   ├── check-references.sh
-│   └── check-version-matrix.sh # P5：server dry-run + 真实部署 + 演练
+│   ├── check-version-matrix.sh # P5：server dry-run + 真实部署 + 演练
+│   └── enable-workflows.sh      # 换带 workflow 权限的凭据后一键激活 CI
 └── .github/workflows/
     ├── ci.yml                  # 快车道：一致性 + 三版本 schema + 容器冒烟
     ├── kind-matrix.yml         # P5：真 kind 集群 × 3 版本（见 D.7）

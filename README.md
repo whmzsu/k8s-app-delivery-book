@@ -75,6 +75,14 @@ python hack/book_tools.py appendix > appendices/附录I-参考文献.md   # 重�
 
 > 私有仓库 Actions 消耗免费分钟额度；`kind-matrix.yml` 默认只在每周、示例基线变更或手动时触发，避免每次改正文都起三个集群。
 
+**激活状态**：创建 `.github/workflows/` 文件需要凭据具备 `workflow` 权限。当前仓库的推送凭据是缺该 scope 的 OAuth App token，因此三个 workflow 文件保留在**本地待推送提交**中；工具链、脚本与文档已全部推送。换一个带权限的凭据后执行一行即可完成推送并触发首次运行：
+
+```bash
+GH_TOKEN=<带 workflow 权限的 PAT> ./hack/enable-workflows.sh
+```
+
+（classic PAT 勾选 `repo` + `workflow`；fine-grained PAT 给该仓库 Contents / Workflows / Actions 的读写权限。也可在 GitHub 网页端手动创建这三个文件，内容直接取本地 `.github/workflows/`。）
+
 ## 版本与复核
 
 正文只写主版本（`Helm 3.x`、`Kustomize 5.x`、`Argo CD 2.x`），小版本、API 版本与破坏性变更集中在附录 A。官方文档链接按季度复核；失效链接切归档地址并在附录 I 标「已归档」。
