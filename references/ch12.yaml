@@ -1,0 +1,111 @@
+# 第 12 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch12.md 正文角标 [R-12-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-12-1
+  title: "SLSA Specification v1.0"
+  author_or_org: "OpenSSF / SLSA"
+  level: "L1"
+  url: "https://slsa.dev/spec/v1.0/"
+  version_or_date: "v1.0"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§12.1 一次构建与制品来源、§12.2 制品引用判据、§12.3 升级路径"
+  status: "verified"
+  note: "已核验入口池 L1 条目；支撑 build once 与来源完整性，不替代附录 A 的版本锁定"
+
+- id: R-12-2
+  title: "GitHub Actions《Workflow syntax / Security hardening for GitHub Actions》"
+  author_or_org: "GitHub"
+  level: "L1"
+  url: "https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions"
+  version_or_date: "在线文档（版本锁附录 A）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§12.1 第三方 Action 用可变 tag 的风险、§12.4 permissions 与 OIDC 短期凭据"
+  status: "verified"
+  note: "GitHub Actions 官方文档"
+
+- id: R-12-3
+  title: "GitLab CI/CD Documentation"
+  author_or_org: "GitLab"
+  level: "L1"
+  url: "https://docs.gitlab.com/ee/ci/"
+  version_or_date: "在线文档（版本锁附录 A）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§12.3 CI 平台选型矩阵；与 R-12-2 为互相竞争的平台官方文档"
+  status: "verified"
+  note: "GitLab 官方文档"
+
+- id: R-12-4
+  title: "NIST SP 800-190 Application Container Security Guide"
+  author_or_org: "NIST"
+  level: "L1"
+  url: "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf"
+  version_or_date: "SP 800-190"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§12.1 镜像层与构建期风险、§12.4 非 root 与最小镜像基线"
+  status: "verified"
+  note: "已核验入口池 L1 条目"
+
+- id: R-12-5
+  title: "OCI Image Spec"
+  author_or_org: "Open Container Initiative"
+  level: "L1"
+  url: "https://specs.opencontainers.org/image-spec/"
+  version_or_date: "v1.1"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§12.1 标签是可变指针而 digest 是内容标识、§12.2 唯一制品判据、§12.5 digest 一致性验证"
+  status: "verified"
+  note: "OCI Image Spec v1.1 规范站点"
+
+- id: R-12-6
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§12.1 build once 反模式、§12.2 fail fast 阶段顺序与越晚发现越贵"
+  status: "verified"
+  note: "已核验入口池 L2 条目，book/references/_registry.yaml 亦登记 R-FOWLER-CD"
+
+- id: R-12-7
+  title: "The Twelve-Factor App · III. Config"
+  author_or_org: "Heroku / 12factor.net"
+  level: "L2"
+  url: "https://12factor.net/config"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§12.1 配置与凭据分离、§12.2 环境等价判据"
+  status: "verified"
+  note: "适用边界：面向无状态 Web 服务；有状态组件见第 16 章"
+
+- id: R-12-8
+  title: "CNCF Cloud Native Security Whitepaper v2"
+  author_or_org: "CNCF TAG Security"
+  level: "L2"
+  url: "https://github.com/cncf/tag-security"
+  version_or_date: "v2"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§12.1 机密脱敏与供应链共识、§12.4 OIDC 最小权限"
+  status: "verified"
+  note: "CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）"
+
+- id: R-12-9
+  title: "公开 CI/CD 流水线配置失误与供应链 postmortem 合集（名称级候选）"
+  author_or_org: "各机构"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "合集入口（按章择取，待核验）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§12.1 反模式的方法论；合成案例不得冒充真实事件"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
