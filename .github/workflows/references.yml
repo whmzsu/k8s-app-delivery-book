@@ -1,0 +1,71 @@
+# 背书体系 10.5 的季度/周度复核：附录 I 新鲜度 + 已登记 URL 可达性
+# 外链会因反爬或临时维护返回 4xx/5xx，这是监控型检查（阈值放行），不是硬闸门。
+name: 背书链接复核
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_fail_rate:
+        description: '允许的外链失败率（0.08 = 8%）'
+        required: false
+        default: '0.08'
+        type: string
+  schedule:
+    # 每周一 04:17 UTC
+    - cron: '17 4 * * 1'
+  push:
+    branches: [main]
+    paths:
+      - 'references/**'
+      - 'hack/book_tools.py'
+      - 'hack/check-links.py'
+      - '.github/workflows/references.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    name: 引用登记与外链可达性
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: hack/requirements.txt
+      - run: pip install -r hack/requirements.txt
+
+      - name: 引用登记字段 / 角标闭环 / 附录 I 新鲜度
+        run: ./hack/check-references.sh
+
+      - name: 待核验候选（pending_url）清单
+        run: |
+          python hack/book_tools.py pending > /tmp/pending.txt || true
+          echo "待核验 $(wc -l < /tmp/pending.txt) 条"
+          head -30 /tmp/pending.txt
+          {
+            echo "### 待核验来源（pending_url）"
+            echo ""
+            echo "共 $(wc -l < /tmp/pending.txt) 条。按 D-10 不编造 URL，季度复核时逐条补正式入口。"
+            echo ""
+            echo '```'
+            head -30 /tmp/pending.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 外链可达性（并发核验 + 阈值放行）
+        run: |
+          RATE="${{ inputs.max_fail_rate }}"
+          [[ -z "$RATE" ]] && RATE=0.08
+          python hack/check-links.py --max-fail-rate "$RATE" --workers 6 \
+            --report build/link-report.tsv
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: link-report
+          path: build/link-report.tsv
+          if-no-files-found: warn

@@ -1,0 +1,208 @@
+# 书稿快车道闸门：P0–P4 一致性 + 清单 schema 多版本 + 示例应用可构建
+# 不启集群，每次 push / PR 都跑；真集群复核见 kind-matrix.yml
+name: 书稿一致性闸门
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KUBECONFORM_VERSION: v0.6.7
+  # 静态 schema 矩阵：最低基线 1.32.0 / 书稿矩阵 1.33、1.34 / 当前稳定 1.37.0
+  # 四个版本的 schema 均在 yannh/kubernetes-json-schema 存在；真集群矩阵见 kind-matrix.yml
+
+jobs:
+  manuscript:
+    name: 一致性 / 引用 / 物化 / 装配
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: hack/requirements.txt
+      - name: 安装锁定的校验依赖
+        run: pip install -r hack/requirements.txt
+
+      - name: 全书一致性闸门（八项横扫 + 附录 I 新鲜度 + 脚本语法）
+        run: ./hack/check-consistency.sh
+
+      - name: 章节代码块与可复制产物一致
+        run: python hack/materialize.py --check
+
+      - name: 清单预检（内置 / CRD / 模板 / 配置分类）
+        run: |
+          python hack/validate-manifests.py --out build/manifests
+          {
+            echo "### 清单分类"
+            echo "- 内置资源：$(wc -l < build/manifests/builtin.txt) 份文档"
+            echo "- CRD 实例：$(wc -l < build/manifests/crd.txt) 份（需对应控制器，不在本闸门校验）"
+            echo "- Helm 模板：$(wc -l < build/manifests/template.txt) 份（由 render job 渲染）"
+            echo "- 纯配置：$(wc -l < build/manifests/other.txt) 份"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 装配全书单一 Markdown
+        run: python hack/build_book.py --out dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: book-manuscript
+          path: dist/
+          if-no-files-found: error
+
+  manifests:
+    name: 清单 schema · K8s ${{ matrix.k8s }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        k8s: ['1.32.0', '1.33.0', '1.34.0', '1.37.0']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: hack/requirements.txt
+      - run: pip install -r hack/requirements.txt
+
+      - name: 安装 kubeconform（版本锁定，见附录 A-06）
+        run: |
+          set -euo pipefail
+          curl -fsSLo /tmp/kubeconform.tar.gz \
+            "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz"
+          sudo tar -xzf /tmp/kubeconform.tar.gz -C /usr/local/bin kubeconform
+          kubeconform -v
+
+      - name: 拆分逐文档清单
+        run: python hack/validate-manifests.py --out build/manifests
+
+      - name: 硬闸门 · 第 6 章基线（strict）
+        run: |
+          kubeconform -strict -summary \
+            -kubernetes-version "${{ matrix.k8s }}" \
+            examples/order-demo/deploy/base/*.yaml
+
+      - name: 硬闸门 · 全书内置资源（${{ matrix.k8s }} schema）
+        run: |
+          set -euo pipefail
+          mapfile -t files < build/manifests/builtin.txt
+          kubeconform -summary \
+            -kubernetes-version "${{ matrix.k8s }}" \
+            -ignore-missing-schemas "${files[@]}"
+
+      - name: CRD 实例与工具配置的结构断言
+        run: |
+          python - <<'PY'
+          import glob, yaml, sys
+          bad = []
+          for f in glob.glob('build/manifests/crd/*.yaml') + glob.glob('build/manifests/other/*.yaml'):
+              try:
+                  d = yaml.safe_load(open(f, encoding='utf-8'))
+              except Exception as e:
+                  bad.append((f, 'YAML 解析失败: %s' % str(e).splitlines()[0])); continue
+              if not isinstance(d, dict):
+                  bad.append((f, '不是映射结构')); continue
+              if not d.get('apiVersion') or not d.get('kind'):
+                  bad.append((f, '缺 apiVersion / kind'))
+          print('结构断言检查 %d 份，问题 %d 处' % (
+              len(glob.glob('build/manifests/crd/*.yaml')) + len(glob.glob('build/manifests/other/*.yaml')), len(bad)))
+          for f, why in bad[:20]: print('  ', f, why)
+          sys.exit(1 if bad else 0)
+          PY
+
+  example-app:
+    name: 示例应用构建与容器冒烟
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: false  # 示例只有标准库依赖，无 go.sum，不启用缓存
+
+      - name: Go 静态检查与构建
+        working-directory: examples/order-demo
+        run: |
+          go vet ./...
+          go test ./...
+          go build -o /tmp/gateway ./cmd/gateway
+
+      - name: 构建不可变镜像（多阶段 / distroless / 非 root）
+        run: |
+          docker build -f examples/order-demo/docker/Dockerfile \
+            -t order-demo/gateway:ci-smoke examples/order-demo
+
+      - name: 容器冒烟 · /healthz 与配置注入
+        run: |
+          set -euo pipefail
+          docker run -d --name gateway-smoke -p 18080:8080 \
+            -e GREETING="hello from CI" -e APP_VERSION="git-ci0001" \
+            --read-only --user 65532:65532 order-demo/gateway:ci-smoke
+          trap 'docker rm -f gateway-smoke >/dev/null 2>&1 || true' EXIT
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:18080/healthz >/dev/null 2>&1 && break
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:18080/healthz
+          BODY="$(curl -fsS http://127.0.0.1:18080/)"
+          echo "$BODY"
+          [[ "$BODY" == *"hello from CI"* ]]
+          [[ "$BODY" == *"version=git-ci0001"* ]]
+
+  render:
+    name: 模板与 overlay 渲染（软报告）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: hack/requirements.txt
+      - run: pip install -r hack/requirements.txt
+      - uses: azure/setup-helm@v4
+
+      - name: Helm Chart lint / template（第 10 章）
+        run: |
+          CHART=examples/by-chapter/ch10/deploy/charts/order-demo
+          helm version --short
+          helm lint "$CHART" -f "$CHART/values-dev.yaml"
+          helm template order-demo "$CHART" -f "$CHART/values-dev.yaml" \
+            > /tmp/helm-rendered.yaml
+          head -20 /tmp/helm-rendered.yaml
+
+      - name: Kustomize overlay 结构报告（逐章增量片段不可独立渲染）
+        run: |
+          python - <<'PY'
+          import glob, os, yaml
+          miss, total = [], 0
+          for f in sorted(glob.glob('examples/by-chapter/**/kustomization.yaml', recursive=True)):
+              d = yaml.safe_load(open(f, encoding='utf-8')) or {}
+              base = os.path.dirname(f)
+              for r in d.get('resources', []):
+                  total += 1
+                  p = os.path.normpath(os.path.join(base, str(r)))
+                  if os.path.isdir(p):
+                      continue
+                  if not os.path.exists(p):
+                      miss.append((f, r))
+          print('overlay 引用 %d 处，缺失 %d 处' % (total, len(miss)))
+          for f, r in miss[:15]: print('  ', f, '->', r)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as out:
+              out.write('\n### Kustomize overlay（软报告）\n\n')
+              out.write('`examples/by-chapter/` 是**逐章增量**产物：后一章只给 patch，')
+              out.write('因此 kustomization 引用的资源常来自前几章目录，按设计不可独立 `kustomize build`。')
+              out.write('可运行基线是 `examples/order-demo/`；完整渲染请在对应章节 tag 检出配套仓库。\n\n')
+              out.write('- 引用 %d 处，缺失 %d 处（属预期，不计入闸门）\n' % (total, len(miss)))
+          PY
