@@ -1,0 +1,123 @@
+# 第 16 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch16.md 正文角标 [R-16-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-16-1
+  title: "StatefulSets"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§16.1 StatefulSet 能力边界、§16.2 稳定标识与有序启停、§16.4 OnDelete 与 preStop"
+  status: "verified"
+  note: "已核验入口池 L1 条目；本章唯一有状态示例实现（原生 StatefulSet）"
+
+- id: R-16-2
+  title: "Velero Documentation（Backup / Restore / Schedule / Hooks）"
+  author_or_org: "Velero"
+  level: "L1"
+  url: "https://velero.io/docs/"
+  version_or_date: "1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§16.1 只备份不恢复的反模式、§16.3 备份选型、§16.4 Schedule 与恢复脚本、§16.5 数据侧回滚"
+  status: "verified"
+  note: "已核验入口池 L1 条目；备份恢复演练示例实现"
+
+- id: R-16-3
+  title: "Init Containers"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/pods/init-containers/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§16.4 迁移任务按序执行与前置校验的时序保证"
+  status: "verified"
+  note: "已核验入口池 L1 条目"
+
+- id: R-16-4
+  title: "CloudNativePG Documentation"
+  author_or_org: "CloudNativePG"
+  level: "L1"
+  url: "https://cloudnative-pg.io/"
+  version_or_date: "1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§16.2 能力边界、§16.3 有状态方案对比（第 29 章评估对象）"
+  status: "verified"
+  note: "已核验入口池 L1 条目；与 R-16-1 构成原生 StatefulSet vs 现成 Operator 的互相竞争实现官方文档；本章不展开配置"
+
+- id: R-16-5
+  title: "Kubernetes 关于 finalizer / 级联删除的文档"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/architecture/garbage-collection/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§16.1 finalizer 卡住反模式、§16.4 卸载检查清单、§16.5 回滚验证"
+  status: "verified"
+  note: "Kubernetes 垃圾回收 / finalizer 官方文档"
+
+- id: R-16-6
+  title: "Refactoring Databases: Evolutionary Database Design"
+  author_or_org: "Scott Ambler / Pramod Sadalage, Addison-Wesley"
+  level: "L2"
+  url: "https://www.amazon.com/Refactoring-Databases-Evolutionary-Database-Design/dp/0321293533"
+  version_or_date: "2006"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§16.1 破坏性 DDL 反模式、§16.2 expand–contract 四阶段与双写回填"
+  status: "verified"
+  note: "书目条目（出版社信息页）"
+
+- id: R-16-7
+  title: "BlueGreenDeployment"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/BlueGreenDeployment.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§16.1 回滚失效、§16.2 schema 变更排序与新旧共存；与 R-16-6 来自不同机构、无利益关联"
+  status: "verified"
+  note: "已核验入口池 L2 条目；book/references/_registry.yaml 亦登记 R-FOWLER-BG"
+
+- id: R-16-8
+  title: "Site Reliability Engineering《Managing Incidents》"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/"
+  version_or_date: "在线版（含第 2 版）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§16.1 备份不等于可恢复、§16.3 能力边界、§16.4 恢复演练报告"
+  status: "verified"
+  note: "检索核验存在；直连经代理超时，P4 复核。book/references/_registry.yaml 登记 R-SRE-BOOK"
+
+- id: R-16-9
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§16.3 数据变更与发布解耦、§16.5 迁移 PR 先于发布写回滚方案"
+  status: "verified"
+  note: "已核验入口池 L2 条目；book/references/_registry.yaml 亦登记 R-FOWLER-CD"
+
+- id: R-16-10
+  title: "公开数据迁移事故复盘（名称级候选）"
+  author_or_org: "各机构"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "公开 postmortem 合集（按章择取，待核验）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§16.1 反模式的方法论；合成案例不冒充真实事件"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
