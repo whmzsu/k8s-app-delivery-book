@@ -117,7 +117,9 @@ jobs:
                   bad.append((f, 'YAML 解析失败: %s' % str(e).splitlines()[0])); continue
               if not isinstance(d, dict):
                   bad.append((f, '不是映射结构')); continue
-              if not d.get('apiVersion') or not d.get('kind'):
+              # crd / patch 必须带 apiVersion+kind；other 是 values、promtool 规则、
+              # Chart.yaml 等工具文件，只要求是合法 YAML 映射（D-26 第二轮修正）
+              if ('/crd/' in f or '/patch/' in f) and (not d.get('apiVersion') or not d.get('kind')):
                   bad.append((f, '缺 apiVersion / kind'))
           print('结构断言检查 %d 份，问题 %d 处' % (len(files), len(bad)))
           for f, why in bad[:20]: print('  ', f, why)

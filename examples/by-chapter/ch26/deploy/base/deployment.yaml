@@ -10,9 +10,7 @@ rules:
     resources: ["configmaps"]
     resourceNames: ["order-demo-config"]
     verbs: ["get"]
-  - apiGroups: [""]
-    resources: ["secrets"]
-    verbs: []
+  # 故意不写 secrets 规则：RBAC 没有显式拒绝，写 verbs: [] 会被 apiserver 拒绝
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding

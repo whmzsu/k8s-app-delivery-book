@@ -138,7 +138,7 @@
 | 24 | `examples/by-chapter/ch24/hack/harbor-retention.json` | 38 |
 | 24 | `examples/by-chapter/ch24/hack/verify-supply-chain.sh` | 103 |
 | 26 | `examples/by-chapter/ch26/deploy/base/serviceaccount.yaml` | 29 |
-| 26 | `examples/by-chapter/ch26/deploy/base/deployment.yaml` | 31 |
+| 26 | `examples/by-chapter/ch26/deploy/base/deployment.yaml` | 29 |
 | 26 | `examples/by-chapter/ch26/hack/kind-audit.yaml` | 18 |
 | 28 | `examples/by-chapter/ch28/observability/operator-alerts.yaml` | 43 |
 | 29 | `examples/by-chapter/ch29/observability/operator-slo.yaml` | 43 |

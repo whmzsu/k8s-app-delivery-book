@@ -200,6 +200,17 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - 修复后验证：actionlint 三个 workflow 零告警；`validate-manifests.py` 在 PyYAML 与降级两种模式下分类一致（builtin/patch 数相同）；`materialize.py --check` 幂等一致（书稿内容未改，patch 按设计合法）；`check-consistency.sh` problem=0；`bash -n` 通过
 - 未决项更新：待修复后 push 触发的重跑结论（ci 快车道约 2–3 分钟；kind 矩阵约 15–25 分钟，含三组真集群部署与演练）；26 条 `pending_url` 季度复核；第 1 章终稿润色；终稿扩写至 30–35 万字
 
+### 第二轮结论与修复 · 2026-11-11（`f7b015c` 重跑：ci #4 / kind-matrix #4）
+
+- 重跑结论：kind-matrix **不再是 startup failure**（run 名正常、三腿 job 全部真实运行，D-27 生效）；kubeconform 硬闸门全过（D-26 生效，79 份 builtin 四版本全绿）。失败转移到了下一层，这正是分层闸门的设计意图
+- ci #4 失败：结构断言报 8 处「缺 apiVersion / kind」——全在 `other/`。**该步骤在首跑因前置失败从未执行过，这是它第一次真正运行**。`other/` 本来就是 values、promtool 规则测试、Alertmanager 配置、Chart.yaml 等无 kind 工具文件，对其要求 apiVersion/kind 是原脚本缺陷。修正：apiVersion/kind 硬性要求只适用于 `crd/` 与 `patch/`，`other/` 只要求合法 YAML 映射
+- kind 矩阵 #4 失败（真集群实锤，两处书稿正确性缺陷）：
+  - **D-28（SHA 标签替换丢前缀）**：`sed "s/git-1a2b3c4/${SHA}/g"` 把整个 token 换成裸 7 位 SHA，部署产物 tag 变成 `:f7b015c`，而构建加载的是 `:git-f7b015c`，Pod 永远 ImagePullBackOff。该模式横跨 **ch06/07/08/09 四章**（6 处 sed）与 `examples/order-demo/hack/kind-up.sh`，全部改为 `s/git-1a2b3c4/git-${SHA}/g`；物化产物重新生成并 `--check` 一致。此脚本此前从未被真集群执行过，是 P5 存在价值的直接例证
+  - **D-29（RBAC 无显式拒绝）**：ch26 的 Role 写 `secrets` 规则 `verbs: []`，apiserver 拒绝：`The Role "order-demo-api" is invalid: rules[1].verbs: Required value`。RBAC 没有显式拒绝语义，「不给权限」的唯一正确表达是规则里不写。ch26 正文改为把这一点写成反模式警示，清单里以注释声明意图；物化产物同步
+- 另记 1 条软失败：ch26 deployment 多文档中的 Role 即 D-29 同源（修复后预计 0 软失败）；1.32/1.34/1.37 三腿失败点一致
+- 修复后本地验证：`materialize.py --check` 一致、consistency problem=0、actionlint（ci.yml）零告警
+- 未决项更新：待 `f7b015c` 修复提交的重跑结论（第三轮）；其余同上
+
 ### 统计快照（v1.0）
 
 | 项 | 值 |
