@@ -1,0 +1,106 @@
+# 第 27 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch27.md 正文角标 [R-27-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-27-1
+  title: "Operator pattern"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/extend-kubernetes/operator/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §27.1「跳过决策树」根因、§27.2 Operator = CRD + 协调循环定义"
+  status: "verified"
+
+- id: R-27-2
+  title: "Controllers（控制循环）"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/architecture/controller/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §27.1 反模式二、§27.2 协调循环幂等/可重入/容忍重复事件三条工程约束（不重复第 2 章定义，SP-17）"
+  status: "verified"
+
+- id: R-27-3
+  title: "Custom Resources / CustomResourceDefinitions"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: ""
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §27.2 CRD 正式定义、§27.4 apiextensions.k8s.io/v1 与 openAPIV3Schema、§27.5 server 端 dry-run"
+  status: "pending_url"
+  note: "卡片列为 L1 候选；_verified.md 未登记该页 URL，不编造"
+
+- id: R-27-4
+  title: "Kubernetes API Conventions（spec / status 语义与 finalizer 删除语义）"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/architecture/garbage-collection/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §27.1 反模式二、§27.2 spec/status/finalizer 三条语义与 finalizer 正式定义、§27.4 status 子资源、§27.5 卸载顺序"
+  status: "verified"
+  note: "Kubernetes 垃圾回收 / finalizer 官方文档"
+
+- id: R-27-5
+  title: "Kubebuilder Book（CRD 版本与转换 webhook 章节）"
+  author_or_org: "Kubebuilder"
+  level: "L1"
+  url: "https://book.kubebuilder.io/"
+  version_or_date: "适用版本 4.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §27.1 反模式三、§27.2 版本迁移路径与长期负债清单、§27.3 脚手架主版本、§27.6 CL-27-03"
+  status: "verified"
+
+- id: R-27-6
+  title: "ValidatingAdmissionPolicy"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §27.2 决策树第 ④ 项、§27.3 Webhook 或策略一行"
+  status: "verified"
+
+- id: R-27-7
+  title: "Introducing Operators"
+  author_or_org: "CoreOS"
+  level: "L2"
+  url: ""
+  version_or_date: "2016"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §27.1 反模式一、§27.2「什么时候不该写比怎么写更重要」"
+  status: "pending_url"
+  note: "卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造"
+
+- id: R-27-8
+  title: "CNCF Operator 相关白皮书（名称级候选）"
+  author_or_org: "CNCF"
+  level: "L2"
+  url: ""
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §27.2 扩展方式共识与长期负债清单；与 R-27-7 来自不同机构、无利益关联"
+  status: "pending_url"
+  note: "卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造"
+
+- id: R-27-9
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §27.2 决策树「成本从低到高」、§27.3 选型矩阵「何时不该用」；与第 5 章过度工程警戒线口径一致"
+  status: "verified"
