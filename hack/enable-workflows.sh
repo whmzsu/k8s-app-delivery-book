@@ -6,8 +6,8 @@
 # 此时三个 workflow 文件会留在本地待推送提交里，本脚本用新凭据完成推送并触发首次运行。
 #
 # 用法（token 只走环境变量，绝不写入仓库或 .git/config）：
-#   GH_TOKEN=<带 workflow 权限的 PAT> ./hack/enable-workflows.sh
-#   GH_TOKEN=<...> REPO=owner/repo BRANCH=main ./hack/enable-workflows.sh
+#   GH_TOKEN=<带 workflow 权限的 PAT> bash hack/enable-workflows.sh
+#   GH_TOKEN=<...> REPO=owner/repo BRANCH=main bash hack/enable-workflows.sh
 #
 # 生成新凭据：GitHub → Settings → Developer settings → Personal access tokens
 #   classic PAT 勾选 `repo` + `workflow`；或 fine-grained PAT 给该仓库

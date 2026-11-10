@@ -39,7 +39,7 @@ jobs:
       - run: pip install -r hack/requirements.txt
 
       - name: 引用登记字段 / 角标闭环 / 附录 I 新鲜度
-        run: ./hack/check-references.sh
+        run: bash hack/check-references.sh
 
       - name: 待核验候选（pending_url）清单
         run: |

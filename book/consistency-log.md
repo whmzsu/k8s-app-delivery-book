@@ -174,7 +174,8 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
   - **D-22（版本漂移，联网预检发现）**：实测 kind 最新为 **v0.33.0**（默认 K8s 1.37.0，node 仅提供 1.34.11 / 1.35.8 / 1.36.4 / 1.37.0），而附录 A 原写 CI 矩阵 `1.32.0 / 1.33.0 / 1.34.0`，与当前 kind 支持窗口错位。裁决：静态 schema 保留 1.32.0 / 1.33.0 / 1.34.0 并补 1.37.0；真集群改为**kind 版本与 node 镜像成对锁定**——v0.27.0 × 1.32.2（写作基线）、v0.33.0 × 1.34.11（书稿上界）、v0.33.0 × 1.37.0（当前稳定）。正文只写主版本，不受影响；差异与升级方式集中写在附录 A.1 / A.4
 - 外部依赖预检（联网核验）：kubeconform v0.6.7 release asset 200；四个版本的 `kubernetes-json-schema` 目录 200；`dl.k8s.io` 上 1.32.2 / 1.33.0 / 1.34.11 / 1.35.8 / 1.36.4 / 1.37.0 的 kubectl 二进制均 200；kind v0.27.0 / v0.33.0 二进制均 200；两组 node 镜像 tag 均在各 kind release notes 中明确列出
 - 静态验证：`bash -n` 6 个脚本通过；`py_compile` 5 个工具通过；三个 workflow YAML 可解析；`materialize.py --check` 幂等通过；`validate-manifests.py` 在有无 PyYAML 两种环境下均可用；`build_book.py` 装配成功
-- **权限阻塞**：用户提供的 `gho_` token 缺 `workflow` scope，git push 被 GitHub 明确拒绝（`refusing to allow an OAuth App to create or update workflow ... without workflow scope`）；REST Contents API 返回 404、GraphQL `createCommitOnBranch` 返回 FORBIDDEN。脚本与文档已单独推送（远端 `f180fd2`），三个 workflow 文件保留在本地待推送提交中；已提供 `hack/enable-workflows.sh`（token 只走环境变量），换带权限凭据后一行命令完成推送并触发三条流水线首次运行
+- **权限阻塞**：用户提供的 GitHub OAuth App token 缺 `workflow` scope，git push 被 GitHub 明确拒绝（`refusing to allow an OAuth App to create or update workflow ... without workflow scope`）；REST Contents API 返回 404、GraphQL `createCommitOnBranch` 返回 FORBIDDEN。工具链与文档已单独推送（远端 `e7875c6`），三个 workflow 文件保留在本地待推送提交中；已提供 `hack/enable-workflows.sh`（token 只走环境变量），换带权限凭据后一行命令完成推送并触发三条流水线首次运行
+- **D-23（CI 可移植性）**：Windows 工作区里 `.sh` 的 git 索引执行位是 `100644`，Linux runner 上 `./script.sh` 会 Permission denied。所有 workflow 与被调脚本统一改用 `bash hack/xxx.sh` 显式调用，并同时设置索引执行位作双保险；本地文档命令同步改口径
 - 未决项：workflow 激活与首次 Actions 运行结果待回填（含软失败数、演练结论）；26 条 `pending_url` 季度复核；第 1 章终稿润色；终稿扩写至 30–35 万字
 - 是否放行：**是（工程就绪）**；真集群结论以 `kind-matrix.yml` 的运行记录为准
 

@@ -118,9 +118,9 @@ if [[ "$DRILL" == "1" ]]; then
   echo "== 硬闸门 C：真实部署 + 四判据 + 滚动 / 回滚 / 摘流演练 =="
   (
     cd examples/order-demo
-    CLUSTER="${CLUSTER:-order-demo}" ./hack/kind-up.sh
-    ./hack/verify.sh
-    CLUSTER="${CLUSTER:-order-demo}" ./hack/ci-drill.sh
+    CLUSTER="${CLUSTER:-order-demo}" bash hack/kind-up.sh
+    bash hack/verify.sh
+    CLUSTER="${CLUSTER:-order-demo}" bash hack/ci-drill.sh
   ) || FAILED=1
 fi
 

@@ -55,17 +55,17 @@ P5 技术复核不需要本地装 docker/kind/kubectl——三条 workflow 在 G
 
 ```bash
 # 本地等价校验（无需集群的部分）
-./hack/check-consistency.sh                 # 八项横扫 + tag 一致性 + 附录 I 新鲜度 + 脚本语法
+bash hack/check-consistency.sh                 # 八项横扫 + tag 一致性 + 附录 I 新鲜度 + 脚本语法
 python hack/materialize.py --check          # 章内代码块 vs 可复制产物（CI 用，不改工作区）
 python hack/validate-manifests.py           # 逐文档拆分为 内置 / CRD / 模板 / 配置
 python hack/build_book.py --out dist        # 装配单一 Markdown 稿件
 python hack/check-links.py                  # 外链可达性（阈值放行）
-./hack/check-references.sh                  # 引用字段 / 角标闭环 / 待核验清单
+bash hack/check-references.sh                  # 引用字段 / 角标闭环 / 待核验清单
 
 # 本地真集群复核（需 docker + kind + kubectl，先自行起好集群）
-./hack/check-version-matrix.sh --strict
+bash hack/check-version-matrix.sh --strict
 # CI 模式（集群由 workflow 创建）
-./hack/check-version-matrix.sh --mode ci --version 1.32.2 --cluster p5-1-32-2
+bash hack/check-version-matrix.sh --mode ci --version 1.32.2 --cluster p5-1-32-2
 
 python hack/materialize.py --clean          # 重新物化各章代码块到 examples/by-chapter/
 python hack/book_tools.py appendix > appendices/附录I-参考文献.md   # 重新生成附录 I
@@ -78,7 +78,7 @@ python hack/book_tools.py appendix > appendices/附录I-参考文献.md   # 重�
 **激活状态**：创建 `.github/workflows/` 文件需要凭据具备 `workflow` 权限。当前仓库的推送凭据是缺该 scope 的 OAuth App token，因此三个 workflow 文件保留在**本地待推送提交**中；工具链、脚本与文档已全部推送。换一个带权限的凭据后执行一行即可完成推送并触发首次运行：
 
 ```bash
-GH_TOKEN=<带 workflow 权限的 PAT> ./hack/enable-workflows.sh
+GH_TOKEN=<带 workflow 权限的 PAT> bash hack/enable-workflows.sh
 ```
 
 （classic PAT 勾选 `repo` + `workflow`；fine-grained PAT 给该仓库 Contents / Workflows / Actions 的读写权限。也可在 GitHub 网页端手动创建这三个文件，内容直接取本地 `.github/workflows/`。）

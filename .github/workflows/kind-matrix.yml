@@ -113,7 +113,7 @@ jobs:
           set -euo pipefail
           EXTRA=()
           if [[ "${{ inputs.no_drill }}" == "true" ]]; then EXTRA+=(--no-drill); fi
-          ./hack/check-version-matrix.sh \
+          bash hack/check-version-matrix.sh \
             --mode ci \
             --version "${{ matrix.k8s }}" \
             --cluster "${{ steps.cluster.outputs.name }}" \

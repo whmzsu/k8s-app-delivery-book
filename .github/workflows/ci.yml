@@ -35,7 +35,7 @@ jobs:
         run: pip install -r hack/requirements.txt
 
       - name: 全书一致性闸门（八项横扫 + 附录 I 新鲜度 + 脚本语法）
-        run: ./hack/check-consistency.sh
+        run: bash hack/check-consistency.sh
 
       - name: 章节代码块与可复制产物一致
         run: python hack/materialize.py --check
