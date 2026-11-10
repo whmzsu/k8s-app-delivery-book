@@ -1,0 +1,84 @@
+# 第 2 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch02.md 正文角标 [R-02-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-02-1
+  title: "Controllers"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/architecture/controller/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §2.1 控制器持续比对并收敛、§2.2 控制循环正式定义、§2.5 演示 A 通过标准"
+  status: "verified"
+
+- id: R-02-2
+  title: "Declarative Object Management"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §2.1「手改被纠正不是 bug」、§2.2 决策树、§2.5 演示 B 通过标准"
+  status: "verified"
+
+- id: R-02-3
+  title: "Owners and Dependents"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §2.2 OwnerReference 级联删除与重建、§2.5 owner 链判据"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-02-4
+  title: "Pod Lifecycle"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §2.1 反模式一「Pod 不是虚机、可被丢弃」"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-02-5
+  title: "Borg, Omega, and Kubernetes"
+  author_or_org: "Burns / Grant / Oppenheimer / Brewer / Wilkes（ACM Queue 14(1), 2016）"
+  level: "L2"
+  url: "https://dl.acm.org/doi/10.1145/2898442.2898444"
+  version_or_date: "ACM Queue 14(1), 2016"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §2.1 反模式二、§2.2「编排系统固化运维知识、平台与应用分层」"
+  status: "verified"
+  note: "ACM DL DOI 入口，已通过文献页核验"
+
+- id: R-02-6
+  title: "Kubernetes the Hard Way"
+  author_or_org: "Kelsey Hightower"
+  level: "L2"
+  url: "https://github.com/kelseyhightower/kubernetes-the-hard-way"
+  version_or_date: "教学仓库"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §2.3「先理解清单再引入自动化」、§2.2 责任边界；适用边界：教学用途，非生产安装指南"
+  status: "verified"
+
+- id: R-02-7
+  title: "Cloud Native Definition"
+  author_or_org: "CNCF"
+  level: "L2"
+  url: "https://github.com/cncf/toc/blob/main/DEFINITION.md"
+  version_or_date: "定义条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §2.2「应用 / 工作负载」术语所处的云原生语境"
+  status: "verified"
+  note: "CNCF TOC 云原生定义 v1.0"
