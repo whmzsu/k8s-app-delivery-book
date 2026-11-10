@@ -1,0 +1,111 @@
+# 第 23 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch23.md 正文角标 [R-23-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-23-1
+  title: "Chaos Mesh Documentation"
+  author_or_org: "Chaos Mesh"
+  level: "L1"
+  url: "https://chaos-mesh.org/docs/"
+  version_or_date: "2.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§23.4 PodChaos / StressChaos / NetworkChaos 实验清单、Chaos Mesh 与 Litmus 对比、爆炸半径上限；§23.5 清理注入对象"
+  status: "verified"
+  note: "decisions.md 固定演练工具为 Chaos Mesh；已核验池中 Chaos Mesh Documentation 条目"
+
+- id: R-23-2
+  title: "Litmus Documentation"
+  author_or_org: "LitmusChaos"
+  level: "L1"
+  url: "https://litmuschaos.io/"
+  version_or_date: "3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§23.4 演练工具对比（仅作对比，非唯一示例实现）"
+  status: "verified"
+  note: "LitmusChaos 官方文档站"
+
+- id: R-23-3
+  title: "Debug Pods"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§23.1 「命令与判断标准前置」；§23.2 症状→定位→处置速查表的只读定位命令；§23.3 六份 runbook 的定位命令"
+  status: "verified"
+  note: "describe pod / logs --previous / get events 等定位方式出自该官方任务页"
+
+- id: R-23-4
+  title: "Configure Liveness, Readiness and Startup Probes"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§23.1 liveness 误杀引发重启级联（H4 合成案例）；§23.2 CrashLoopBackOff 判据；§23.3 crashloop-backoff.md 探针误杀识别"
+  status: "verified"
+  note: "探针路径契约 /healthz /readyz /startup（仅 api）；旧路径超时已按核验池改用当前任务页"
+
+- id: R-23-5
+  title: "Managing Resources for Containers"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§23.2 OOMKilled 定位（lastState.terminated.reason）；§23.4 StressChaos 220Mi 越过 memory: 256Mi limits 的演练设计"
+  status: "verified"
+  note: "api 资源基线 requests cpu: 100m, memory: 128Mi / limits cpu: 500m, memory: 256Mi 与第 17 章一致"
+
+- id: R-23-6
+  title: "Site Reliability Engineering（含 Managing Incidents / Postmortem Culture 章）"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/"
+  version_or_date: "在线版（全书入口，含第 2 版）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§23.1 先恢复服务/再保全现场/最后查根因、无责复盘；§23.4 演练价值在于验证 runbook 与回滚路径"
+  status: "verified"
+  note: "直连经代理超时、检索核验存在；单章链接待 P4 复核，暂用全书入口；适用边界：面向有专职 SRE 的组织，值班流程需按团队规模裁剪"
+
+- id: R-23-7
+  title: "Incident Response（Google SRE Workbook）"
+  author_or_org: "Google"
+  level: "L2"
+  url: ""
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§23.1 事件响应优先级；§23.5 清注入→止血→纠漂移→回声明 四步回滚顺序"
+  status: "pending_url"
+  note: "与 [R-23-6] 为同机构不同著作；卡片列为候选待核验，链接待核验，不得编造 URL"
+
+- id: R-23-8
+  title: "公开 postmortem 方法论合集（含数据库事故类复盘；GitLab 2017 为名称级候选）"
+  author_or_org: "各机构"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "名称级候选；访问日期 2026-11-10"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§23.1 处置时间被信息搜集拖长、复盘改进项无人跟踪；§23.4 演练价值的方法论背景"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
+
+- id: R-23-9
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§23.1 止血优先于查根因；§23.4 回滚演练纳入常规发布门禁；§23.5 生产变更回到 Git"
+  status: "verified"
+  note: "与 [R-23-6][R-23-7] 来自不同机构、无利益关联，共同支撑「回滚方案先行」的社区共识"
