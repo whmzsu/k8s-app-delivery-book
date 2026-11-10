@@ -33,9 +33,15 @@ case "$AUTH_OUT" in
 esac
 
 echo "== 2. 推送（SSH 通道）=="
+# 优先推 named remote：显式 URL 不会更新 origin/<branch> 跟踪引用，
+# 会让 git status 误报 "ahead N"。
+PUSH_TARGET="$SSH_URL"
+if [[ "$(git remote get-url origin 2>/dev/null || true)" == "$SSH_URL" ]]; then
+  PUSH_TARGET="origin"
+fi
 GIT_SSH_COMMAND="ssh -i ${SSH_KEY} -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=20" \
-  git push "$SSH_URL" "${BRANCH}:${BRANCH}"
-echo "   已同步 ${BRANCH}"
+  git push "$PUSH_TARGET" "${BRANCH}:${BRANCH}"
+echo "   已同步 ${BRANCH}（目标：${PUSH_TARGET}）"
 
 echo "== 3. 触发 / 查看 =="
 if [[ -n "${GH_TOKEN:-}" ]]; then
