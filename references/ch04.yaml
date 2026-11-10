@@ -1,0 +1,106 @@
+# 第 4 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch04.md 正文角标 [R-04-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-04-1
+  title: "Namespaces"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/administer-cluster/namespaces/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §4.2「命名空间不是安全边界、只做组织与配额划分」"
+  status: "verified"
+  note: "Kubernetes v1.32 任务页"
+
+- id: R-04-2
+  title: "ResourceQuota"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/policy/resource-quotas/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §4.2 配额划分判据、§4.3 选型矩阵相对成本 / 故障域列"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-04-3
+  title: "Best Practices（官方实践汇总）"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/setup/best-practices/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §4.2 多租户隔离需额外机制"
+  status: "verified"
+
+- id: R-04-4
+  title: "Secrets"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/configuration/secret/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §4.1 反模式一、§4.5 凭据明文扫描通过标准"
+  status: "verified"
+
+- id: R-04-5
+  title: "Kustomize Documentation"
+  author_or_org: "Kustomize"
+  level: "L1"
+  url: "https://kustomize.io/"
+  version_or_date: "适用版本 5.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §4.3 overlay 与 images transformer、§4.5 镜像一致通过标准"
+  status: "verified"
+
+- id: R-04-6
+  title: "Cluster API Book"
+  author_or_org: "Cluster API"
+  level: "L1"
+  url: "https://cluster-api.sigs.k8s.io/"
+  version_or_date: "适用版本 1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §4.3 集群声明式供应、§4.4 gitops/bootstrap 自举入口"
+  status: "verified"
+
+- id: R-04-7
+  title: "Terraform State 文档"
+  author_or_org: "HashiCorp / Terraform"
+  level: "L1"
+  url: "https://developer.hashicorp.com/terraform/language/state"
+  version_or_date: "适用版本 1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §4.1 反模式二、§4.4 backend.tf 远端加密、§4.5 state 不入 Git"
+  status: "verified"
+  note: "HashiCorp 官方文档"
+
+- id: R-04-8
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §4.2 目录策略「先服务晋升」的排序原则"
+  status: "verified"
+
+- id: R-04-9
+  title: "CNCF TAG App Delivery 材料"
+  author_or_org: "CNCF TAG App Delivery"
+  level: "L2"
+  url: "https://github.com/cncf/tag-app-delivery"
+  version_or_date: "材料条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "支撑 §4.2 目录规范与多环境晋升；与 R-04-8 来自不同机构、无利益关联"
+  status: "verified"
+  note: "CNCF TAG App Delivery 官方仓库"
