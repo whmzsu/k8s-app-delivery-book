@@ -1,0 +1,75 @@
+# 第 20 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch20.md 正文角标 [R-20-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-20-1
+  title: "OpenSLO Specification"
+  author_or_org: "OpenSLO"
+  level: "L1"
+  url: "https://github.com/OpenSLO/OpenSLO"
+  version_or_date: "openslo/v1（1.x）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§20.2 SLO 结构化定义与五字段对照；§20.3 表达层取舍；§20.4 slo.yaml 的 apiVersion/kind/objectives；§20.5 回滚不改数字、留痕"
+  status: "verified"
+  note: "已核验池中 OpenSLO 规范条目；规范站点另见 https://www.openslo.com/ ，本章以 GitHub 规范仓库为准"
+
+- id: R-20-2
+  title: "Prometheus Recording Rules"
+  author_or_org: "Prometheus"
+  level: "L1"
+  url: "https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/"
+  version_or_date: "Prometheus 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§20.2 SLI 可测量定义（分子/分母/测量点/排除项）；§20.3 实现层与「何时不该用」；§20.4 记录规则命名 sli:...:ratio_* 与 clamp_min；§20.3 promtool 门禁"
+  status: "verified"
+  note: "记录规则命名约定 level:metric:operations 出自该官方文档；小版本锁附录 A"
+
+- id: R-20-3
+  title: "Prometheus Alerting Rules"
+  author_or_org: "Prometheus"
+  level: "L1"
+  url: "https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/"
+  version_or_date: "Prometheus 3.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§20.1 单一窗口/无窗口反模式；§20.2 快燃尽 1h/5m、慢燃尽 6h、趋势 3d 判据表；§20.4 GatewayErrorBudgetFastBurn / SlowBurn 规则"
+  status: "verified"
+  note: "多窗口燃尽率由同一份错误预算推导，阈值与第 22 章告警规则同源（SP-06）"
+
+- id: R-20-4
+  title: "Implementing SLOs"
+  author_or_org: "Google SRE Workbook"
+  level: "L2"
+  url: "https://sre.google/workbook/implementing-slos/"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§20.1 SLI 必须是用户可感事件的比例；§20.2 SLO = SLI + 目标 + 时间窗口、错误预算 = 1 − SLO、滚动窗口与多窗口燃尽；§20.5 验证口径"
+  status: "verified"
+  note: "已核验池标注「强烈推荐第 20 章使用」；适用边界：面向已有 SRE 组织、有稳定用户流量的在线服务，离线 worker 见 §20.2 反例"
+
+- id: R-20-5
+  title: "Embracing Risk"
+  author_or_org: "Google（Site Reliability Engineering，SRE Book）"
+  level: "L2"
+  url: "https://sre.google/sre-book/embracing-risk/"
+  version_or_date: "在线版（SRE Book 章节）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§20.1 错误预算是变更额度而非口号；§20.2 预算耗尽冻结与例外审批；§20.4 budget-report.sh 的冻结判定与 exit 2"
+  status: "verified"
+  note: "检索核验存在、直连经代理超时，P4 复核；与 [R-20-4] 为同机构不同著作，适用边界：以风险与变更速度权衡为语境，不覆盖规则语法"
+
+- id: R-20-6
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§20.1 资源指标不能充当交付判定依据；§20.2 发布冻结决策树；§20.5 生产变更回到 Git、git revert 回滚"
+  status: "verified"
+  note: "与 [R-20-4][R-20-5] 来自不同机构、无利益关联，共同支撑「冻结规则属发布节奏」的社区共识"
