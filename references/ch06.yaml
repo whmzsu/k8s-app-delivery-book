@@ -1,0 +1,97 @@
+# 第 6 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch06.md 正文角标 [R-06-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-06-1
+  title: "Deployments"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§6.1 控制器收敛；§6.2 声明副本数；§6.5 rollout undo 回退的是 Pod 模板修订"
+  status: "verified"
+  note: "第二轮 UA 复核 200；旧版本差异见附录 A"
+
+- id: R-06-2
+  title: "Service"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/services-networking/service/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§6.1 裸 Pod 没有稳定入口；§6.2 稳定入口判据"
+  status: "verified"
+
+- id: R-06-3
+  title: "ConfigMaps"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/configuration/configmap/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§6.1 配置硬编码反模式；§6.4 通过 env.valueFrom.configMapKeyRef 注入"
+  status: "verified"
+  note: "第二轮 UA 复核 200"
+
+- id: R-06-4
+  title: "Images / ImagePullPolicy"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/containers/images/"
+  version_or_date: "v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§6.1 latest 与节点缓存导致同标签不同内容；§6.2 产物可追溯"
+  status: "verified"
+  note: "第二轮 UA 复核 200"
+
+- id: R-06-5
+  title: "OCI Image Specification"
+  author_or_org: "Open Container Initiative"
+  level: "L1"
+  url: "https://specs.opencontainers.org/image-spec/"
+  version_or_date: "v1.1"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§6.1 标签是可变指针、摘要才是内容标识"
+  status: "verified"
+
+- id: R-06-6
+  title: "The Twelve-Factor App · III. Config"
+  author_or_org: "12factor.net / Heroku"
+  level: "L2"
+  url: "https://12factor.net/config"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§6.1、§6.2 配置与产物分离"
+  status: "verified"
+  note: "适用边界：面向无状态 Web 服务；有状态组件见第 16 章"
+
+- id: R-06-7
+  title: "Kubernetes the Hard Way"
+  author_or_org: "Kelsey Hightower"
+  level: "L2"
+  url: "https://github.com/kelseyhightower/kubernetes-the-hard-way"
+  version_or_date: "在线版（仓库持续更新）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§6.2 先理解清单再引入自动化；§6.3 最小工具集"
+  status: "verified"
+  note: "适用边界：教学用途，不是生产安装指南"
+
+- id: R-06-8
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§6.2 一次构建、可重复部署"
+  status: "verified"
+  note: "与 R-06-6 来自不同机构、无利益关联，共同支撑社区共识类论断"
