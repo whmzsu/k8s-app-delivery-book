@@ -1,0 +1,132 @@
+# 第 8 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch08.md 正文角标 [R-08-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-08-1
+  title: "Configure Liveness, Readiness and Startup Probes（任务页，当前路径）"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.1 三类探针语义；§8.2 语义对照表；§8.4 全部探针字段；§8.5 参数回退"
+  status: "verified"
+  note: "旧路径漂移记录（供附录 A 版本矩阵使用）：旧任务页路径 .../tasks/configure-pod-container/configure-liveness-readiness-probes/ 与旧概念页路径 .../concepts/workloads/pods/probes/ 在本轮直连中超时，仅检索核验存在；references/_verified.md 第 34 行明确要求第 8 章引用上表「任务页，当前路径」。另：book/references/_registry.yaml 的 R-K8S-PROBE-TASK 仍登记旧路径 .../configure-liveness-readiness-probes/，与本章采用的当前路径不一致，该冲突已写入本章「一致性备注」⑤，由统稿统一裁决"
+
+- id: R-08-2
+  title: "Liveness, Readiness, and Startup Probes（概念页）"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/pods/probes/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.1/§8.2 readiness 与 liveness 失败后果区分"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-08-3
+  title: "Configure a Pod Disruption Budget"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/run-application/configure-pdb/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.2 PDB 只保护自愿中断；§8.4 pdb.yaml；§8.6 CL-08-03"
+  status: "verified"
+
+- id: R-08-4
+  title: "Pod Lifecycle / Pod Termination"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.1 在途请求被砍；§8.2 下线时序；§8.4 preStop.sleep"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-08-5
+  title: "Debug Pods"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.1 发布卡住定位；§8.2 progressDeadlineSeconds；§8.5 事件排查"
+  status: "verified"
+
+- id: R-08-6
+  title: "Service"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/services-networking/service/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.1 Endpoint 摘除竞态；§8.2 下线时序第一步；§8.5 get endpoints 验证"
+  status: "verified"
+
+- id: R-08-7
+  title: "SRE Book《Monitoring Distributed Systems》"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/sre-book/monitoring-distributed-systems/"
+  version_or_date: "在线版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.2 零停机四条件；§8.4 连续请求统计判据"
+  status: "verified"
+  note: "检索核验存在，直连经代理超时，P4 复核"
+
+- id: R-08-8
+  title: "Site Reliability Engineering（全书入口）"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/"
+  version_or_date: "在线版，含第 2 版"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.1 重启级联；§8.2 本书观点里重启是放大器的论证"
+  status: "verified"
+  note: "检索核验存在，直连经代理超时，P4 复核"
+
+- id: R-08-9
+  title: "Zalando 工程博客：探针误用经验"
+  author_or_org: "Zalando"
+  level: "L2"
+  url: ""
+  version_or_date: "工程博客条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.1 liveness 误用反模式"
+  status: "pending_url"
+  note: "P1 卡片名称级候选，未核验，链接待 P3 补齐；不得冒充已核验背书"
+
+- id: R-08-10
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "持续更新"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.2 零停机四条件为工程共识"
+  status: "verified"
+  note: "与 R-08-7、R-08-8 来自不同机构、无利益关联，共同支撑共识类论断"
+
+- id: R-08-11
+  title: "公开 postmortem 合集（重启级联类复盘）"
+  author_or_org: "各机构"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "公开复盘栏目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§8.1/§8.2 反模式的方法论"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
