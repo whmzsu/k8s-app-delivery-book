@@ -1,0 +1,133 @@
+# 第 26 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch26.md 正文角标 [R-26-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-26-1
+  title: "NIST SP 800-190 Application Container Security Guide"
+  author_or_org: "NIST"
+  level: "L1"
+  url: "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf"
+  version_or_date: "SP 800-190"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.1 反模式三（凭据分发/轮换/吊销全周期）；§26.2.3 Workload Identity 与动态凭据判据"
+  status: "verified"
+
+- id: R-26-2
+  title: "Secrets"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/configuration/secret/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.1 ServiceAccount token 与 Secret 对象定义；§26.2.3 ExternalSecret 的密钥来源"
+  status: "verified"
+
+- id: R-26-3
+  title: "Using RBAC Authorization"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.1 RBAC 白话定义；§26.2.1 权限基线表；§26.2.3 Role / RoleBinding 字段"
+  status: "verified"
+  note: "Kubernetes v1.32 参考页"
+
+- id: R-26-4
+  title: "Auditing"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: ""
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.2.2 隔离失效表；§26.2.3 audit-policy.yaml 规则顺序；§26.2.5 越权留痕"
+  status: "pending_url"
+  note: "Kubernetes Auditing 官方页未在已核验池；待 P4 补正式链接"
+
+- id: R-26-5
+  title: "Configure Service Accounts for Pods"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: ""
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.1 反模式一；§26.2.1 gateway 无 API 权限基线；§26.2.3 automountServiceAccountToken: false"
+  status: "pending_url"
+  note: "未在已核验池；字段语义以附录 A 锁定的小版本为准"
+
+- id: R-26-6
+  title: "Namespaces / Multi-tenancy 概念文档"
+  author_or_org: "Kubernetes"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/administer-cluster/namespaces/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.1 反模式二『命名空间不是安全边界』；§26.2.2 隔离失效场景表"
+  status: "verified"
+  note: "Kubernetes v1.32 任务页"
+
+- id: R-26-7
+  title: "CIS Kubernetes Benchmark"
+  author_or_org: "Center for Internet Security"
+  level: "L1"
+  url: ""
+  version_or_date: "名称级候选，版本待锁"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.1 反模式一；§26.2.1 权限基线的合规参照"
+  status: "pending_url"
+  note: "未在已核验池；仅作基线参照，不冒充已核验规范"
+
+- id: R-26-8
+  title: "云厂 Workload Identity / IRSA 文档（AWS IRSA、GCP Workload Identity）"
+  author_or_org: "AWS / Google Cloud"
+  level: "L1"
+  url: "https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html"
+  version_or_date: "名称级候选"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.2.3 ServiceAccount annotation、短期令牌与 OIDC 信任策略"
+  status: "verified"
+  note: "AWS EKS 官方文档"
+
+- id: R-26-9
+  title: "Cloud Native Security Whitepaper v2"
+  author_or_org: "CNCF TAG Security"
+  level: "L2"
+  url: "https://github.com/cncf/tag-security"
+  version_or_date: "v2"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.1 反模式三；§26.2.3 动态凭据轮换窗口"
+  status: "verified"
+  note: "CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）"
+
+- id: R-26-10
+  title: "Site Reliability Engineering"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/"
+  version_or_date: "在线版（含第 2 版）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.2.4『以可观测与自动化替代登机排障』的运维共识；与 R-26-9 不同机构、无利益关联"
+  status: "verified"
+  note: "检索核验存在；直连经代理超时，P4 复核，见 _verified.md 第二节"
+
+- id: R-26-11
+  title: "公开权限配置事故复盘（postmortem 合集）"
+  author_or_org: "各机构公开 postmortem"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "名称级候选"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§26.1 三条反模式的方法论支撑（默认 token、边界误判、长期密钥）"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
