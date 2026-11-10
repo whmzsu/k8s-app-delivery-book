@@ -1,0 +1,111 @@
+# 第 13 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch13.md 正文角标 [R-13-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-13-1
+  title: "Kubernetes《Deployments》（Rolling Update / maxSurge / maxUnavailable / progressDeadlineSeconds）"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§13.1 滚动卡死反模式、§13.2 容量账公式、§13.4 策略参数、§13.5 rollout undo 回退的是 Pod 模板修订"
+  status: "verified"
+  note: "Kubernetes v1.32 概念页"
+
+- id: R-13-2
+  title: "Configure a Pod Disruption Budget"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/run-application/configure-pdb/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§13.2 最少可用副本与 PDB 对齐、§13.4 PDB 清单、§13.5 发布期可用性"
+  status: "verified"
+  note: "已核验入口池 L1 条目"
+
+- id: R-13-3
+  title: "Argo Rollouts Documentation"
+  author_or_org: "Argo"
+  level: "L1"
+  url: "https://argoproj.github.io/rollouts/"
+  version_or_date: "1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§13.3 金丝雀控制器对比；与 R-13-1 构成原生滚动 vs 控制器灰度的互相竞争实现官方文档"
+  status: "verified"
+  note: "官方规范入口；直连经代理超时，P4 复核"
+
+- id: R-13-4
+  title: "Configure Liveness, Readiness and Startup Probes"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§13.2 零停机前提、§13.4 minReadySeconds、§13.5 发布期零 5xx"
+  status: "verified"
+  note: "取 references/_verified.md 标注的「任务页，当前路径」；book/references/_registry.yaml 的 R-K8S-PROBE-TASK 仍为旧路径，见本章一致性备注"
+
+- id: R-13-5
+  title: "BlueGreenDeployment"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/BlueGreenDeployment.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§13.1 合成案例的切流失败、§13.2 蓝绿策略列、§13.3 保留旧版本"
+  status: "verified"
+  note: "已核验入口池 L2 条目；book/references/_registry.yaml 亦登记 R-FOWLER-BG，并注明支撑 schema 排序（第 16 章）"
+
+- id: R-13-6
+  title: "CanaryRelease"
+  author_or_org: "Danilo Sato (martinfowler.com)"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/CanaryRelease.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§13.2 金丝雀策略列、§13.3 流量分批对比"
+  status: "verified"
+  note: "已核验入口池 L2 条目；book/references/_registry.yaml 亦登记 R-SATO-CANARY"
+
+- id: R-13-7
+  title: "Site Reliability Engineering《Release Engineering》"
+  author_or_org: "Google"
+  level: "L2"
+  url: "https://sre.google/"
+  version_or_date: "在线版（含第 2 版）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§13.1 回滚方案先于发布、§13.2 回滚方案六要素定义"
+  status: "verified"
+  note: "检索核验存在；直连经代理超时，P4 复核。book/references/_registry.yaml 登记 R-SRE-BOOK"
+
+- id: R-13-8
+  title: "Continuous Delivery (Humble & Farley, 2010)"
+  author_or_org: "Jez Humble / David Farley, Addison-Wesley"
+  level: "L2"
+  url: "https://continuousdelivery.com/"
+  version_or_date: "2010"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§13.2 发布门禁与回滚预案；与 R-13-7 来自不同机构、无利益关联"
+  status: "verified"
+  note: "Jez Humble / David Farley 持续交付官方站点"
+
+- id: R-13-9
+  title: "公开发布 / 回滚失败事故复盘（名称级候选）"
+  author_or_org: "各机构"
+  level: "L3"
+  url: "https://github.com/danluu/post-mortems"
+  version_or_date: "公开 postmortem 合集（按章择取，待核验）"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§13.1 反模式的方法论；合成案例不冒充真实事件"
+  status: "verified"
+  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
