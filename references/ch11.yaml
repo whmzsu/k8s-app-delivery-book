@@ -1,0 +1,133 @@
+# 第 11 章引用登记（由 hack/book_tools.py normalize 规范化）
+# 编号与 chapters/ch11.md 正文角标 [R-11-x] 逐一闭环；字段模板见 book/references/_registry.yaml
+# 正文只出现角标，严禁裸 URL；链接池见 references/_verified.md；附录 I 由本文件生成。
+
+- id: R-11-1
+  title: "kind Documentation"
+  author_or_org: "kind"
+  level: "L1"
+  url: "https://kind.sigs.k8s.io/"
+  version_or_date: "版本 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.1 单版本验证失效；§11.2 第 4 层；§11.4 版本矩阵与集群随 job 销毁"
+  status: "verified"
+  note: "k3d 5.x 仅作本地对比，版本矩阵以 kind 0.x 为准；节点镜像小版本锁附录 A"
+
+- id: R-11-2
+  title: "conftest"
+  author_or_org: "Open Policy Agent"
+  level: "L1"
+  url: "https://www.conftest.dev/"
+  version_or_date: "版本 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.2 第 2 层；§11.3 选型矩阵；§11.4 validate.sh / workflow"
+  status: "verified"
+  note: "本章定位为多版本验证环的静态两层，与第 10 章发布前渲染审查分工不同；集群侧准入见第 25 章"
+
+- id: R-11-3
+  title: "Tilt Documentation"
+  author_or_org: "Tilt"
+  level: "L1"
+  url: "https://tilt.dev/"
+  version_or_date: "版本 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.1 热更新绕过审查；§11.3 开发回路；§11.4 dev-loop.yaml / dev-loop.sh"
+  status: "verified"
+  note: "Skaffold 2.x / Telepresence 2.x 仅作对比，开发回路只允许指向本地 kind 与个人命名空间"
+
+- id: R-11-4
+  title: "kubeconform 项目文档"
+  author_or_org: "kubeconform（yannh）"
+  level: "L1"
+  url: "https://github.com/yannh/kubeconform"
+  version_or_date: "版本 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.2 第 1 层；§11.4 错误字段演示的可读报错（资源名 / 字段路径 / 期望类型）"
+  status: "verified"
+  note: "kubeconform 官方仓库"
+
+- id: R-11-5
+  title: "kuttl（KUbernetes Test TooL）项目文档"
+  author_or_org: "kudobuilder"
+  level: "L1"
+  url: "https://github.com/kudobuilder/kuttl"
+  version_or_date: "版本 0.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.1 反模式三（sleep 写成 flaky）；§11.2 第 3 层；§11.4 tests/kuttl/"
+  status: "verified"
+  note: "kuttl 官方仓库"
+
+- id: R-11-6
+  title: "Kubernetes 版本与版本偏差策略"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/setup/release/version-skew-policy/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.1 单版本验证失效；§11.2 多版本矩阵为必选项；§11.4 kind-matrix.yaml"
+  status: "verified"
+  note: "Kubernetes 官方版本偏差策略"
+
+- id: R-11-7
+  title: "Kyverno Documentation（CLI 离线校验）"
+  author_or_org: "Kyverno"
+  level: "L1"
+  url: "https://kyverno.io/docs/"
+  version_or_date: "版本 1.x"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.3 策略离线校验与第 25 章分工；§11.4 选型矩阵"
+  status: "verified"
+  note: "按 book/decisions.md U-04，Kyverno 1.x 为唯一策略引擎示例；本章只讲离线校验，集群侧策略库与准入见第 25 章（SP-16）"
+
+- id: R-11-8
+  title: "Thoughtworks Technology Radar"
+  author_or_org: "Thoughtworks"
+  level: "L2"
+  url: "https://www.thoughtworks.com/radar"
+  version_or_date: "持续更新"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.1 热更新绕过审查；§11.2 四层顺序与本书观点论证"
+  status: "verified"
+
+- id: R-11-9
+  title: "Continuous Delivery"
+  author_or_org: "Martin Fowler"
+  level: "L2"
+  url: "https://martinfowler.com/bliki/ContinuousDelivery.html"
+  version_or_date: "bliki 条目"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.1 声明与收敛之别；§11.2 短反馈回路；§11.5 回到 Git"
+  status: "verified"
+
+- id: R-11-10
+  title: "Kubernetes SIG Testing 材料"
+  author_or_org: "Kubernetes SIG Testing"
+  level: "L2"
+  url: ""
+  version_or_date: "持续更新"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.1 反模式三；§11.2 第 3 层声明式断言"
+  status: "pending_url"
+  note: "P1 卡片名称级候选，链接待 P3 核验；与 R-11-8、R-11-9 来自不同机构、无利益关联"
+
+- id: R-11-11
+  title: "CNCF Annual Survey 2023"
+  author_or_org: "CNCF"
+  level: "L3"
+  url: "https://www.cncf.io/reports/cncf-annual-survey-2023/"
+  version_or_date: "2023"
+  accessed: "2026-11-10"
+  archive_url: ""
+  supports: "§11.1 / §11.2 多版本并存的实证背景"
+  status: "verified"
+  note: "按 references/_verified.md 第三节，L3 只作背景实证，不用于证明某次虚构事故真实发生"
