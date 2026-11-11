@@ -42,10 +42,10 @@
 | A-32 | SLSA | v1.0 | 供应链等级 | 24 |
 | A-33 | OpenSLO | 规范 v1 | SLO 定义 | 20 |
 | A-34 | kubeconform | **v0.8.0**（`ci.yml` 的 `KUBECONFORM_VERSION` 锁定） | 四版本 schema 校验 | 11 |
-| A-35 | PyYAML | **6.0.3**（`hack/requirements.txt` 锁定） | 清单逐文档拆分与结构断言 | 11 |
+| A-35 | PyYAML | **6.0.3**（已随工具链锁定） | 清单逐文档拆分与结构断言 | 11 |
 | A-36 | GitHub Actions runner | `ubuntu-latest`；Go **1.27**、Python **3.13**；`actions/*` 统一 **v7**（Node 24 运行时，替代触达弃用线的 v4/v5） | 快车道闸门与全书装配 | 11、附录 D |
-| A-37 | kind / kubectl（CI） | kind 版本与 `kindest/node` 镜像**成对锁定**（见 A-02）；kubectl 与集群 patch 版本一致，下载地址 `dl.k8s.io/release/v<k8s>/bin/linux/amd64/kubectl` | P5 真集群复核 | 11 |
-| A-38 | Helm / kustomize（CI） | Helm **4.3.1**（`azure/setup-helm@v5` 的 `version` 入参显式固定——该 action 默认装「最新」，版本会随上游漂；固定值随主版本基线升级，见 D-38/D-40）；kustomize 不作独立渲染闸门，原因见 D.7 | 模板渲染与 overlay 结构报告 | 10、11 |
+| A-37 | kind / kubectl（CI） | kind 版本与 `kindest/node` 镜像**成对锁定**（见 A-02）；kubectl 与集群 patch 版本一致，下载地址 `dl.k8s.io/release/v<k8s>/bin/linux/amd64/kubectl` | 真集群复核 | 11 |
+| A-38 | Helm / kustomize（CI） | Helm **4.3.1**（`azure/setup-helm@v5` 的 `version` 入参显式固定——该 action 默认装「最新」，版本会随上游漂；固定值随主版本基线升级，见 A.3 的迁移记录）；kustomize 不作独立渲染闸门，原因见 D.7 | 模板渲染与 overlay 结构报告 | 10、11 |
 
 ## A.2 关键 API 版本与字段
 
@@ -80,21 +80,22 @@
 | cosign 3.x → 3.x | 24 | `--key` 与 `--insecure-ignore-tlog` 仍在，但**签名必须显式 `--bundle <file>` 输出 Sigstore bundle**（v2 时可选）；默认改用新 protobuf bundle 格式与 OCI 1.1 referring artifact；`--tlog-upload` 与 `--offline` 弃用（改用 `--trusted-root` / `--signing-config`）；`--certificate-identity` + `--certificate-oidc-issuer` 仍是 keyless 验签必填 |
 | Crossplane 2.x → 2.x | 30 | 本书只作对比、不引入为示例，因此不影响配置；若读者自行采用：v2 移除 native provider（须走 provider 包）、Composition 必须有 function pipeline、部分 `v1beta1` XRD 需迁移 |
 | Helm 3.x → 4.x | 10、14、30 | **chart 不用重写**：`apiVersion: v2` 原样可用，Helm 4 就地接管 Helm 3 的 release 记录。要改的是**围绕它的自动化**：`--atomic`→`--rollback-on-failure`、`--force`→`--force-replace`（旧名仍可用但告警）；`--post-renderer` 只接受插件名、不再接受脚本路径；`helm registry login` 只接受裸域名（不带 `https://`）；`--wait` 改用 kstatus 判断就绪，**RBAC 需要 `watch` 动词**，否则 `install/upgrade --wait` 立即失败；新装的 release 默认 server-side apply（既有 release 沿用原 apply 方式） |
-| 官方文档路径迁移 | 8 及引用章 | 探针任务页等官方路径已多次迁移，见 `references/_verified.md` 版本漂移提示 |
+| 官方文档路径迁移 | 8 及引用章 | 探针任务页等官方路径已多次迁移，见附录 I 的版本漂移提示 |
 
-## A.4 复核节奏与执行方式（P5 已迁移到 GitHub Actions）
+## A.4 基线怎么维护、示例怎么验证
 
-| 频率 | 由谁执行 | 命令 / workflow | 产出 |
-|---|---|---|---|
-| 每次 push / PR | `ci.yml` | `check-consistency.sh`、`materialize.py --check`、`validate-manifests.py`、kubeconform × 4 版本、Go/Docker 冒烟、Helm 渲染 | job summary + 全书 Markdown artifact |
-| 每周一 / 示例基线变更 / 手动 | `kind-matrix.yml` | `check-version-matrix.sh --mode ci` × K8s 1.32.2（kind v0.27.0）/ 1.34.11、1.37.0（kind v0.33.0） | server dry-run 日志、集群事件、演练结论 |
-| 每周一 / 引用登记变更 / 手动 | `references.yml` | `check-references.sh`、`check-links.py` | 外链报告 TSV、失败清单 |
-| 每季度 | 人工 | `./hack/check-upstream-versions.sh`：逐仓库对比「书稿口径」与上游最新稳定版 | 主版本有变的按 A.3 逐项复核、改 CI 固定值与正文口径并记入 `consistency-log`；仅小版本漂移只改 A.1 说明 |
-| 每季度 | 人工 | 复核 `references/*.yaml`、`pending_url` 逐条补正式入口 | 失效链接切 `archive_url` 并在附录 I 标「已归档」 |
+本书的版本基线与示例配置不是「写完就算」，而是按固定节奏复核。这一节说明复核口径与**验证边界**——你照抄示例之前，应该知道它们被验到了什么程度、哪些部分还得自己在集群里试。
 
-1. **K8s 大版本发布后**：改 `ci.yml` 的 `matrix.k8s`、`kind-matrix.yml` 的 `matrix.include`（k8s / kind / role 三项与 dispatch 的 `single_version` 选项），按 A.3 表逐项复核，把结果写回本附录。`kindest/node` 镜像 tag 由 `kind-matrix.yml` 预检步骤强制校验，不存在会直接失败，**不会静默跳过**。
-2. **为什么静态矩阵与真集群矩阵不同**：kubeconform 的 JSON schema 覆盖任意版本，可以完整验证书稿声称的 1.32 / 1.33 / 1.34 窗口并延伸到当前稳定版；而 kind 对旧 K8s 有支持窗口——v0.33.0 只提供 1.34.11 及以上的 node 镜像，1.32 基线必须用 v0.27.0（其 release notes 明确列出 `kindest/node:v1.32.2`）。因此真集群矩阵按「kind 版本 + node 镜像成对锁定」，用 1.32.2 覆盖最低基线、1.34.11 覆盖书稿上界、1.37.0 覆盖当前稳定版。**这是 P5 复核发现的真实版本漂移**：原稿写的 `1.32.0 / 1.33.0 / 1.34.0` 与当前 kind 支持窗口已错位，正文因只写主版本而不受影响。
-3. **清单校验分两层**：`examples/order-demo/deploy/base/` 是硬闸门（strict schema + 真实 apply + 演练）；`examples/by-chapter/` 的逐章增量片段按「软报告」处理，失败清单上传 artifact 并设阈值 `SOFT_LIMIT`，超过阈值才失败——因为它脱离对应章节 tag 的仓库状态本就不保证可独立应用。
-4. **任何工具小版本变更**：只改本附录、CI 环境变量与配置文件，不改正文；正文出现具体小版本即视为一致性缺陷。
+| 频率 | 做什么 | 产出 |
+|---|---|---|
+| 每次改动 | 全书一致性校验、四版本 schema 校验（1.32 / 1.33 / 1.34 / 1.37）、示例容器构建与冒烟、Chart 渲染 | 任一项失败即阻断 |
+| 每周 / 基线变更 | 在三个真实 kind 集群上做 server dry-run、真实部署与演练（K8s 1.32.2 × kind v0.27.0、1.34.11 与 1.37.0 × kind v0.33.0） | server dry-run 日志、集群事件、演练结论 |
+| 每周 | 全书引用外链的可达性复核 | 失效清单，逐条修源或切归档地址 |
+| 每季度 | 逐仓库对比「本书口径」与上游最新稳定版 | 主版本有变的按 A.3 逐项复核并回写本附录，仅小版本漂移只更新 A.1 说明 |
+
+1. **K8s 大版本发布后**：按 A.3 表逐项复核，把结果写回本附录。`kindest/node` 镜像 tag 必须对应真实存在的镜像——不存在时构集群会直接失败，**不会静默跳过**，这是为了避免「矩阵里写着一个跑不起来的版本」。
+2. **为什么静态矩阵与真集群矩阵不同**：kubeconform 的 JSON schema 覆盖任意版本，可以完整验证本书声称的 1.32 / 1.33 / 1.34 窗口并延伸到当前稳定版；而 kind 对旧 K8s 有支持窗口——v0.33.0 只提供 1.34.11 及以上的 node 镜像，1.32 基线必须用 v0.27.0（其 release notes 明确列出 `kindest/node:v1.32.2`）。因此真集群矩阵按「kind 版本 + node 镜像成对锁定」，用 1.32.2 覆盖最低基线、1.34.11 覆盖书中上界、1.37.0 覆盖当前稳定版。**这正是版本会漂移的实例**：早期草稿写的 `1.32.0 / 1.33.0 / 1.34.0` 与当前 kind 支持窗口已错位，而正文只写主版本，因此不受影响——这也是本书刻意让正文不带小版本的原因（见本附录开头的说明）。
+3. **示例代码分两类对待**：`examples/order-demo/` 是完整可运行基线，进硬闸门（严格 schema + 真实 apply + 演练）；`examples/by-chapter/` 是逐章增量片段，脱离对应章节 tag 的仓库状态本就不保证可独立应用，因此只做结构报告、不计入阻断——它保证的是「这一章的清单长这样」，不是「单独拿走能跑」。
+4. **任何工具小版本变更**：只改本附录与配置文件，不改正文；正文出现具体小版本即视为一致性缺陷。
 5. **版权与引用**：只引用与摘要，不整段转载；图表自行重绘并注明数据来源。
-6. **CI 不能覆盖的部分**（云厂商 LB/存储/IRSA、跨集群容灾、生产流量下的弹性、长周期证书轮换、需装 CRD 的控制器行为）仍须读者按各章「验证与回滚」段在自有集群演练，不得把 CI 通过等同于生产可用。
+6. **验证不能覆盖的部分**：云厂商 LB / 存储 / IRSA 的真实行为、跨集群容灾、生产流量下的 HPA / KEDA 效果、长周期证书轮换，以及需装 CRD 的控制器运行时表现，都必须按各章「验证与回滚」段在你自己的集群演练。**自动化校验通过 ≠ 生产可用**，这条边界请务必记住。

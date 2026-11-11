@@ -153,10 +153,10 @@
 > 同一路径在一章内出现多次时，按「完整度 → 行数 → 位置」选权威副本；
 > 被弃的多为回滚/处置片段，不当可复制文件。
 
-- ch06 `hack/verify.sh`：选 L563（41 行，完整度 2），弃 L378（20 行，完整度 2）
-- ch10 `deploy/charts/order-demo/Chart.yaml`：保留 L386（6 行，完整度 2），弃 L634（4 行，完整度 2）
+- ch06 `hack/verify.sh`：选 L561（41 行，完整度 2），弃 L376（20 行，完整度 2）
+- ch10 `deploy/charts/order-demo/Chart.yaml`：保留 L384（6 行，完整度 2），弃 L632（4 行，完整度 2）
 
-## 跳过（12）
+## 跳过（13）
 
 - ch03 `hack/verify.sh`：无 shebang，判定为命令行片段，不物化
 - ch04 `deploy/overlays/<env>/kustomization.yaml`：占位路径（含 <>/模板占位），不物化
@@ -170,3 +170,4 @@
 - ch21 `observability/metric-naming.md`：相邻代码块语言与文件类型不符：markdown
 - ch23 `hack/verify.sh`：无 shebang，判定为命令行片段，不物化
 - ch25 `deploy/base/deployment.yaml`：相邻代码块语言与文件类型不符：bash
+- ch28 `go.mod`：相邻代码块语言与文件类型不符：diff

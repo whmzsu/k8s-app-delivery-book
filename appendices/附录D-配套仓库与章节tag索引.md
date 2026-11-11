@@ -1,60 +1,47 @@
 # 附录 D　配套仓库结构与章节 tag 索引
 
-> `order-demo` 是全书唯一贯穿案例：同一套应用从第 1 章的事故现场逐章演进到第 31 章的多集群渐进式交付。每章一个 tag，读者可 checkout 到任一章的状态并复现该章的可验证动作。tag 全量表由 `book/case-evolution.md` 第三节生成，不在别处手工维护第二份。
+> `order-demo` 是全书唯一贯穿案例：同一套应用从第 1 章的事故现场逐章演进到第 31 章的多集群渐进式交付。每章一个 tag，读者可 checkout 到任一章的状态并复现该章的可验证动作。D.3 是全量 tag 表，也是唯一一份——不在别处维护第二份。
 
-## D.1 仓库结构（本仓库即配套仓库）
+## D.1 配套仓库结构
+
+读者真正需要的是三样东西：**一份能跑起来的基线**、**按章的配置片段**、**可复现的锚点**。仓库按这个顺序组织：
 
 ```
 .
-├── 书籍大纲-v3.md              # 当前有效大纲（含 v3.1/v3.2/v3.3 全部裁决）
-├── 书籍大纲-v2.md              # 历史对照版
-├── .gitattributes              # 锁定脚本/配置 LF 行尾（见 D-25）
-├── book/                       # 全局资产（P0 冻结，单一真相源）
-│   ├── README.md               # 资产包入口与推进状态
-│   ├── glossary.md             # 统一口径 + 全书公理
-│   ├── concept-ladder.md       # 概念梯度
-│   ├── case-evolution.md       # 配置契约 + 31 章演进表 + 唯一示例实现固定值
-│   ├── hooks.md                # H1–H8 钩子映射 + 31 章坐标标签
-│   ├── checklist-master.md     # 检查清单母版
-│   ├── strong-pairs.md         # 21 对跨章强耦合
-│   ├── decisions.md            # U-01～U-05 裁决与 D-09～D-11
-│   ├── chapter-spec.md         # 成稿规范（七段模板）
-│   ├── consistency-log.md      # 裁决与每轮横扫记录
-│   ├── cards/                  # P1 的 31 张章卡片 + 模板 + 索引
-│   └── references/_registry.yaml
-├── chapters/ch01.md … ch31.md  # 31 章成稿
-├── appendices/                 # 附录 A–I
-├── references/
-│   ├── _verified.md            # 已核验来源池（两轮联网复核）
-│   └── ch01.yaml … ch31.yaml   # 逐章引用登记（附录 I 由此生成）
 ├── examples/
-│   ├── order-demo/             # 第 6 章基线可运行代码（见 D.4）
-│   └── by-chapter/             # 各章 §N.4 代码块按章物化的可复制形态（见 D.5）
-├── hack/
-│   ├── book_tools.py           # 规范化 / 一致性校验 / 附录 I 生成
-│   ├── materialize.py          # 物化 + --check 一致性比对
-│   ├── validate-manifests.py   # 逐文档分类：内置 / CRD / 模板 / 配置
-│   ├── build_book.py           # 装配全书单一 Markdown
-│   ├── check-links.py          # 外链并发可达性（阈值放行）
-│   ├── requirements.txt        # 依赖锁定（PyYAML 6.0.2）
-│   ├── check-consistency.sh
-│   ├── check-references.sh
-│   ├── check-version-matrix.sh # P5：server dry-run + 真实部署 + 演练
-│   └── enable-workflows.sh      # SSH 推送 + 可选手动触发流水线（无需 token）
-└── .github/workflows/
-    ├── ci.yml                  # 快车道：一致性 + 三版本 schema + 容器冒烟
-    ├── kind-matrix.yml         # P5：真 kind 集群 × 3 版本（见 D.7）
-    └── references.yml          # 背书链接复核
+│   ├── order-demo/               # 第 6 章的最小完整闭环，唯一可直接运行的完整基线
+│   │   ├── cmd/gateway/          # gateway 组件源码（Go）
+│   │   ├── docker/               # 多阶段构建 Dockerfile
+│   │   ├── deploy/base/          # namespace / configmap / deployment / service 四份清单
+│   │   ├── hack/                 # kind-up.sh、verify.sh、ci-drill.sh
+│   │   ├── go.mod
+│   │   └── README.md             # 如何起集群、部署、验证、清理
+│   └── by-chapter/               # 各章代码块按章整理的可复制副本（见 D.5）
+│       ├── ch01/ … ch31/
+│       └── _manifest.md          # 逐章文件清单与来源小节
+├── chapters/ch01.md … ch31.md    # 全书正文
+├── appendices/                   # 附录 A–I
+└── .github/workflows/            # 示例配置的自动化验证（见 D.7）
 ```
+
+两点说明：
+
+- **`order-demo` 只到第 6 章为止**。它刻意保持最小：一个 `gateway` 组件、四份清单、三个脚本。后续章节的 `api`、`worker`、`db`、overlay、Policy、GitOps 清单都在 `examples/by-chapter/` 里按章给出，而不是把最终形态一次性塞进基线——否则你会失去「这一章到底加了什么」的对照。
+- **本书的写作期资产不随书分发**。大纲、章卡片、跨章一致性记录、校验脚本这些是我写这本书用的东西，不会出现在你的 clone 里；它们与读者无关，删掉也不影响任何示例运行。
 
 ## D.2 复现方式
 
 ```bash
 git clone <本仓库地址>
 cd k8s-app-delivery-book
-git checkout ch06-first-loop      # 任一章 tag
-cat chapters/ch06.md               # 读该章
-./hack/check-consistency.sh        # 校验全书一致性（在 main 上执行）
+git checkout ch06-first-loop        # 切到任一章的 tag
+less chapters/ch06.md               # 读该章正文
+ls examples/by-chapter/ch06/        # 该章的配置副本
+
+# 想直接跑起来，用第 6 章的完整基线
+cd examples/order-demo
+./hack/kind-up.sh                   # 起一个本地 kind 集群（需 docker）
+./hack/verify.sh                    # 部署并验证（见第 6 章 §6.4–6.5）
 ```
 
 > tag 是**内容快照**，不代表该章的代码只在该 tag 上存在：全书成稿与资产始终在 `main` 上，tag 用于给读者一个稳定的复现锚点，也用于附录 D 的对照练习（如 `git diff ch01-incident ch31-replay`）。
@@ -97,39 +84,31 @@ cat chapters/ch06.md               # 读该章
 
 ## D.4 第 6 章基线代码
 
-`examples/order-demo/` 提供第 6 章的完整可运行基线：`go.mod`、`cmd/gateway/main.go`、`docker/Dockerfile`、`deploy/base/{namespace,configmap,deployment,service}.yaml`、`hack/kind-up.sh`、`hack/verify.sh`、`hack/ci-drill.sh`。执行方式见第 6 章 §6.4–6.5；`ci-drill.sh` 是 P5 的运行时演练（滚动零停机、SHA 回滚、readiness 摘流、Pod 重建），本地与 CI 用同一份脚本。第 7–11 章的增量配置在各章 §N.4 给出，按章叠加即可，字段严格沿用 `book/case-evolution.md` 的配置契约。
+`examples/order-demo/` 提供第 6 章的完整可运行基线：`go.mod`、`cmd/gateway/main.go`、`docker/Dockerfile`、`deploy/base/{namespace,configmap,deployment,service}.yaml`、`hack/{kind-up,verify,ci-drill}.sh`。执行方式见第 6 章 §6.4–6.5。
 
-## D.5 按章物化的配置副本
+`ci-drill.sh` 是运行时演练脚本，一次跑完四件事：滚动更新零停机、SHA 标签回滚、readiness 摘流、Pod 重建。它不需要额外工具，只要集群起好了就能执行——建议你第一次照抄完配置就顺手跑一遍，用它的输出对照第 6 章的四条验证判据。
 
-`examples/by-chapter/chNN/<path>` 由 `python hack/materialize.py` 从各章 §N.4 的带路径标注代码块生成，与附录 D 的章节 tag 一一对应；清单见 `examples/by-chapter/_manifest.md`。
+第 7–11 章的增量配置在各章 §N.4 给出，按章叠加即可，字段严格沿用第 6 章冻结的配置契约（命名空间、标签、端口、镜像命名）。
 
-**为什么按章分目录**：同一路径（例如 `deploy/base/deployment.yaml`）会在多章出现，后面章节给出的往往是**增量 patch**而不是完整文件，平铺到一个目录会互相覆盖。按章物化保留了每章当时的状态，读者 checkout 对应 tag 后即可直接使用。
+## D.5 按章整理的配置副本
+
+`examples/by-chapter/chNN/<path>` 是从各章 §N.4 带路径标注的代码块整理出来的可复制副本，与 D.3 的章节 tag 一一对应；逐章清单见 `examples/by-chapter/_manifest.md`。
+
+**为什么按章分目录而不是平铺**：同一路径（例如 `deploy/base/deployment.yaml`）会在多章出现，后面章节给出的往往是**增量 patch** 而不是完整文件，平铺到一个目录会互相覆盖。按章保留，等于保留了每章当时的真实状态——你 checkout 对应 tag 后可以直接用，也可以拿两章对比看出「这一章改了什么」。
 
 - 章内 §N.4 的代码块是**权威副本**；`examples/by-chapter/` 是它的可复制形态，两者冲突时以章内为准
 - `examples/order-demo/` 是第 6 章的完整可运行基线，与 `examples/by-chapter/ch06/` 内容一致
-- 少数章节（第 5、25、27 章）没有带路径标注的代码块，配置与命令仍完整写在章内，不需要物化
-- 第 1 章的 `hack/reproduce-incident.sh` 与第 31 章的 `hack/replay-incident.sh` 是首尾对照的可执行脚本，分别位于 `examples/by-chapter/ch01/` 与 `examples/by-chapter/ch31/`
+- 少数章节（第 5、25、27 章）以命令与判断为主，没有带路径标注的清单，不需要副本，配置完整写在章内
+- 第 1 章的 `hack/reproduce-incident.sh` 与第 31 章的 `hack/replay-incident.sh` 是首尾对照的两个可执行脚本，分别位于 `examples/by-chapter/ch01/` 与 `examples/by-chapter/ch31/`——建议各自跑一次，体会同一事故在「不懂」和「懂」两种状态下的差别
 
-> **技术复核状态**：P5 已迁移到 GitHub Actions（`kind-matrix.yml`），无需本地安装 docker / kind / kubectl；真集群结论见仓库 Actions 记录。本地若已起好集群，仍可执行 `./hack/check-version-matrix.sh --strict` 得到同一套结论。
+## D.7 示例配置验到了什么程度
 
-## D.6 tag 命名变更记录
+示例配置不是「贴出来就算」。三件事在每次改动时自动做，你也可以用它们判断某个示例能不能直接抄。
 
-- D-04：`ch15-gitops` → `ch14-gitops`，新增 `ch15-canary`（第 14/15 章内容互换）
-- D-05：`ch06-image` → `ch06-first-loop`（第 6 章改为最小完整闭环，供应链内容并入第 24 章）
-- 附录 D 由 `book/case-evolution.md` 生成，禁止在其他文件维护第二份 tag 表
+**一、清单按类型分开校验。** 全书 YAML 按 `apiVersion` 分组：内置资源（Deployment、Service、ConfigMap 等）、CRD 实例（`HTTPRoute`、`ClusterPolicy`、`Application` 等）、Helm 模板、以及非 K8s 对象（`kind` 集群配置、`Kustomization`、`Chart.yaml`）。只有内置资源能直接交给 API Server 做 server dry-run；CRD 实例要先装对应控制器，模板要先渲染。**不分类就全量校验，会产生大量假阳性**——所以示例清单是分类验的，不是一把梭。
 
-## D.7 CI 持续复核与验证边界
+**二、能跑的那份必须真跑。** `examples/order-demo/` 进硬闸门：四版本 schema 校验 → 真实 kind 集群部署 → `ci-drill.sh` 演练。它在 K8s 1.32.2 / 1.34.11 / 1.37.0 三个版本上各跑一遍，版本与 kind 成对锁定（见附录 A.2）。**这是本书唯一承诺「拷下去能跑」的部分。**
 
-三条 workflow 与本地脚本共用同一套口径，不另起一套校验逻辑：
+**三、逐章片段只做结构报告。** `examples/by-chapter/` 是逐章增量，例如 `ch10/deploy/base/kustomization.yaml` 引用的 12 个资源分散在前面几章的目录里，按设计不可独立渲染。因此它只输出「引用 / 缺失」的结构报告，**不计入阻断**——它保证的是「这一章的清单长这样」，不是「单独拿走能跑」。要用完整形态，请 checkout 对应章节 tag。
 
-| Workflow | 本地等价命令 | 触发 |
-|---|---|---|
-| `ci.yml` | `check-consistency.sh`、`materialize.py --check`、`validate-manifests.py`、`build_book.py`、kubeconform × 3 版本、`go vet/test/build`、`docker build/run` | push / PR / 手动 |
-| `kind-matrix.yml` | `check-version-matrix.sh --mode ci --version V --cluster C` | 每周 / 基线变更 / 手动 |
-| `references.yml` | `check-references.sh`、`check-links.py` | 每周 / 引用登记变更 / 手动 |
-
-**清单分层的理由**：`validate-manifests.py` 把全书 YAML 按 `apiVersion` group 拆成逐文档文件。实测 91 个源文件拆出 131 份文档，其中内置资源 84 份、CRD 实例 37 份、Helm 模板 2 份、纯配置 8 份。只有内置资源能直接交给 kube-apiserver 的 server dry-run；CRD 实例需要先装控制器，Helm 模板要先渲染，`kind`/`Kustomization`/`Chart.yaml` 根本不是 K8s 对象。不分类就全量校验会产生大量假阳性，这在 `ci.yml` 里是硬失败来源。
-
-**为什么 `kustomize build` 不进闸门**：`examples/by-chapter/` 是逐章增量，例如 `ch10/deploy/base/kustomization.yaml` 引用的 12 个资源分散在前面几章的目录里，按设计不可独立渲染。`ci.yml` 的 render job 只输出「引用 / 缺失」结构报告并写进 job summary，不计入闸门；可独立运行与渲染的是 `examples/order-demo/`，完整渲染请在对应章节 tag 检出仓库。
-
-**CI 不覆盖的部分**：云厂商 LB / 存储 / IRSA 的真实行为、跨集群容灾、生产流量下的 HPA / KEDA 效果、长周期证书轮换，以及 Argo CD / Kyverno / Gateway API 控制器等需装 CRD 组件的运行时表现。这些章节的配置仍须按各章「验证与回滚」段在自有集群演练。**CI 通过 ≠ 生产可用**。
+**验证覆盖不到的地方**（务必自己补）：云厂商 LB / 存储 / IRSA 的真实行为、跨集群容灾、生产流量下的 HPA / KEDA 效果、长周期证书轮换，以及 Argo CD / Kyverno / Gateway API 等需装 CRD 控制器的运行时表现。这些必须按各章「验证与回滚」段在自有集群演练。**自动化校验通过 ≠ 生产可用**，这句话在本书里出现两次，因为它最容易被误读成「示例经过了完整验证」。

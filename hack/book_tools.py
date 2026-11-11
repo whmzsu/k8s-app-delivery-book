@@ -20,6 +20,7 @@ import collections
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CH_DIR = os.path.join(ROOT, "chapters")
 REF_DIR = os.path.join(ROOT, "references")
+BOOK_NOTES = os.path.join(ROOT, "book", "chapter-notes")
 FIELDS = ["id", "title", "author_or_org", "level", "url", "version_or_date",
           "accessed", "archive_url", "supports", "status"]
 OPTIONAL = ["note", "license"]
@@ -225,10 +226,16 @@ def check():
         if n not in CROSS_CHAPTERS and n not in SPECIAL_CHAPTERS and len(heads) != 7:
             problems["主线章段数"].append((n, len(heads)))
         for marker, label in [("本书观点", "本书观点块"), ("CL-S-", "安全项"),
-                              ("上线检查清单", "检查清单段"), ("依据与延伸阅读", "依据段"),
-                              ("终稿扩写清单", "扩写清单"), ("一致性备注", "一致性备注")]:
+                              ("上线检查清单", "检查清单段"), ("依据与延伸阅读", "依据段")]:
             if marker not in t:
                 problems["缺" + label].append(n)
+        # P6 出书面（D-42）：写作期脚手架必须已外迁，正文不得残留
+        for marker, label in [("终稿扩写清单", "扩写清单"), ("一致性备注", "一致性备注"),
+                              ("初稿状态", "初稿状态行")]:
+            if marker in t:
+                problems["正文残留" + label].append(n)
+        if not os.path.exists(os.path.join(BOOK_NOTES, f"ch{n}.md")):
+            problems["缺写作笔记存档"].append(n)
         # 只有独立小标题或加粗落点才算「回到第 1 章」；「按 9.7 不硬凑…」是说明文字，不算
         hook_hit = re.search(r"(?m)^(?:\*\*回到第 1 章\*\*|#{2,3}\s*回到第 1 章)", t)
         if hook_hit and n not in HOOK_CHAPTERS and n != "31":
