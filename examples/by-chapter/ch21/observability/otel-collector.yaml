@@ -50,6 +50,19 @@ data:
               - replace_pattern(body, "Bearer \\S+", "Bearer ***")
               - replace_pattern(body, "password=\\S+", "password=***")
               - replace_pattern(body, "card_no=\\d{12,19}", "card_no=***")
+      filter/keep_errors:
+        error_mode: ignore
+        logs:
+          log_record:
+            - 'severity_number < SEVERITY_NUMBER_WARN'
+      filter/drop_errors:
+        error_mode: ignore
+        logs:
+          log_record:
+            - 'severity_number >= SEVERITY_NUMBER_WARN'
+      probabilistic_sampler/logs:
+        sampling_percentage: 10
+        hash_seed: 42
       tail_sampling:
         decision_wait: 10s
         num_traces: 100000
@@ -81,6 +94,14 @@ data:
         endpoint: tempo.observability.svc.cluster.local:4317
         tls:
           insecure: true
+        sending_queue:
+          enabled: true
+          queue_size: 5000
+        retry_on_failure:
+          enabled: true
+          initial_interval: 5s
+          max_interval: 30s
+          max_elapsed_time: 5m
       loki:
         endpoint: http://loki.observability.svc.cluster.local:3100/loki/api/v1/push
         default_labels_enabled:
@@ -97,9 +118,13 @@ data:
           receivers: [otlp]
           processors: [memory_limiter, resource, tail_sampling, batch]
           exporters: [otlp/tempo]
-        logs:
+        logs/errors:
           receivers: [otlp]
-          processors: [memory_limiter, resource, transform/redact_logs, batch]
+          processors: [memory_limiter, resource, transform/redact_logs, filter/keep_errors, batch]
+          exporters: [loki]
+        logs/baseline:
+          receivers: [otlp]
+          processors: [memory_limiter, resource, transform/redact_logs, filter/drop_errors, probabilistic_sampler/logs, batch]
           exporters: [loki]
       telemetry:
         logs:

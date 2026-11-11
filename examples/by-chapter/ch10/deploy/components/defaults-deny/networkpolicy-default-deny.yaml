@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: order-demo-default-deny
+  labels:
+    app.kubernetes.io/name: order-demo
+    app.kubernetes.io/managed-by: kustomize
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress

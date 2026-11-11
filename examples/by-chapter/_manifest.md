@@ -39,6 +39,7 @@
 | 06 | `examples/by-chapter/ch06/deploy/base/service.yaml` | 18 |
 | 06 | `examples/by-chapter/ch06/hack/kind-up.sh` | 24 |
 | 06 | `examples/by-chapter/ch06/hack/verify.sh` | 20 |
+| 06 | `examples/by-chapter/ch06/hack/verify.sh` | 41 |
 | 07 | `examples/by-chapter/ch07/deploy/base/deployment-worker.yaml` | 45 |
 | 07 | `examples/by-chapter/ch07/deploy/base/deployment-api.yaml` | 71 |
 | 07 | `examples/by-chapter/ch07/deploy/base/service-api.yaml` | 18 |
@@ -67,6 +68,11 @@
 | 10 | `examples/by-chapter/ch10/deploy/charts/_order-demo-common/Chart.yaml` | 5 |
 | 10 | `examples/by-chapter/ch10/deploy/charts/_order-demo-common/templates/_helpers.tpl` | 9 |
 | 10 | `examples/by-chapter/ch10/deploy/charts/order-demo/Chart.yaml` | 4 |
+| 10 | `examples/by-chapter/ch10/deploy/components/defaults-deny/kustomization.yaml` | 4 |
+| 10 | `examples/by-chapter/ch10/deploy/components/defaults-deny/networkpolicy-default-deny.yaml` | 12 |
+| 10 | `examples/by-chapter/ch10/hack/render-diff.sh` | 4 |
+| 10 | `examples/by-chapter/ch10/deploy/charts/order-demo/values-staging.yaml` | 2 |
+| 10 | `examples/by-chapter/ch10/deploy/charts/order-demo/values-prod.yaml` | 2 |
 | 11 | `examples/by-chapter/ch11/hack/kind-matrix.yaml` | 9 |
 | 11 | `examples/by-chapter/ch11/hack/validate.sh` | 43 |
 | 11 | `examples/by-chapter/ch11/hack/dev-loop.yaml` | 11 |
@@ -82,6 +88,8 @@
 | 13 | `examples/by-chapter/ch13/deploy/bluegreen/service.yaml` | 19 |
 | 13 | `examples/by-chapter/ch13/deploy/bluegreen/switch.sh` | 28 |
 | 13 | `examples/by-chapter/ch13/hack/rollback-drill.sh` | 47 |
+| 13 | `examples/by-chapter/ch13/hack/rollback-drill.sh` | 6 |
+| 14 | `examples/by-chapter/ch14/hack/render.sh` | 10 |
 | 14 | `examples/by-chapter/ch14/gitops/appproject.yaml` | 29 |
 | 14 | `examples/by-chapter/ch14/gitops/applicationset.yaml` | 56 |
 | 14 | `examples/by-chapter/ch14/deploy/overlays/prod/kustomization.yaml` | 15 |
@@ -102,6 +110,7 @@
 | 16 | `examples/by-chapter/ch16/hack/dual-write-check.sh` | 15 |
 | 16 | `examples/by-chapter/ch16/hack/uninstall-check.sh` | 20 |
 | 16 | `examples/by-chapter/ch16/hack/restore-drill.sh` | 43 |
+| 16 | `examples/by-chapter/ch16/hack/restore-drill.sh` | 9 |
 | 16 | `examples/by-chapter/ch16/hack/dual-write-check.sh` | 19 |
 | 16 | `examples/by-chapter/ch16/hack/restore-drill.sh` | 19 |
 | 16 | `examples/by-chapter/ch16/hack/uninstall-check.sh` | 19 |
@@ -130,7 +139,7 @@
 | 20 | `examples/by-chapter/ch20/observability/sli-recording-rules.yaml` | 80 |
 | 20 | `examples/by-chapter/ch20/observability/sli-rules-test.yaml` | 35 |
 | 20 | `examples/by-chapter/ch20/hack/budget-report.sh` | 28 |
-| 21 | `examples/by-chapter/ch21/observability/otel-collector.yaml` | 206 |
+| 21 | `examples/by-chapter/ch21/observability/otel-collector.yaml` | 231 |
 | 21 | `examples/by-chapter/ch21/observability/prometheus.yaml` | 103 |
 | 21 | `examples/by-chapter/ch21/observability/loki-tempo.yaml` | 191 |
 | 21 | `examples/by-chapter/ch21/hack/verify-signal-chain.sh` | 41 |
@@ -160,7 +169,7 @@
 | 31 | `examples/by-chapter/ch31/deploy/replay/order-demo-replay.yaml` | 129 |
 | 31 | `examples/by-chapter/ch31/hack/replay-incident.sh` | 80 |
 
-## 跳过（20）
+## 跳过（24）
 
 - ch03 `deploy/base/deployment.yaml`：相邻代码块语言与文件类型不符：diff
 - ch04 `deploy/overlays/<env>/kustomization.yaml`：占位路径（含 <>/模板占位），不物化
@@ -168,15 +177,19 @@
 - ch06 `hack/kind-up.sh`：相邻代码块语言与文件类型不符：go
 - ch07 `hack/kind-up.sh`：相邻代码块语言与文件类型不符：yaml
 - ch09 `deploy/base/secretstore.yaml`：相邻代码块语言与文件类型不符：diff
+- ch10 `hack/render-diff.sh`：相邻代码块语言与文件类型不符：yaml
 - ch11 `hack/kind-matrix.yaml`：相邻代码块语言与文件类型不符：bash
+- ch11 `hack/dev-loop.sh`：相邻代码块语言与文件类型不符：yaml
 - ch11 `hack/kind-matrix.yaml`：相邻代码块语言与文件类型不符：bash
 - ch14 `gitops/envs/<env>/config.yaml`：占位路径（含 <>/模板占位），不物化
 - ch14 `gitops/rendered/<env>/all.yaml`：占位路径（含 <>/模板占位），不物化
 - ch14 `gitops/rendered/prod/all.yaml`：相邻代码块语言与文件类型不符：bash
 - ch14 `gitops/rendered/<env>/all.yaml`：占位路径（含 <>/模板占位），不物化
+- ch16 `hack/dual-write-check.sh`：相邻代码块语言与文件类型不符：sql
 - ch16 `hack/uninstall-check.sh`：相邻代码块语言与文件类型不符：yaml
 - ch20 `hack/budget-report.sh`：相邻代码块语言与文件类型不符：yaml
 - ch21 `observability/metric-naming.md`：相邻代码块语言与文件类型不符：markdown
+- ch22 `hack/alert-drill.sh`：相邻代码块语言与文件类型不符：text
 - ch24 `hack/verify-supply-chain.sh`：相邻代码块语言与文件类型不符：yaml
 - ch24 `hack/verify-supply-chain.sh`：相邻代码块语言与文件类型不符：yaml
 - ch24 `hack/verify-supply-chain.sh`：相邻代码块语言与文件类型不符：yaml
