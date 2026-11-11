@@ -61,9 +61,10 @@ data:
           path: /tmp/tempo/wal
         local:
           path: /tmp/tempo/blocks
-    compactor:
-      compaction:
-        block_retention: 72h
+    # Tempo 3.x：compactor 组件已移除，压缩与保留由 backend scheduler/worker 承担，
+    # 保留期改到顶层 compaction（2.x 写法是 compactor.compaction.block_retention）
+    compaction:
+      block_retention: 72h
 ---
 apiVersion: apps/v1
 kind: Deployment

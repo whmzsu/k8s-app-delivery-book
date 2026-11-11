@@ -123,7 +123,7 @@
 | 20 | `examples/by-chapter/ch20/observability/sli-rules-test.yaml` | 35 |
 | 20 | `examples/by-chapter/ch20/observability/slo.yaml` | 43 |
 | 21 | `examples/by-chapter/ch21/hack/verify-signal-chain.sh` | 41 |
-| 21 | `examples/by-chapter/ch21/observability/loki-tempo.yaml` | 191 |
+| 21 | `examples/by-chapter/ch21/observability/loki-tempo.yaml` | 192 |
 | 21 | `examples/by-chapter/ch21/observability/otel-collector.yaml` | 231 |
 | 21 | `examples/by-chapter/ch21/observability/prometheus.yaml` | 103 |
 | 22 | `examples/by-chapter/ch22/hack/alert-drill.sh` | 35 |

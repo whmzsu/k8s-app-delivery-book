@@ -63,7 +63,7 @@
   author_or_org: "Sigstore"
   level: "L1"
   url: "https://github.com/sigstore/cosign"
-  version_or_date: "适用版本 2.x"
+  version_or_date: "适用版本 3.x"
   accessed: "2026-11-10"
   archive_url: ""
   supports: "§24.1 签名回答『是不是那一个』；§24.2.2 sign / attach sbom / download sbom / verify 命令"

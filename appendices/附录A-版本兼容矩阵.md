@@ -4,17 +4,19 @@
 
 ## A.1 基线（本书写作时锁定）
 
+> 版本核对日期 **2026-11-11**：主版本是本书承诺，小版本随上游漂，以本表为准；CI 实际锁定值与下表逐项一致。
+
 | 行 | 组件 | 基线版本 | 本书用途 | 对应章 |
 |---|---|---|---|---|
-| A-01 | Kubernetes | **写作基线 1.32+**；静态 schema 矩阵 1.32.0 / 1.33.0 / 1.34.0 / 1.37.0；真集群矩阵 1.32.2 / 1.34.11 / 1.37.0 | 全部 YAML 的 `apiVersion` 与字段语义 | 全书 |
+| A-01 | Kubernetes | **写作基线 1.32+**；静态 schema 矩阵 1.32.0 / 1.33.0 / 1.34.0 / 1.37.0；真集群矩阵 1.32.2 / 1.34.11 / 1.37.0 | 全部 YAML 的 `apiVersion` 与字段语义。**当前稳定版 1.37.x**；1.32 已于 2026-02 EOL，只作最低兼容基线保留，新集群建议 ≥ 1.35 | 全书 |
 | A-02 | kind | **v0.27.0**（配 1.32.2）/ **v0.33.0**（配 1.34.11、1.37.0），与 node 镜像成对锁定 | 本地集群与多版本验证 | 6、11 |
 | A-03 | kubectl | 与集群版本偏差不超过 1 个次版本 | 全部命令示例 | 全书 |
-| A-04 | Go 工具链 | 1.23（仅 `order-demo` 示例） | 第 6 章最小镜像构建 | 6 |
+| A-04 | Go 工具链 | **1.27**（仅 `order-demo` 示例；`go.mod` 与 Dockerfile 同步） | 第 6 章最小镜像构建 | 6 |
 | A-05 | distroless static | `static-debian12:nonroot`（digest 锁定） | 非 root 运行镜像 | 6、24 |
-| A-06 | Docker / BuildKit | 24.x+ 或兼容 OCI 构建器 | 构建与 `kind load` | 6、12 |
+| A-06 | Docker / BuildKit | **28.x+** 或兼容 OCI 构建器（29.x 已发布，本书示例不依赖其新特性） | 构建与 `kind load` | 6、12 |
 | A-07 | Helm | 4.x（`Chart apiVersion: v2` 不变） | 对外分发 Chart | 10、14 |
 | A-08 | Kustomize | 5.x | 多环境 overlay 基线 | 4、10、14 |
-| A-09 | Argo CD | 2.x | GitOps 唯一示例实现 | 14、30 |
+| A-09 | Argo CD | **3.x**（`Application` / `ApplicationSet` 仍为 `argoproj.io/v1alpha1`） | GitOps 唯一示例实现 | 14、30 |
 | A-10 | Flux | 2.x | 仅选型矩阵对比 | 14 |
 | A-11 | Argo Rollouts | 1.x + Gateway API traffic router 插件 | 渐进式交付 | 15 |
 | A-12 | Gateway API | v1（GA 通道） | 流量入口；实现为 Envoy Gateway | 15、19、21、30 |
@@ -24,26 +26,26 @@
 | A-16 | Kyverno | 1.x | U-04 唯一示例实现（策略与验签） | 24、25 |
 | A-17 | ValidatingAdmissionPolicy | K8s 1.30+ 内置 | 轻量内置对比方案 | 25 |
 | A-18 | Gatekeeper | 3.x | 仅选型矩阵对比 | 25 |
-| A-19 | External Secrets Operator | 0.x（API 仍在演进，升级前查 CRD 迁移） | 密钥注入 | 9、14、26 |
+| A-19 | External Secrets Operator | **2.x**（`external-secrets.io/v1` 已 GA；`v1beta1` 为 0.x 时代写法，不再使用） | 密钥注入 | 9、14、26 |
 | A-20 | CloudNativePG | 1.x | 第 29 章 Operator 成熟度评估对象 | 16、29 |
 | A-21 | Velero | 1.x | 备份恢复演练 | 16 |
 | A-22 | Prometheus | 3.x | 指标与 SLO 记录规则 | 20、21、22 |
 | A-23 | OpenTelemetry Collector | 0.x（contrib 与 core 分发需分开锁） | 链路/日志/指标采集 | 21 |
-| A-24 | Loki / Tempo | 3.x / 2.x | 日志与链路存储 | 21 |
+| A-24 | Loki / Tempo | **3.x / 3.x**（Tempo 3 移除 `ingester`、`compactor` 配置节，改用 `compaction` 与 backend scheduler/worker） | 日志与链路存储 | 21 |
 | A-25 | Thanos | 0.x | 长期指标（或兼容远端存储） | 21 |
 | A-26 | Chaos Mesh | 2.x | 演练唯一示例实现 | 23 |
 | A-27 | KEDA | 2.x | 事件驱动弹性 | 18 |
 | A-28 | Karpenter | 1.x | 节点弹性 | 18 |
 | A-29 | Kubebuilder | 4.x | 第 28 章 Operator 骨架（平台团队可选） | 28 |
-| A-30 | Crossplane / Cluster API / Backstage / Score | 各自 1.x / 1.x / 1.x / 规范 v1 | 第 30 章平台化 | 30 |
-| A-31 | Syft / Trivy / cosign | 1.x / 0.x / 2.x | SBOM / 扫描 / 签名验签 | 24 |
+| A-30 | Crossplane / Cluster API / Backstage / Score | **2.x** / 1.x / 1.x / 规范 v1 | 第 30 章平台化 | 30 |
+| A-31 | Syft / Trivy / cosign | 1.x / 0.x / **3.x**（v3 起签名必须显式 `--bundle`） | SBOM / 扫描 / 签名验签 | 24 |
 | A-32 | SLSA | v1.0 | 供应链等级 | 24 |
 | A-33 | OpenSLO | 规范 v1 | SLO 定义 | 20 |
-| A-34 | kubeconform | **v0.6.7**（`ci.yml` 的 `KUBECONFORM_VERSION` 锁定） | 三版本 schema 校验 | 11 |
-| A-35 | PyYAML | **6.0.2**（`hack/requirements.txt` 锁定） | 清单逐文档拆分与结构断言 | 11 |
-| A-36 | GitHub Actions runner | `ubuntu-latest`；Go **1.23**、Python **3.12** | 快车道闸门与全书装配 | 11、附录 D |
+| A-34 | kubeconform | **v0.8.0**（`ci.yml` 的 `KUBECONFORM_VERSION` 锁定） | 四版本 schema 校验 | 11 |
+| A-35 | PyYAML | **6.0.3**（`hack/requirements.txt` 锁定） | 清单逐文档拆分与结构断言 | 11 |
+| A-36 | GitHub Actions runner | `ubuntu-latest`；Go **1.27**、Python **3.13**；`actions/*` 统一 **v7**（Node 24 运行时，替代触达弃用线的 v4/v5） | 快车道闸门与全书装配 | 11、附录 D |
 | A-37 | kind / kubectl（CI） | kind 版本与 `kindest/node` 镜像**成对锁定**（见 A-02）；kubectl 与集群 patch 版本一致，下载地址 `dl.k8s.io/release/v<k8s>/bin/linux/amd64/kubectl` | P5 真集群复核 | 11 |
-| A-38 | Helm / kustomize（CI） | Helm **4.3.1**（`azure/setup-helm@v4` 的 `version` 入参显式固定——该 action 默认装「最新」，版本会随上游漂；固定值随主版本基线升级，见 D-38/D-40）；kustomize 不作独立渲染闸门，原因见 D.7 | 模板渲染与 overlay 结构报告 | 10、11 |
+| A-38 | Helm / kustomize（CI） | Helm **4.3.1**（`azure/setup-helm@v5` 的 `version` 入参显式固定——该 action 默认装「最新」，版本会随上游漂；固定值随主版本基线升级，见 D-38/D-40）；kustomize 不作独立渲染闸门，原因见 D.7 | 模板渲染与 overlay 结构报告 | 10、11 |
 
 ## A.2 关键 API 版本与字段
 
@@ -71,7 +73,12 @@
 | Argo CD / Argo Rollouts 大版本 | 14、15 | ApplicationSet 生成器、插件 API、Analysis 指标名 |
 | ESO / CloudNativePG CRD 升级 | 9、16、29 | CRD schema 迁移、`conversion webhook`、备份兼容性 |
 | Prometheus 3.x 与 OTel Collector 升级 | 20、21、22 | 记录规则语法、指标重命名、采样配置 |
-| Kyverno / cosign 升级 | 24、25 | 策略 schema、验签规则、镜像签名格式 |
+| Kyverno / Gatekeeper 升级 | 24、25 | 策略 schema、验签规则、准入 webhook 的 `failurePolicy` |
+| Argo CD 3.x → 3.x | 14、30 | `Application` / `ApplicationSet` 的 **GVK 不变**（`argoproj.io/v1alpha1`），示例清单不用改。要复核的是**默认行为**：`compareOptions` 默认值变更（影响 `ignoreDifferences` 的生效范围，见第 14 章漂移自愈边界）、已知 interim 资源默认排除、日志 RBAC 默认强制（读日志需显式授权）、应用健康状态默认写 Redis（多副本需确认 Redis 可用） |
+| ESO 2.x → 2.x | 9、14、26 | `external-secrets.io/v1` → **`external-secrets.io/v1`**（1.0 起 GA，2.x 只服务 v1）；`SecretStore` / `ExternalSecret` 字段名不变，改 `apiVersion` 即可；`refreshInterval` 仍是 `spec.refreshInterval`，新增 `refreshPolicy`（`Periodic` / `OnChange` / `CreatedOnce`）。**集群内 `Secret` 对象名 `order-demo-db-credentials` 不变** |
+| Tempo 3.x → 3.x | 21 | 架构级变更：`ingester`、`ingester_client`、`compactor`、`metrics_generator_client` 配置节**整体移除**，`compactor.compaction.block_retention` → 顶层 `compaction.block_retention`；压缩改由 backend scheduler / worker 承担。用 `tempo-cli migrate config` 自动迁移；`distributor.receivers.otlp` 仍可用 |
+| cosign 3.x → 3.x | 24 | `--key` 与 `--insecure-ignore-tlog` 仍在，但**签名必须显式 `--bundle <file>` 输出 Sigstore bundle**（v2 时可选）；默认改用新 protobuf bundle 格式与 OCI 1.1 referring artifact；`--tlog-upload` 与 `--offline` 弃用（改用 `--trusted-root` / `--signing-config`）；`--certificate-identity` + `--certificate-oidc-issuer` 仍是 keyless 验签必填 |
+| Crossplane 2.x → 2.x | 30 | 本书只作对比、不引入为示例，因此不影响配置；若读者自行采用：v2 移除 native provider（须走 provider 包）、Composition 必须有 function pipeline、部分 `v1beta1` XRD 需迁移 |
 | Helm 3.x → 4.x | 10、14、30 | **chart 不用重写**：`apiVersion: v2` 原样可用，Helm 4 就地接管 Helm 3 的 release 记录。要改的是**围绕它的自动化**：`--atomic`→`--rollback-on-failure`、`--force`→`--force-replace`（旧名仍可用但告警）；`--post-renderer` 只接受插件名、不再接受脚本路径；`helm registry login` 只接受裸域名（不带 `https://`）；`--wait` 改用 kstatus 判断就绪，**RBAC 需要 `watch` 动词**，否则 `install/upgrade --wait` 立即失败；新装的 release 默认 server-side apply（既有 release 沿用原 apply 方式） |
 | 官方文档路径迁移 | 8 及引用章 | 探针任务页等官方路径已多次迁移，见 `references/_verified.md` 版本漂移提示 |
 

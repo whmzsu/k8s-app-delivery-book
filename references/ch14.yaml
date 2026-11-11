@@ -19,7 +19,7 @@
   author_or_org: "Argo CD"
   level: "L1"
   url: "https://argo-cd.readthedocs.io/en/stable/"
-  version_or_date: "2.x"
+  version_or_date: "3.x"
   accessed: "2026-11-10"
   archive_url: ""
   supports: "§14.1 漂移可验证形态、§14.2 持续收敛与漂移纠正判据、§14.4 ApplicationSet 与 selfHeal、§14.5 同步与回滚"

@@ -272,3 +272,36 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
   3. 附录 A-07 改「Helm 4.x（`Chart apiVersion: v2` 不变）」、A-38 改「4.3.1 固定」；A.3 新增「Helm 3.x → 4.x」复核触发行，写明**真正会断的是自动化而非 chart**：`--atomic`→`--rollback-on-failure`、`--force`→`--force-replace`、`--post-renderer` 只收插件名、`helm registry login` 只收裸域名、`--wait` 依赖 kstatus 需 RBAC `watch`、新装 release 默认 server-side apply；
   4. 引用登记 R-05-3 / R-10-1 / R-14-6 的 `version_or_date` 改 4.x 并重新生成附录 I（R-10-6 是 chart-testing 自身版本，未动）；
   5. 正文检查结论：全书用到 `helm template/lint/upgrade/install/rollback/get/history/package` 均为 4.x 仍存在的子命令，**没有**使用 `--atomic` / `--post-renderer` / `helm registry login`，因此这次升级只改版本口径与附录说明，不动示例命令。
+
+### 版本基线核对 · 2026-11-11（D-41，全工具对齐 2026 稳定版）
+
+- **触发**：用户要求「其他软件版本一起看，建议用 CI 主流版本或 2026 稳定版本，与最终 CI 版本一致」。此前只对过 Helm（D-38/D-40），其余工具的主版本口径停留在旧值，CI 里的 Actions 还落后两代。
+- **核对方法**：对每个上游仓库用 `gh api repos/<org>/<repo>/releases/latest` 取 2026-11-11 的真实最新稳定 tag，不靠记忆；Go/Python 用 `go.dev/dl` 与 `endoflife.date`；Actions 用 `releases/latest` + 主版本 tag。
+- **变更（旧 → 新）**：
+
+  | 组件 | 旧口径 | 新口径（2026-11 稳定） | 依据 |
+  |---|---|---|---|
+  | GitHub Actions（checkout / setup-python / setup-go / upload-artifact / setup-helm） | v4 / v5 / v5 / v4 / v4 | **v7 / v7 / v7 / v7 / v5** | 各仓库 latest；v7 起用 Node 24 运行时，消除 Actions 的 Node 20 弃用告警 |
+  | Go | 1.23 | **1.27**（1.27.4） | go.dev/dl；1.23 早已退出支持窗口（Go 只维护最近两个次版本） |
+  | Python | 3.12 | **3.13**（3.13.18） | endoflife.date；3.14 已发布但 PyYAML 等 C 扩展 wheel 覆盖仍以 3.13 最稳，取一版保守 |
+  | kubeconform | v0.6.7 | **v0.8.0** | 上游 latest；本地实测四版本 strict 校验通过（1.32/1.33 的 schema 首次下载受本地网络影响，CI 在 GitHub 网络内无此问题） |
+  | PyYAML | 6.0.2 | **6.0.3** | PyPI latest |
+  | Argo CD | 2.x | **3.x**（3.6.1） | 上游 latest；GVK 仍 `argoproj.io/v1alpha1` |
+  | External Secrets Operator | 0.x | **2.x**（2.15.0），`external-secrets.io/v1` | 上游 latest；v1 自 1.0 起 GA |
+  | Loki / Tempo | 3.x / 2.x | **3.x / 3.x**（Tempo 3.1.1） | 上游 latest |
+  | cosign | 2.x | **3.x**（3.1.4） | 上游 latest |
+  | Crossplane | 1.x | **2.x**（2.4.3） | 上游 latest |
+  | Docker / BuildKit | 24.x+ | **28.x+** | docker-engine 29.x 已发布，28.x 为稳定主流 |
+
+- **连带的内容修正（不只是改版本号）**：
+  1. **ESO `v1beta1` → `v1`**（ch09 五处清单 + ch14 + 物化产物）：1.0 起 `v1` GA，2.x 只服务 v1；`SecretStore` / `ExternalSecret` 字段名不变，集群内 `Secret` 对象名 `order-demo-db-credentials` 不变。
+  2. **cosign 3 的 `--bundle` 必填**（ch24 §24.2.2）：签名命令补 `--bundle signature.bundle`，并把 `signature.bundle` 加进按 `git-<sha7>` 归档的制品清单——该文件集中承载证书/签名/时间戳，正是空气隔离环境离线验签的凭据。
+  3. **Tempo 3 移除 `compactor` 配置节**（ch21 `loki-tempo.yaml`）：`compactor.compaction.block_retention` → 顶层 `compaction.block_retention`，并加注释说明压缩改由 backend scheduler/worker 承担。**这是本次核对里唯一会让人照抄后起不来的配置错误**。
+  4. **Go 1.23 → 1.27**：`go.mod`、两处 Dockerfile builder 镜像、ch06 的逐段解释与 ch12 的缓存示例统一到 1.27，避免「正文说 1.27、代码块写 1.23」的割裂。
+- **刻意不升的**：
+  - **K8s 真集群矩阵保持 1.37.0**（最新 patch 是 1.37.2）：kind v0.33.0 的 release notes 只提供 `kindest/node` 到 **v1.37.0**，node 镜像与 kind 版本必须成对锁定，升 patch 会让集群创建失败。静态 schema 矩阵同理保持四版本不变。
+  - **Gateway API 仍写「v1 通道」**：上游已到 v1.7.0，但 `gateway.networking.k8s.io/v1` 通道名未变，正文口径不需要动。
+  - **Argo Rollouts 1.x / Flux 2.x / Kyverno 1.x / Gatekeeper 3.x / KEDA 2.x / Karpenter 1.x / Kubebuilder 4.x / Prometheus 3.x / OTel 0.x / Velero 1.x / CNPG 1.x 等**：主版本与最新版一致，只随附录 A 的小版本说明更新。
+  - **1.32 写作基线保留**：1.32 已于 2026-02 EOL，但作为「最低兼容基线」有意保留（宽兼容窗口）；附录 A-01 已注明 EOL 与新集群建议 ≥1.35。
+- **影响面**：144 处主版本字符串替换（43 个文件）+ 5 处配置实质修正 + 附录 A.3 新增 5 条迁移行 + 6 条引用登记版本字段 + 附录 I 重生成。
+- **验证**：`check-consistency.sh` problem=0（六项全过）；`materialize --check` 一致（142 文件/28 章）；`helm lint` 4.3.1 通过；kubeconform v0.8.0 四版本 strict 校验通过（本地 schema 下载受网络限制，路径已核实存在）。最终口径以 CI 三条 workflow 全绿为准。

@@ -85,7 +85,7 @@ bash hack/enable-workflows.sh    # SSH 推送 + 触发提示；无需 GH_TOKEN
 
 ## 版本与复核
 
-正文只写主版本（`Helm 4.x`、`Kustomize 5.x`、`Argo CD 2.x`），小版本、API 版本与破坏性变更集中在附录 A。官方文档链接按季度复核；失效链接切归档地址并在附录 I 标「已归档」。
+正文只写主版本（`Helm 4.x`、`Kustomize 5.x`、`Argo CD 3.x`），小版本、API 版本与破坏性变更集中在附录 A。官方文档链接按季度复核；失效链接切归档地址并在附录 I 标「已归档」。
 
 ## 状态与后续
 

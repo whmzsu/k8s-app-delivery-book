@@ -1,5 +1,5 @@
 # 构建阶段：工具链版本锁定，见附录 A
-FROM --platform=$BUILDPLATFORM golang:1.23-bookworm AS builder
+FROM --platform=$BUILDPLATFORM golang:1.27-bookworm AS builder
 WORKDIR /src
 COPY go.mod ./
 COPY cmd/gateway/main.go ./cmd/gateway/

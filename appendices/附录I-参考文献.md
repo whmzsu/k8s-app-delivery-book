@@ -139,7 +139,7 @@
 - **R-05-4**｜L1 规范与官方｜Kustomize Documentation｜Kustomize｜适用版本 5.x
   - 支撑：支撑 §5.2 第 3 层、§5.3 overlay 替换成本
   - 链接：https://kustomize.io/ ｜ 访问日期 2026-11-10
-- **R-05-5**｜L1 规范与官方｜Argo CD Documentation｜Argo CD｜适用版本 2.x
+- **R-05-5**｜L1 规范与官方｜Argo CD Documentation｜Argo CD｜适用版本 3.x
   - 支撑：支撑 §5.2 第 4 层、§5.5「无重复问题域工具」通过标准
   - 链接：https://argo-cd.readthedocs.io/en/stable/ ｜ 访问日期 2026-11-10
 - **R-05-6**｜L1 规范与官方｜Kyverno Documentation｜Kyverno｜适用版本 1.x
@@ -288,10 +288,10 @@
   - 支撑：§9.1 原地改同名 ConfigMap 的竞态；§9.2 换对象范式；§9.4 immutable: true
   - 链接：https://kubernetes.io/docs/concepts/configuration/configmap/ ｜ 访问日期 2026-11-10
   - 备注：Kubernetes v1.32 概念页（含 immutable 语义）
-- **R-09-3**｜L1 规范与官方｜External Secrets Operator Docs｜External Secrets Operator｜版本 0.x（apiVersion external-secrets.io/v1beta1）
+- **R-09-3**｜L1 规范与官方｜External Secrets Operator Docs｜External Secrets Operator｜版本 2.x（apiVersion external-secrets.io/v1）
   - 支撑：§9.1 生产密钥外部托管；§9.3 唯一示例实现；§9.4 SecretStore / ExternalSecret / envFrom
   - 链接：https://external-secrets.io/latest/ ｜ 访问日期 2026-11-10
-  - 备注：按 book/decisions.md U-05，ESO 0.x + 占位后端 vault 为全书唯一密钥注入实现，第 14、26 章须对齐
+  - 备注：按 book/decisions.md U-05，ESO 2.x + 占位后端 vault 为全书唯一密钥注入实现，第 14、26 章须对齐
 - **R-09-4**｜L1 规范与官方｜NIST SP 800-190 Application Container Security Guide｜NIST｜SP 800-190
   - 支撑：§9.1 凭据泄露与洗不掉的历史；§9.2 凭据全生命周期；§9.5 审计留痕验收
   - 链接：https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf ｜ 访问日期 2026-11-10
@@ -493,7 +493,7 @@
   - 支撑：§14.1 漂移反模式、§14.2 GitOps 正式定义与四原则
   - 链接：https://opengitops.dev/ ｜ 访问日期 2026-11-10
   - 备注：第二轮低并发复核 200
-- **R-14-2**｜L1 规范与官方｜Argo CD Documentation（Declarative Setup / ApplicationSet / Sync Options / Automated Sync Policy / app diff）｜Argo CD｜2.x
+- **R-14-2**｜L1 规范与官方｜Argo CD Documentation（Declarative Setup / ApplicationSet / Sync Options / Automated Sync Policy / app diff）｜Argo CD｜3.x
   - 支撑：§14.1 漂移可验证形态、§14.2 持续收敛与漂移纠正判据、§14.4 ApplicationSet 与 selfHeal、§14.5 同步与回滚
   - 链接：https://argo-cd.readthedocs.io/en/stable/ ｜ 访问日期 2026-11-10
   - 备注：已核验入口池 L1 条目；本书 GitOps 引擎唯一示例实现
@@ -809,7 +809,7 @@
   - 支撑：§21.1 全量日志不采样反模式；§21.3 选型矩阵保留期/查询能力/何时不该用；§21.4 Loki ConfigMap 与 Service
   - 链接：https://grafana.com/docs/loki/latest/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://grafana.com/docs/loki/latest/
   - 备注：已核验链接池中无 Loki 官方文档独立条目，保留名称级官方条目，链接待核验；不得编造 URL
-- **R-21-6**｜L1 规范与官方｜Grafana Tempo Documentation｜Grafana Labs｜Tempo 2.x
+- **R-21-6**｜L1 规范与官方｜Grafana Tempo Documentation｜Grafana Labs｜Tempo 3.x
   - 支撑：§21.1 只采指标不采链路反模式；§21.3 选型矩阵；§21.4 Tempo OTLP grpc 4317 接收；§21.5 按 trace_id 取瀑布
   - 链接：https://grafana.com/docs/tempo/latest/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://grafana.com/docs/tempo/latest/
   - 备注：已核验链接池中无 Tempo 官方文档独立条目，保留名称级官方条目，链接待核验；不得编造 URL
@@ -922,7 +922,7 @@
   - 支撑：§24.1 SBOM 用标准格式列出镜像成分；§24.2.2 Syft 输出 spdx-json 并归档
   - 链接：https://spdx.dev/specifications/ ｜ 访问日期 2026-11-10
   - 备注：SPDX 规范站点
-- **R-24-6**｜L1 规范与官方｜Sigstore cosign Documentation｜Sigstore｜适用版本 2.x
+- **R-24-6**｜L1 规范与官方｜Sigstore cosign Documentation｜Sigstore｜适用版本 3.x
   - 支撑：§24.1 签名回答『是不是那一个』；§24.2.2 sign / attach sbom / download sbom / verify 命令
   - 链接：https://github.com/sigstore/cosign ｜ 访问日期 2026-11-10
   - 备注：cosign 官方仓库
@@ -1133,7 +1133,7 @@
   - 支撑：支撑 §30.1 反模式一、§30.2 集中供应与集群边界、§30.3 分工表、§30.4 infra/clusters.tf、§30.5 升级顺序
   - 链接：https://cluster-api.sigs.k8s.io/ ｜ 访问日期 2026-11-10
   - 备注：与 R-04-6 同源不同章；集群供应沿用第 4 章固定值
-- **R-30-2**｜L1 规范与官方｜Crossplane Documentation｜Crossplane｜适用版本 1.x
+- **R-30-2**｜L1 规范与官方｜Crossplane Documentation｜Crossplane｜适用版本 2.x
   - 支撑：支撑 §30.3 分工表「何时不该用 Crossplane」
   - 链接：https://crossplane.io/ ｜ 访问日期 2026-11-10
   - 备注：与 R-05-7 同源；本章仅作对比，不引入为第二套集群供应实现
@@ -1144,7 +1144,7 @@
 - **R-30-4**｜L1 规范与官方｜Backstage Documentation（Software Templates）｜Backstage｜在线版
   - 支撑：支撑 §30.2 黄金路径护栏表、§30.3 分工表、§30.4 模板
   - 链接：https://www.backstage.io/ ｜ 访问日期 2026-11-10
-- **R-30-5**｜L1 规范与官方｜Argo CD Documentation（ApplicationSet / 多集群 / Sync Options）｜Argo CD｜适用版本 2.x
+- **R-30-5**｜L1 规范与官方｜Argo CD Documentation（ApplicationSet / 多集群 / Sync Options）｜Argo CD｜适用版本 3.x
   - 支撑：支撑 §30.2 一次变更发两集群、§30.4 applicationset-multicluster.yaml、§30.5 同步与回滚
   - 链接：https://argo-cd.readthedocs.io/en/stable/ ｜ 访问日期 2026-11-10
   - 备注：与 R-14-2 同源；GitOps 唯一示例实现，多集群为第 14 章晋升模型推广（SP-04）

@@ -86,7 +86,7 @@
 | 准入策略引擎 | `kyverno` 1.x（命名空间 `kyverno`），策略命名 `order-demo-*`；VAP 作内置轻量对比，Gatekeeper 仅入矩阵 | 24、25、26 |
 | 流量入口 | `GatewayClass: eg`、`Gateway` 名 `order-demo-gw`、`HTTPRoute` 名 `gateway-route` | 15、19、21、30 |
 | 渐进式交付 | `argo-rollouts` + Gateway API traffic router 插件；必须同时给「按副本比例金丝雀」退化方案 | 15 |
-| GitOps 引擎 | `Argo CD 2.x` 为示例，`Flux 2.x` 仅作对比 | 14、30 |
+| GitOps 引擎 | `Argo CD 3.x` 为示例，`Flux 2.x` 仅作对比 | 14、30 |
 | 配置打包 | `Kustomize 5.x` overlay 为多环境基线；`Helm 4.x` 为对外分发 Chart | 10、14 |
 | 密钥注入 | `External Secrets Operator` + 后端占位 `vault`，键名 `order-demo/db-credentials` | 9、14、26 |
 | 可观测栈 | OTel Collector → Prometheus / Loki / Tempo；长期指标用 Thanos 或兼容远端存储 | 20、21、22 |

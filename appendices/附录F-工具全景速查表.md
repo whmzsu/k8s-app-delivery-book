@@ -18,7 +18,7 @@
 | Docker / BuildKit | OCI 镜像构建 | 24.x+ | 只需运行现成官方镜像时 | 6、12 | ★ |
 | Harbor / 兼容 OCI 仓库 | 制品存储、保留策略与复制 | 2.x | 单集群本地实验、无分发需求时 | 24 | — |
 | Syft / Trivy / Grype | SBOM 生成与漏洞扫描 | 1.x / 0.x | 尚未固定基础镜像与构建流程时 | 24 | ★（Syft + Trivy） |
-| cosign | 签名与验签 | 2.x | 还没有准入控制能消费验签结果时 | 24 | ★ |
+| cosign | 签名与验签 | 3.x | 还没有准入控制能消费验签结果时 | 24 | ★ |
 | SLSA | 供应链完整性等级框架 | v1.0 | 当作「装个工具就达标」的清单时 | 24 | — |
 
 ## F.3 第 3 层　配置与打包
@@ -35,7 +35,7 @@
 
 | 工具 | 定位 | 主版本 | 何时不该用 | 章 | 唯一示例 |
 |---|---|---|---|---|---|
-| Argo CD | GitOps 持续收敛、UI 与 ApplicationSet | 2.x | 只需一次性部署、不需要漂移纠正时 | 14、30 | ★ |
+| Argo CD | GitOps 持续收敛、UI 与 ApplicationSet | 3.x | 只需一次性部署、不需要漂移纠正时 | 14、30 | ★ |
 | Flux | 轻量 GitOps 控制器 | 2.x | 团队需要开箱即用的可视化与多集群视图时 | 14 | — |
 | Kargo | 多环境逐级晋升编排 | 1.x | 只有一两个环境、晋升靠 PR 就够时 | 14 | — |
 | Argo Rollouts | 金丝雀/蓝绿与分析模板 | 1.x | 没有可信指标、无法定义自动回滚判据时 | 15 | ★ |
@@ -50,7 +50,7 @@
 | Envoy Gateway | Gateway API 实现 | 1.x | 已有网格承担全部流量治理且不打算替换时 | 15、19 | ★ |
 | Istio / Cilium | 服务网格与 eBPF 网络 | 1.x | 只是要做超时/重试/默认拒绝，网格成本过高时 | 19 | — |
 | cert-manager | 证书签发与续期 | 1.x | 证书由外部 LB 全托管且无内部 mTLS 时 | 19、29 | ★ |
-| External Secrets Operator | 外部密钥注入 | 0.x | 密钥极少且已有平台统一注入机制时 | 9、14、26 | ★ |
+| External Secrets Operator | 外部密钥注入 | 2.x | 密钥极少且已有平台统一注入机制时 | 9、14、26 | ★ |
 | CloudNativePG / Strimzi | 有状态工作负载 Operator | 1.x / 0.x | 团队无力承担 Operator 升级与降级预案时 | 16、29 | 评估对象 |
 | Kubebuilder / controller-runtime | 自研控制器骨架 | 4.x / 0.x | 需求能用原生资源或 CI 脚本解决时（见第 27 章） | 28 | 平台团队可选 |
 
@@ -60,7 +60,7 @@
 |---|---|---|---|---|---|
 | OpenTelemetry Collector | 遥测采集与路由 | 0.x | 只有单一信号且已有采集链路时 | 21 | ★ |
 | Prometheus / Thanos | 指标与长期存储 | 3.x / 0.x | 只需短期本地调试指标时 | 20、21、22 | ★ |
-| Loki / Tempo | 日志与链路存储 | 3.x / 2.x | 日志量极小、直接用平台日志即可时 | 21 | ★ |
+| Loki / Tempo | 日志与链路存储 | 3.x / 3.x | 日志量极小、直接用平台日志即可时 | 21 | ★ |
 | Alertmanager | 告警去重、分组与路由 | 0.x | 没有可行动告警、先治理噪音时 | 22 | ★ |
 | Chaos Mesh | 故障注入与演练 | 2.x | 没有 runbook 与回滚演练基线时 | 23 | ★ |
 | Litmus | 另一套演练框架 | 3.x | 已用 Chaos Mesh 且不想维护两套实验定义时 | 23 | — |
@@ -74,7 +74,7 @@
 | ValidatingAdmissionPolicy | 内置轻量准入校验 | K8s 1.30+ | 需要变更（mutate）或生成资源时 | 25 | — |
 | Gatekeeper | 基于 Rego 的策略引擎 | 3.x | 团队不愿维护 Rego 与约束模板时 | 25 | — |
 | Pod Security Standards | 内置三级安全基线 | 内置 | 当成「开了 enforce 就安全」的替代品时 | 25 | ★ |
-| Crossplane / Cluster API | 基础设施与集群生命周期 IaC | 1.x | 集群数量少、手工创建更可控时 | 30 | — |
+| Crossplane / Cluster API | 基础设施与集群生命周期 IaC | 2.x / 1.x | 集群数量少、手工创建更可控时 | 30 | — |
 | Backstage / Score | 内部开发者平台与工作负载规范 | 1.x / 规范 v1 | 没有稳定黄金路径、平台团队缺位时 | 30 | — |
 
 ## F.8 按团队规模的最小可行组合（第 5 章的「过度工程警戒线」）
