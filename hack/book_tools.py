@@ -29,7 +29,12 @@ SPECIAL_CHAPTERS = {"01", "23", "31"}
 URL_WHITELIST = re.compile(
     r"(127\.0\.0\.1|localhost|\.svc|example\.com|example\.org|"
     r"kubernetes\.default|chaos-mesh\.org|prometheus\.io|0\.0\.0\.0|"
-    r"https?://api:|https?://db:|https?://gateway:|/api/v1)"
+    r"https?://api:|https?://db:|https?://gateway:|/api/v1|"
+    # 配置端点（非引用 URL）：OIDC 签发方 / cosign 证书身份 / 云 OIDC issuer
+    r"token\.actions\.githubusercontent\.com|"
+    r"github\.com/[a-z0-9_.-]+/order-demo|"
+    r"sigstore\.dev|"
+    r"amazonaws\.com)"
 )
 
 # 第二轮复核后补登的规范入口：title 关键字 -> (url, note)
