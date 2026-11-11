@@ -1,6 +1,6 @@
 # 附录 A　版本兼容矩阵
 
-> 全书正文只写主版本（如 `Helm 3.x`、`Kustomize 5.x`），**具体小版本、API 版本与破坏性变更集中在本附录**。所有示例在 kind 的 K8s 版本矩阵中验证（见第 11 章），版本差异不写进正文。每章配置块标注的「适用版本」都指向本表行号。
+> 全书正文只写主版本（如 `Helm 4.x`、`Kustomize 5.x`），**具体小版本、API 版本与破坏性变更集中在本附录**。所有示例在 kind 的 K8s 版本矩阵中验证（见第 11 章），版本差异不写进正文。每章配置块标注的「适用版本」都指向本表行号。
 
 ## A.1 基线（本书写作时锁定）
 
@@ -12,7 +12,7 @@
 | A-04 | Go 工具链 | 1.23（仅 `order-demo` 示例） | 第 6 章最小镜像构建 | 6 |
 | A-05 | distroless static | `static-debian12:nonroot`（digest 锁定） | 非 root 运行镜像 | 6、24 |
 | A-06 | Docker / BuildKit | 24.x+ 或兼容 OCI 构建器 | 构建与 `kind load` | 6、12 |
-| A-07 | Helm | 3.x | 对外分发 Chart | 10、14 |
+| A-07 | Helm | 4.x（`Chart apiVersion: v2` 不变） | 对外分发 Chart | 10、14 |
 | A-08 | Kustomize | 5.x | 多环境 overlay 基线 | 4、10、14 |
 | A-09 | Argo CD | 2.x | GitOps 唯一示例实现 | 14、30 |
 | A-10 | Flux | 2.x | 仅选型矩阵对比 | 14 |
@@ -43,7 +43,7 @@
 | A-35 | PyYAML | **6.0.2**（`hack/requirements.txt` 锁定） | 清单逐文档拆分与结构断言 | 11 |
 | A-36 | GitHub Actions runner | `ubuntu-latest`；Go **1.23**、Python **3.12** | 快车道闸门与全书装配 | 11、附录 D |
 | A-37 | kind / kubectl（CI） | kind 版本与 `kindest/node` 镜像**成对锁定**（见 A-02）；kubectl 与集群 patch 版本一致，下载地址 `dl.k8s.io/release/v<k8s>/bin/linux/amd64/kubectl` | P5 真集群复核 | 11 |
-| A-38 | Helm / kustomize（CI） | Helm **3.19.0**（`azure/setup-helm@v4` 的 `version` 入参显式固定；该 action 默认装「最新」，实测曾装到 4.x，与 A-07 的 3.x 基线不符，见 D-38）；kustomize 不作独立渲染闸门，原因见 D.7 | 模板渲染与 overlay 结构报告 | 10、11 |
+| A-38 | Helm / kustomize（CI） | Helm **4.3.1**（`azure/setup-helm@v4` 的 `version` 入参显式固定——该 action 默认装「最新」，版本会随上游漂；固定值随主版本基线升级，见 D-38/D-40）；kustomize 不作独立渲染闸门，原因见 D.7 | 模板渲染与 overlay 结构报告 | 10、11 |
 
 ## A.2 关键 API 版本与字段
 
@@ -72,6 +72,7 @@
 | ESO / CloudNativePG CRD 升级 | 9、16、29 | CRD schema 迁移、`conversion webhook`、备份兼容性 |
 | Prometheus 3.x 与 OTel Collector 升级 | 20、21、22 | 记录规则语法、指标重命名、采样配置 |
 | Kyverno / cosign 升级 | 24、25 | 策略 schema、验签规则、镜像签名格式 |
+| Helm 3.x → 4.x | 10、14、30 | **chart 不用重写**：`apiVersion: v2` 原样可用，Helm 4 就地接管 Helm 3 的 release 记录。要改的是**围绕它的自动化**：`--atomic`→`--rollback-on-failure`、`--force`→`--force-replace`（旧名仍可用但告警）；`--post-renderer` 只接受插件名、不再接受脚本路径；`helm registry login` 只接受裸域名（不带 `https://`）；`--wait` 改用 kstatus 判断就绪，**RBAC 需要 `watch` 动词**，否则 `install/upgrade --wait` 立即失败；新装的 release 默认 server-side apply（既有 release 沿用原 apply 方式） |
 | 官方文档路径迁移 | 8 及引用章 | 探针任务页等官方路径已多次迁移，见 `references/_verified.md` 版本漂移提示 |
 
 ## A.4 复核节奏与执行方式（P5 已迁移到 GitHub Actions）

@@ -60,7 +60,7 @@
 
 - 术语定义以 `book/glossary.md` 为准；「首次提及 → 正式定义 → 深入展开」以 `book/concept-ladder.md` 为准
 - **在正式定义章之前**提到某术语，必须给一句白话解释并写「详见第 X 章」，禁止拿它当推理前提
-- 工具首次出现带主版本（`Helm 3.x`），小版本只在附录 A 与配置文件里锁定
+- 工具首次出现带主版本（`Helm 4.x`），小版本只在附录 A 与配置文件里锁定
 - 章内引用写「见第 X 章」，不写「上文/下一章」
 - 资源名保持官方大小写：`Deployment`、`PodDisruptionBudget`、`topologySpreadConstraints`
 

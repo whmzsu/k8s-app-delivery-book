@@ -7,7 +7,7 @@
   author_or_org: "Helm"
   level: "L1"
   url: "https://helm.sh/docs/"
-  version_or_date: "版本 3.x"
+  version_or_date: "版本 4.x"
   accessed: "2026-11-10"
   archive_url: ""
   supports: "§10.1 values 爆炸；§10.2 决策树与判据表；§10.3 选型矩阵；§10.4 Chart 骨架"

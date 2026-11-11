@@ -67,7 +67,7 @@
   author_or_org: "Helm"
   level: "L1"
   url: "https://helm.sh/docs/"
-  version_or_date: "3.x"
+  version_or_date: "4.x"
   accessed: "2026-11-10"
   archive_url: ""
   supports: "§14.3 集群内渲染的 helm template 路径与渲染插件版本漂移"

@@ -133,7 +133,7 @@
   - 支撑：支撑 §5.2 项目成熟度作为选型输入、§5.5 版本已锁定通过标准
   - 链接：https://www.cncf.io/projects/ ｜ 访问日期 2026-11-10
   - 备注：CNCF 项目分级官方页
-- **R-05-3**｜L1 规范与官方｜Helm Documentation｜Helm｜适用版本 3.x
+- **R-05-3**｜L1 规范与官方｜Helm Documentation｜Helm｜适用版本 4.x
   - 支撑：支撑 §5.2 第 3 层、§5.3 替换成本表「何时不该用」
   - 链接：https://helm.sh/docs/ ｜ 访问日期 2026-11-10
 - **R-05-4**｜L1 规范与官方｜Kustomize Documentation｜Kustomize｜适用版本 5.x
@@ -325,7 +325,7 @@
 
 ## 第 10 章（10 条）
 
-- **R-10-1**｜L1 规范与官方｜Helm Documentation（含 Chart Template Guide / Best Practices / Provenance and Integrity）｜Helm｜版本 3.x
+- **R-10-1**｜L1 规范与官方｜Helm Documentation（含 Chart Template Guide / Best Practices / Provenance and Integrity）｜Helm｜版本 4.x
   - 支撑：§10.1 values 爆炸；§10.2 决策树与判据表；§10.3 选型矩阵；§10.4 Chart 骨架
   - 链接：https://helm.sh/docs/ ｜ 访问日期 2026-11-10
   - 备注：与 R-10-2 为互相竞争工具（模板+包管理 vs 无模板 patch）的官方文档，共同满足选型章 ≥2 条 L1 要求；Chart 刻意不注入 Helm 特有标签以保证与 overlay 渲染产物等价
@@ -509,7 +509,7 @@
   - 支撑：§14.3 仓库内渲染、§14.4 hack/render.sh 与 kustomization.yaml
   - 链接：https://kustomize.io/ ｜ 访问日期 2026-11-10
   - 备注：已核验入口池 L1 条目；多环境基线打包工具
-- **R-14-6**｜L1 规范与官方｜Helm Documentation｜Helm｜3.x
+- **R-14-6**｜L1 规范与官方｜Helm Documentation｜Helm｜4.x
   - 支撑：§14.3 集群内渲染的 helm template 路径与渲染插件版本漂移
   - 链接：https://helm.sh/docs/ ｜ 访问日期 2026-11-10
   - 备注：已核验入口池 L1 条目；对外分发 Chart 用

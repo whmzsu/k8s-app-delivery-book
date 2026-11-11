@@ -266,3 +266,9 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - **D-38（CI 的 Helm 版本漂移）**：`render` job 日志实测 `helm version --short` = **v4.3.1**，而附录 A-07 声明基线是 Helm 3.x——`azure/setup-helm@v4` 默认装「最新」，版本随上游漂。已在该 step 显式钉 `version: v3.19.0`（3.x 最后一个稳定版，本地 `lint`/`template` 实测通过），附录 A-38 同步写明「默认装最新、现已固定」。版本文档与 CI 实际再次对齐。
 - **D-39（闸门缺一步：改章不同步示例）**：加深第一至第八波共 6 次 `ci.yml` 红，失败点不是扩写内容，而是 `materialize --check` 报「`examples/by-chapter/` 与章内代码块不一致（9 处）」——每波只提交章节、示例留到最后统一重生成。本地 `check-consistency.sh` 当时**不含**这一步，所以本地全绿、CI 全红。现把 `materialize.py --check` 并入闸门第 6 项；流程上也改为「每波提交前跑一次闸门（含物化一致性）」。
 - **复现口径修正**：`ci.yml` 用 Helm 4 时，`helm lint` 对缺 `name/apiVersion/version` 的 Chart.yaml 报错文案与 3.x 一致，因此本地 3.16.4 复现的失败与 CI 4.3.1 同源，非版本差异导致；钉版本是为了文档口径，不是为了绕过失败。
+- **D-40（Helm 口径升级到 4.x，覆盖 D-38 的版本值）**：用户裁定「helm 用新版本」。Helm 4.0 已于 2025-11 发布，Helm 3 最后一个特性版是 3.22.0、安全支持到 2027-02，继续以 3.x 为基线会让书稿一出版就落后一个主版本。执行：
+  1. `ci.yml` 固定 `version: v4.3.1`（不再固定 3.19.0）；本地 `helm lint` / `helm template` 在 4.3.1 下对本仓 chart 通过，且 3.19.0 与 4.3.1 的**渲染产物逐字节比对只差一个空行**（`diff` 输出 `13a14 >`），语义一致；
+  2. 全书 **56 处**「Helm 3.x / helm 3.x」→ 4.x：ch01/02/03/04/05/06/07/10/14/27、附录 A/E/F、`book/cards/ch10,ch14`、glossary、case-evolution、chapter-spec、decisions、README、全书目录、大纲 v3；
+  3. 附录 A-07 改「Helm 4.x（`Chart apiVersion: v2` 不变）」、A-38 改「4.3.1 固定」；A.3 新增「Helm 3.x → 4.x」复核触发行，写明**真正会断的是自动化而非 chart**：`--atomic`→`--rollback-on-failure`、`--force`→`--force-replace`、`--post-renderer` 只收插件名、`helm registry login` 只收裸域名、`--wait` 依赖 kstatus 需 RBAC `watch`、新装 release 默认 server-side apply；
+  4. 引用登记 R-05-3 / R-10-1 / R-14-6 的 `version_or_date` 改 4.x 并重新生成附录 I（R-10-6 是 chart-testing 自身版本，未动）；
+  5. 正文检查结论：全书用到 `helm template/lint/upgrade/install/rollback/get/history/package` 均为 4.x 仍存在的子命令，**没有**使用 `--atomic` / `--post-renderer` / `helm registry login`，因此这次升级只改版本口径与附录说明，不动示例命令。

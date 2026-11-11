@@ -46,7 +46,7 @@
 ## 三、书写格式约定
 
 - K8s 资源名用代码格式并保持官方大小写：`Deployment`、`PodDisruptionBudget`、`topologySpreadConstraints`
-- 工具首次出现带主版本：`Helm 3.x`、`Kustomize 5.x`、`Argo CD 2.x`；小版本只在附录 A 与配置文件里锁定
+- 工具首次出现带主版本：`Helm 4.x`、`Kustomize 5.x`、`Argo CD 2.x`；小版本只在附录 A 与配置文件里锁定
 - 命令用行内代码；完整命令块必须可复制执行，且带验证命令
 - 章内引用章节写「见第 X 章」，不写「上文/下一章」这类相对表述（章号会被重排）
 - 引用来源只写 `[R-XX-N]` 角标，不写裸 URL
