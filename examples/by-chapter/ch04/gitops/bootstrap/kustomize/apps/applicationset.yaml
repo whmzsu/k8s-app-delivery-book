@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: order-demo-envs
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - env: dev
+            ns: order-demo-dev
+          - env: staging
+            ns: order-demo-staging
+          - env: prod
+            ns: order-demo-prod
+  template:
+    metadata:
+      name: order-demo-{{env}}
+      namespace: argocd
+    spec:
+      project: default
+      source:
+        repoURL: https://git.example.com/order-demo.git
+        path: deploy/overlays/{{env}}
+        targetRevision: main
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: {{ns}}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true       # 手工 kubectl edit 会被纠正（见第 14、26 章）

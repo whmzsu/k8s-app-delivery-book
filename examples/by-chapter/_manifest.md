@@ -26,6 +26,9 @@
 | 04 | `examples/by-chapter/ch04/deploy/overlays/prod/namespace.yaml` | 6 |
 | 04 | `examples/by-chapter/ch04/gitops/bootstrap/backend.tf` | 8 |
 | 04 | `examples/by-chapter/ch04/gitops/bootstrap/bootstrap-namespace.yaml` | 7 |
+| 04 | `examples/by-chapter/ch04/gitops/bootstrap/providers.tf` | 18 |
+| 04 | `examples/by-chapter/ch04/gitops/bootstrap/main.tf` | 17 |
+| 04 | `examples/by-chapter/ch04/gitops/bootstrap/kustomize/apps/applicationset.yaml` | 32 |
 | 04 | `examples/by-chapter/ch04/hack/render-diff.sh` | 19 |
 | 06 | `examples/by-chapter/ch06/go.mod` | 3 |
 | 06 | `examples/by-chapter/ch06/cmd/gateway/main.go` | 29 |
@@ -42,7 +45,6 @@
 | 07 | `examples/by-chapter/ch07/deploy/base/service-db-headless.yaml` | 18 |
 | 07 | `examples/by-chapter/ch07/deploy/base/statefulset-db.yaml` | 61 |
 | 07 | `examples/by-chapter/ch07/hack/ch07-apply.sh` | 20 |
-| 07 | `examples/by-chapter/ch07/hack/kind-up.sh` | 8 |
 | 08 | `examples/by-chapter/ch08/deploy/base/deployment.yaml` | 79 |
 | 08 | `examples/by-chapter/ch08/deploy/base/deployment-api.yaml` | 100 |
 | 08 | `examples/by-chapter/ch08/deploy/base/pdb.yaml` | 14 |
@@ -62,6 +64,9 @@
 | 10 | `examples/by-chapter/ch10/deploy/charts/order-demo/templates/configmap.yaml` | 11 |
 | 10 | `examples/by-chapter/ch10/deploy/charts/order-demo/templates/deployment.yaml` | 77 |
 | 10 | `examples/by-chapter/ch10/hack/render-diff.sh` | 21 |
+| 10 | `examples/by-chapter/ch10/deploy/charts/_order-demo-common/Chart.yaml` | 5 |
+| 10 | `examples/by-chapter/ch10/deploy/charts/_order-demo-common/templates/_helpers.tpl` | 9 |
+| 10 | `examples/by-chapter/ch10/deploy/charts/order-demo/Chart.yaml` | 4 |
 | 11 | `examples/by-chapter/ch11/hack/kind-matrix.yaml` | 9 |
 | 11 | `examples/by-chapter/ch11/hack/validate.sh` | 43 |
 | 11 | `examples/by-chapter/ch11/hack/dev-loop.yaml` | 11 |
@@ -100,6 +105,7 @@
 | 16 | `examples/by-chapter/ch16/hack/dual-write-check.sh` | 19 |
 | 16 | `examples/by-chapter/ch16/hack/restore-drill.sh` | 19 |
 | 16 | `examples/by-chapter/ch16/hack/uninstall-check.sh` | 19 |
+| 17 | `examples/by-chapter/ch17/hack/cpu-limit-bench.sh` | 42 |
 | 17 | `examples/by-chapter/ch17/deploy/base/deployment-api.yaml` | 77 |
 | 17 | `examples/by-chapter/ch17/deploy/base/limitrange.yaml` | 26 |
 | 17 | `examples/by-chapter/ch17/deploy/base/resourcequota.yaml` | 16 |
@@ -132,8 +138,10 @@
 | 22 | `examples/by-chapter/ch22/observability/alertmanager.yaml` | 51 |
 | 22 | `examples/by-chapter/ch22/observability/alert-rules-test.yaml` | 27 |
 | 22 | `examples/by-chapter/ch22/hack/alert-drill.sh` | 35 |
+| 22 | `examples/by-chapter/ch22/hack/alert-drill.sh` | 8 |
 | 23 | `examples/by-chapter/ch23/hack/verify.sh` | 11 |
 | 23 | `examples/by-chapter/ch23/hack/chaos-drill.sh` | 20 |
+| 23 | `examples/by-chapter/ch23/hack/chaos-report.sh` | 39 |
 | 23 | `examples/by-chapter/ch23/hack/rollback-drill.sh` | 17 |
 | 24 | `examples/by-chapter/ch24/hack/harbor-retention.json` | 38 |
 | 24 | `examples/by-chapter/ch24/hack/verify-supply-chain.sh` | 103 |
@@ -141,6 +149,8 @@
 | 26 | `examples/by-chapter/ch26/deploy/base/deployment.yaml` | 29 |
 | 26 | `examples/by-chapter/ch26/hack/kind-audit.yaml` | 18 |
 | 28 | `examples/by-chapter/ch28/observability/operator-alerts.yaml` | 43 |
+| 28 | `examples/by-chapter/ch28/hack/gen-webhook-certs.sh` | 46 |
+| 28 | `examples/by-chapter/ch28/hack/crd-rotation-drill.sh` | 81 |
 | 29 | `examples/by-chapter/ch29/observability/operator-slo.yaml` | 43 |
 | 29 | `examples/by-chapter/ch29/hack/operator-uninstall-drill.sh` | 40 |
 | 29 | `examples/by-chapter/ch29/hack/operator-uninstall-drill.sh` | 21 |
@@ -150,16 +160,25 @@
 | 31 | `examples/by-chapter/ch31/deploy/replay/order-demo-replay.yaml` | 129 |
 | 31 | `examples/by-chapter/ch31/hack/replay-incident.sh` | 80 |
 
-## 跳过（11）
+## 跳过（20）
 
 - ch03 `deploy/base/deployment.yaml`：相邻代码块语言与文件类型不符：diff
+- ch04 `deploy/overlays/<env>/kustomization.yaml`：占位路径（含 <>/模板占位），不物化
+- ch04 `gitops/bootstrap/env/cluster-a.tfvars`：相邻代码块语言与文件类型不符：bash
 - ch06 `hack/kind-up.sh`：相邻代码块语言与文件类型不符：go
-- ch11 `hack/validate.sh`：相邻代码块语言与文件类型不符：yaml
+- ch07 `hack/kind-up.sh`：相邻代码块语言与文件类型不符：yaml
+- ch09 `deploy/base/secretstore.yaml`：相邻代码块语言与文件类型不符：diff
 - ch11 `hack/kind-matrix.yaml`：相邻代码块语言与文件类型不符：bash
 - ch11 `hack/kind-matrix.yaml`：相邻代码块语言与文件类型不符：bash
-- ch14 `gitops/rendered/<env>/all.yaml`：相邻代码块语言与文件类型不符：bash
+- ch14 `gitops/envs/<env>/config.yaml`：占位路径（含 <>/模板占位），不物化
+- ch14 `gitops/rendered/<env>/all.yaml`：占位路径（含 <>/模板占位），不物化
 - ch14 `gitops/rendered/prod/all.yaml`：相邻代码块语言与文件类型不符：bash
+- ch14 `gitops/rendered/<env>/all.yaml`：占位路径（含 <>/模板占位），不物化
+- ch16 `hack/uninstall-check.sh`：相邻代码块语言与文件类型不符：yaml
 - ch20 `hack/budget-report.sh`：相邻代码块语言与文件类型不符：yaml
 - ch21 `observability/metric-naming.md`：相邻代码块语言与文件类型不符：markdown
 - ch24 `hack/verify-supply-chain.sh`：相邻代码块语言与文件类型不符：yaml
+- ch24 `hack/verify-supply-chain.sh`：相邻代码块语言与文件类型不符：yaml
+- ch24 `hack/verify-supply-chain.sh`：相邻代码块语言与文件类型不符：yaml
+- ch25 `deploy/base/deployment.yaml`：相邻代码块语言与文件类型不符：bash
 - ch26 `hack/kind-audit.yaml`：相邻代码块语言与文件类型不符：bash

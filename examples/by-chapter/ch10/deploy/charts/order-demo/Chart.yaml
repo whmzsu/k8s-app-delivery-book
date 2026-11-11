@@ -1,6 +1,4 @@
-apiVersion: v2
-name: order-demo
-description: order-demo gateway — 对外分发的最小可复用单元
-type: application
-version: 0.1.0
-appVersion: "git-1a2b3c4"
+dependencies:
+  - name: order-demo-common
+    version: 0.1.0
+    repository: file://../_order-demo-common

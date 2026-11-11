@@ -56,6 +56,10 @@ def generate(out_dir):
             path = tok.group(1).strip()
             if not PATH_OK.match(path):
                 continue
+            # 占位路径（含 <env> 之类尖括号）不是具体文件，跳过（Windows 也不允许 < > 作目录名）
+            if "<" in path or ">" in path:
+                skipped.append((n, path, "占位路径（含 <>/模板占位），不物化"))
+                continue
             # 跳过代码块内部的反引号路径
             if any(s <= tok.start() <= e for s, e, _, _ in fences):
                 continue

@@ -1,0 +1,5 @@
+apiVersion: v2
+name: order-demo-common
+description: order-demo 共享标签/资源/安全上下文（Library Chart，不可独立安装）
+type: library
+version: 0.1.0
