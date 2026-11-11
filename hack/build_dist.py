@@ -26,6 +26,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -438,10 +439,12 @@ body { font-family: "Songti SC", "SimSun", "宋体", serif; font-size: 10.5pt;
        line-height: 1.62; color: #1a1a1a; }
 h1 { font-family: "Heiti SC", "SimHei", "黑体", sans-serif; font-size: 21pt;
      text-align: center; margin: 0 0 14pt; page-break-before: always;
-     page-break-after: avoid; }
+     page-break-after: avoid;
+     bookmark-level: 1; bookmark-label: content(text); }
 h1.first { page-break-before: avoid; }
 h2 { font-family: "Heiti SC", "SimHei", "黑体", sans-serif; font-size: 14pt;
-     margin: 16pt 0 8pt; page-break-after: avoid; }
+     margin: 16pt 0 8pt; page-break-after: avoid;
+     bookmark-level: 2; bookmark-label: content(text); }
 h3 { font-family: "Heiti SC", "SimHei", "黑体", sans-serif; font-size: 12pt;
      margin: 12pt 0 6pt; page-break-after: avoid; }
 h4 { font-family: "Heiti SC", "SimHei", "黑体", sans-serif; font-size: 11pt;
@@ -551,22 +554,33 @@ def build_pdf(html_path: str, dest: str) -> int:
     edge = find_edge()
     if not edge:
         raise RuntimeError("找不到 Edge/Chrome，无法打印 PDF")
-    url = "file:///" + html_path.replace("\\", "/")
+    # 用「确保不存在」的临时路径：实测 Edge 对预创建的空目标文件偶尔不写盘
+    # （表现为 pypdf 读到空文件），故不依赖 tempfile.mkstemp 的预建行为
+    import time
+    tmp_pdf = os.path.join(tempfile.gettempdir(),
+                           f"bdout_{os.getpid()}_{int(time.time() * 1000)}.pdf")
+    if os.path.exists(tmp_pdf):
+        os.remove(tmp_pdf)
+    url = "file:///" + os.path.abspath(html_path).replace("\\", "/")
     cmd = [edge, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
-           f"--print-to-pdf={dest}", "--virtual-time-budget=30000", url]
+           f"--print-to-pdf={tmp_pdf}", url]
     subprocess.run(cmd, check=True, timeout=600,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    if not os.path.exists(dest):
-        raise RuntimeError("Edge 未产出 PDF")
+    if not os.path.exists(tmp_pdf) or os.path.getsize(tmp_pdf) == 0:
+        raise RuntimeError("Edge 未产出 PDF（空文件）")
 
-    # 盖页码：Chromium 不支持 @page 计数器，用 pypdf + reportlab 补
+    # 盖页码 + 自建书签：Chromium 不支持 @page 计数器，也不保证
+    # --generate-pdf-document-outline 稳定生效（实测同管线 550→0→空文件），
+    # 故书签改为由 HTML 标题结构显式生成，页码按 stamped 页面文本定位
     from io import BytesIO
     from pypdf import PdfReader, PdfWriter
     from reportlab.pdfgen import canvas
 
-    reader = PdfReader(dest)
+    reader = PdfReader(tmp_pdf)
     total = len(reader.pages)
-    writer = PdfWriter(clone_from=dest)
+    writer = PdfWriter()
+    writer.append(reader)
+
     for i, page in enumerate(writer.pages, 1):
         w = float(page.mediabox.width)
         buf = BytesIO()
@@ -577,9 +591,63 @@ def build_pdf(html_path: str, dest: str) -> int:
         c.save()
         buf.seek(0)
         page.merge_page(PdfReader(buf).pages[0])
+
+    build_pdf_outline(writer, html_path, total)
+
     with open(dest, "wb") as fh:
         writer.write(fh)
+    try:
+        os.remove(tmp_pdf)
+    except OSError:
+        pass
     return total
+
+
+def build_pdf_outline(writer, html_path: str, total: int) -> None:
+    """按 HTML 的 h1/h2 文档顺序自建 PDF 书签树。
+
+    - 不依赖 Edge 的 outline 开关（不可靠）；
+    - 页码用 stamped 后每页文本反查，并从上一标题页向后单调搜索，
+      保证「父页号 ≤ 子页号」的书签树合法。
+    """
+    raw = open(html_path, encoding="utf-8").read()
+    items: list[tuple[int, str]] = []
+    for m in re.finditer(r"<h([12])[^>]*>(.*?)</h\1>", raw, re.S | re.I):
+        level = int(m.group(1))
+        txt = re.sub(r"<[^>]+>", "", m.group(2))
+        txt = html.unescape(txt)
+        txt = re.sub(r"\s+", " ", txt).strip()
+        if txt:
+            items.append((level, txt))
+    if not items:
+        return
+
+    def norm(s: str) -> str:
+        return re.sub(r"\s+", "", s or "")
+
+    page_texts = [norm(p.extract_text()) for p in writer.pages]
+
+    def key_of(txt: str) -> str:
+        # 章标题「第 N 章　…」取「第 N 章」前缀，足够唯一且免受后续长串干扰
+        if "第" in txt and "章" in txt:
+            return norm(txt.split("章", 1)[0] + "章")
+        return norm(txt)[:8]
+
+    last_page = 0
+    stack: dict[int, object] = {}
+    for level, txt in items:
+        key = key_of(txt)
+        page_idx = last_page
+        for idx in range(last_page, total):
+            if key and key in page_texts[idx]:
+                page_idx = idx
+                break
+        parent = stack.get(level - 1)
+        ref = writer.add_outline_item(txt, page_idx, parent=parent)
+        stack[level] = ref
+        for lv in (level + 1, level + 2):
+            stack.pop(lv, None)
+        last_page = page_idx
 
 
 # ---------------------------------------------------------------------------
