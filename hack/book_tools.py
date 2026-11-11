@@ -270,9 +270,9 @@ LEVEL_LABEL = {"L1": "L1 规范与官方", "L2": "L2 权威著作与共识", "L3
 
 def appendix():
     out = ["# 附录 I　参考文献与来源登记", "",
-           "> 本附录由 `references/chNN.yaml` 自动生成（`python hack/book_tools.py appendix`），不在别处手工维护第二份。",
-           "> 正文只出现 `[R-XX-N]` 角标；此处给出编号、级别、标题、机构、版本、访问日期与支撑的论断位置。",
-           "> 标「链接待核验」者为池外候选来源，按 D-10 不编造 URL；季度复核计划见 10.5。", ""]
+           "> 本附录由全书统一的章级引用登记表生成，不在别处手工维护第二份。",
+           "> 每条给出编号、级别、标题、机构、版本、访问日期与支撑的论断位置。",
+           "> 原站已下线的条目按名称引用，只登记文献信息、不提供失效链接。", ""]
     for path in sorted(glob.glob(os.path.join(REF_DIR, "ch*.yaml"))):
         n = os.path.basename(path)[2:4]
         entries = parse_refs(path)
@@ -287,6 +287,8 @@ def appendix():
                 out.append("  - 链接：%s ｜ 访问日期 %s%s" % (
                     e["url"], e["accessed"] or "—",
                     " ｜ 归档 %s" % e["archive_url"] if e["archive_url"] else ""))
+            elif e["status"] == "offline":
+                out.append("  - 链接：**原站已下线**（访问日期 %s，按名称引用，不提供链接）" % (e["accessed"] or "—"))
             else:
                 out.append("  - 链接：**待核验**（%s，访问日期 %s）" % (e["status"], e["accessed"] or "—"))
             if e.get("note"):
@@ -304,7 +306,16 @@ if __name__ == "__main__":
     elif cmd == "pending":
         pending()
     elif cmd == "appendix":
-        print(appendix())
+        text = appendix()
+        if "--stdout" in sys.argv:
+            # 关掉平台的 CRLF 翻译，保证与落盘文件逐字节可比
+            sys.stdout.reconfigure(newline="\n")
+            sys.stdout.write(text + "\n")
+            sys.exit(0)
+        dest = os.path.join(ROOT, "appendices", "附录I-参考文献.md")
+        with open(dest, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(text + "\n")
+        print("附录 I 已写入 %s（%d 字）" % (os.path.relpath(dest, ROOT), len(text)))
     else:
         print(__doc__)
         sys.exit(2)

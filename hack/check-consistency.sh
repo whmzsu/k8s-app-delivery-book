@@ -26,11 +26,11 @@ assert not missing
 PY
 
 echo "== 3. 附录 I 由引用登记重新生成并比对 =="
-python hack/book_tools.py appendix > /tmp/appendix_I_check.md
+python hack/book_tools.py appendix --stdout > /tmp/appendix_I_check.md
 if diff -q appendices/附录I-参考文献.md /tmp/appendix_I_check.md >/dev/null; then
   echo "附录 I 与 references/*.yaml 一致"
 else
-  echo "!! 附录 I 已过期，请运行：python hack/book_tools.py appendix > appendices/附录I-参考文献.md"
+  echo "!! 附录 I 已过期，请运行：python hack/book_tools.py appendix"
   exit 1
 fi
 

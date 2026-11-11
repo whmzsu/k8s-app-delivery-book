@@ -31,11 +31,11 @@
   level: "L1"
   url: "https://external-secrets.io/latest/"
   version_or_date: "版本 2.x（apiVersion external-secrets.io/v1）"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§9.1 生产密钥外部托管；§9.3 唯一示例实现；§9.4 SecretStore / ExternalSecret / envFrom"
   status: "verified"
-  note: "按 book/decisions.md U-05，ESO 2.x + 占位后端 vault 为全书唯一密钥注入实现，第 14、26 章须对齐"
+  note: "按本书选型基线，ESO 2.x + 占位后端 vault 为全书唯一密钥注入实现，第 14、26 章与本章一致"
 
 - id: R-09-4
   title: "NIST SP 800-190 Application Container Security Guide"
@@ -75,13 +75,13 @@
   title: "Cloud Native Security Whitepaper v2"
   author_or_org: "CNCF TAG Security"
   level: "L2"
-  url: "https://github.com/cncf/tag-security"
+  url: "https://github.com/cncf/tag-security/blob/main/community/resources/security-whitepaper/v2/CNCF_cloud-native-security-whitepaper-May2022-v2.pdf"
   version_or_date: "v2"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§9.2 凭据全生命周期（分发/轮换/吊销/审计）；§9.2 本书观点论证；§9.5 审计验收"
   status: "verified"
-  note: "CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）"
+  note: "CNCF TAG Security 发布的云原生安全白皮书 v2（2022 年 5 月）；适用边界：面向云原生通用架构，具体控制项需按本章清单裁剪"
 
 - id: R-09-8
   title: "SOPS（Secrets OPerationS）项目文档"

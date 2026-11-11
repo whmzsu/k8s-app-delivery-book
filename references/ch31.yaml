@@ -70,13 +70,13 @@
   status: "verified"
 
 - id: R-31-7
-  title: "公开 postmortem 合集（名称级候选）"
+  title: "公开事故复盘索引（复盘方法与事故重演相关案例的检索入口）"
   author_or_org: "各机构"
   level: "L3"
   url: "https://github.com/danluu/post-mortems"
-  version_or_date: "公开 postmortem 合集（按章择取，待核验）"
-  accessed: "2026-11-10"
+  version_or_date: "持续更新"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "支撑 §31.1 合成案例声明、§31.3 事故重演的方法论；合成案例不冒充真实事件"
   status: "verified"
-  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
+  note: "由社区维护的公开复盘索引；用于观察复盘文档的通用结构，本书的重演脚本为合成设计，不引用其中具体事件"

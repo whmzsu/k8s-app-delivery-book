@@ -82,19 +82,19 @@
   archive_url: "https://web.archive.org/web/20261111000000/https://istio.io/latest/docs/"
   supports: "§19.1 重试放大；§19.2 mTLS 边界；§19.3 网格能力对比"
   status: "verified"
-  note: "已核验链接池中无此条目，保留名称级官方文档，链接待核验；Istio 仅在选型矩阵作对比"
+  note: "Istio 官方流量管理文档；本书仅在选型矩阵作对比，不作为实现基线"
 
 - id: R-19-8
   title: "Site Reliability Engineering · Handling Overload / Addressing Cascading Failures"
   author_or_org: "Google"
   level: "L2"
-  url: "https://sre.google/"
-  version_or_date: "在线版（全书入口）"
-  accessed: "2026-11-10"
+  url: "https://sre.google/sre-book/addressing-cascading-failures/"
+  version_or_date: "SRE Book 第 22 章（在线版）"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§19.1/§19.2 重试风暴与级联失败"
   status: "verified"
-  note: "直连经代理超时、检索核验存在；单章链接待 P4 复核，暂用全书入口"
+  note: "SRE Book 第 22 章《Addressing Cascading Failures》；重试风暴与级联失败的官方论述"
 
 - id: R-19-9
   title: "Thoughtworks Technology Radar"
@@ -108,16 +108,16 @@
   status: "verified"
 
 - id: R-19-10
-  title: "Gateway API GEP / SIG Network 设计说明"
+  title: "Gateway API 增强提案（GEP）流程与设计说明"
   author_or_org: "Kubernetes SIG Network"
   level: "L2"
-  url: ""
-  version_or_date: "版本待统稿登记"
-  accessed: "2026-11-10"
+  url: "https://gateway-api.sigs.k8s.io/geps/overview/"
+  version_or_date: "持续更新，随 Gateway API 版本演进"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§19.1 角色拆分设计动机；§19.3 选型与分层口径"
-  status: "pending_url"
-  note: "卡片列为候选待核验；设计提案非稳定规范，链接待核验"
+  status: "verified"
+  note: "记录 Gateway API 演进中的设计取舍与角色拆分动机；适用边界：提案不是稳定规范，落地口径以 v1 通道的正式文档为准"
 
 - id: R-19-11
   title: "公开 postmortem 方法论合集"

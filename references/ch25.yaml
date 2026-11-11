@@ -52,22 +52,22 @@
   level: "L1"
   url: "https://www.conftest.dev/"
   version_or_date: "适用版本 0.x"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
-  supports: "§25.1 反模式二（CI 侧离线校验的通用做法）；与第 11 章分工见 SP-16"
+  supports: "§25.1 反模式二（CI 侧离线校验的通用做法）；与第 11 章的分工见 §25.2"
   status: "verified"
 
 - id: R-25-6
   title: "Cloud Native Security Whitepaper v2"
   author_or_org: "CNCF TAG Security"
   level: "L2"
-  url: "https://github.com/cncf/tag-security"
+  url: "https://github.com/cncf/tag-security/blob/main/community/resources/security-whitepaper/v2/CNCF_cloud-native-security-whitepaper-May2022-v2.pdf"
   version_or_date: "v2"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§25.1 反模式三（例外登记与审计链）、本书观点的工程背景"
   status: "verified"
-  note: "CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）"
+  note: "CNCF TAG Security 发布的云原生安全白皮书 v2（2022 年 5 月）；适用边界：面向云原生通用架构，具体控制项需按本章清单裁剪"
 
 - id: R-25-7
   title: "Thoughtworks Technology Radar"
@@ -90,4 +90,4 @@
   archive_url: ""
   supports: "§25.1 反模式一的现实背景（安全策略与交付速度的张力）"
   status: "verified"
-  note: "仅作行业背景实证；按 D-02，合成案例不得冒充真实事件"
+  note: "仅作行业背景实证；本书合成案例不冒充真实事件"

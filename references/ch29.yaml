@@ -70,7 +70,7 @@
   archive_url: "https://web.archive.org/web/20261111000000/https://operatorhub.io/"
   supports: "支撑 §29.3 找现成 Operator 的选型入口"
   status: "verified"
-  note: "卡片列为 L1 候选；_verified.md 未登记正式链接，不编造"
+  note: ""
 
 - id: R-29-7
   title: "Prometheus《Alerting Rules》"
@@ -84,16 +84,16 @@
   status: "verified"
 
 - id: R-29-8
-  title: "CNCF 项目成熟度标准（沙箱 / 孵化 / 毕业）"
+  title: "CNCF 项目成熟度分层（Graduated / Incubating / Sandbox）"
   author_or_org: "CNCF"
   level: "L2"
-  url: ""
-  version_or_date: "分级条目"
-  accessed: "2026-11-10"
+  url: "https://www.cncf.io/projects/"
+  version_or_date: "持续更新"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "支撑 §29.1 反模式一/三、§29.2 社区治理维度、§29.3 评估表"
-  status: "pending_url"
-  note: "与 R-05-2 同源；卡片标注「候选待核验」，_verified.md 未登记正式链接，不编造"
+  status: "verified"
+  note: "按三档成熟度列出定义与在册项目；适用边界：成熟度是准入门槛而非质量保证，同一档内项目的运维成熟度差异仍大"
 
 - id: R-29-9
   title: "Thoughtworks Technology Radar"
@@ -129,13 +129,13 @@
   status: "verified"
 
 - id: R-29-12
-  title: "Operator 升级事故复盘（名称级候选）"
+  title: "公开事故复盘索引（Operator 与控制器升级相关案例的检索入口）"
   author_or_org: "各机构"
   level: "L3"
   url: "https://github.com/danluu/post-mortems"
-  version_or_date: "公开 postmortem 合集（按章择取，待核验）"
-  accessed: "2026-11-10"
+  version_or_date: "持续更新"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "支撑 §29.1 反模式的方法论；合成案例不冒充真实事件"
   status: "verified"
-  note: "公开 postmortem 索引；合成案例不得冒充真实事件"
+  note: "由社区维护的公开复盘索引；控制器升级事故的公开披露零散，本书因此不引用具体事件，只据此说明该类失效存在"

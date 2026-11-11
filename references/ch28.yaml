@@ -47,7 +47,7 @@
   archive_url: "https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/concepts/extend-kubernetes/operator/"
   supports: "支撑 §28.1 反模式二、§28.2 status 只表达观测结果、§28.4 类型定义、§28.5 通过标准"
   status: "verified"
-  note: "与 R-27-4 同源不同章；_verified.md 未登记该页 URL，不编造"
+  note: "与 R-27-4 同源不同章"
 
 - id: R-28-5
   title: "Kubernetes《CRD 版本与转换 webhook》文档"
@@ -73,28 +73,28 @@
   status: "verified"
 
 - id: R-28-7
-  title: "KubeCon 控制器最佳实践演讲（名称级候选）"
+  title: "KubeCon 控制器实践演讲（会议录播）"
   author_or_org: "KubeCon / CNCF"
   level: "L2"
   url: ""
-  version_or_date: "会议演讲"
-  accessed: "2026-11-10"
+  version_or_date: "KubeCon 演讲，年份随会议届次变化"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "支撑 §28.1 反模式一/二、§28.2 reconcile 反模式清单"
-  status: "pending_url"
-  note: "卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造"
+  status: "offline"
+  note: "会议录播入口随年份迁移，稳定链接不可长期依赖；本条按名称引用其结论，不提供易失效链接。同类最佳实践以 R-28-1（Kubebuilder Book）与 R-28-2（controller-runtime）的官方文档为准"
 
 - id: R-28-8
-  title: "CNCF Operator 相关白皮书（名称级候选）"
-  author_or_org: "CNCF"
+  title: "CNCF Operator 白皮书 v1.0（TAG App Delivery）"
+  author_or_org: "CNCF TAG App Delivery"
   level: "L2"
-  url: ""
-  version_or_date: "在线版"
-  accessed: "2026-11-10"
+  url: "https://tag-app-delivery.cncf.io/whitepapers/operator/"
+  version_or_date: "v1.0"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "支撑 §28.1 反模式三「控制器静默降级」；与 R-28-7 来自不同机构、无利益关联"
-  status: "pending_url"
-  note: "卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造"
+  status: "verified"
+  note: "支撑「控制器静默降级」这一反模式的判定：Operator 白皮书把可观测性与状态上报列为能力项而非可选项；适用边界：白皮书给能力清单，落地强度按团队运维能力裁剪"
 
 - id: R-28-9
   title: "Thoughtworks Technology Radar"

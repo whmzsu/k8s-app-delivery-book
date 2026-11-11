@@ -32,11 +32,11 @@
   level: "L1"
   url: "https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/"
   version_or_date: "Prometheus 3.x"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§20.1 单一窗口/无窗口反模式；§20.2 快燃尽 1h/5m、慢燃尽 6h、趋势 3d 判据表；§20.4 GatewayErrorBudgetFastBurn / SlowBurn 规则"
   status: "verified"
-  note: "多窗口燃尽率由同一份错误预算推导，阈值与第 22 章告警规则同源（SP-06）"
+  note: "多窗口燃尽率由同一份错误预算推导，阈值与第 22 章告警规则同源"
 
 - id: R-20-4
   title: "Implementing SLOs"
@@ -56,11 +56,11 @@
   level: "L2"
   url: "https://sre.google/sre-book/embracing-risk/"
   version_or_date: "在线版（SRE Book 章节）"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§20.1 错误预算是变更额度而非口号；§20.2 预算耗尽冻结与例外审批；§20.4 budget-report.sh 的冻结判定与 exit 2"
   status: "verified"
-  note: "检索核验存在、直连经代理超时，P4 复核；与 [R-20-4] 为同机构不同著作，适用边界：以风险与变更速度权衡为语境，不覆盖规则语法"
+  note: "SRE Book 第 3 章《Embracing Risk》；与 R-20-4 为同机构不同著作，适用边界：以风险与变更速度权衡为语境，不覆盖规则语法"
 
 - id: R-20-6
   title: "Continuous Delivery"

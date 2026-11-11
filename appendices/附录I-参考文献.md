@@ -1,8 +1,8 @@
 # 附录 I　参考文献与来源登记
 
-> 本附录由 `references/chNN.yaml` 自动生成（`python hack/book_tools.py appendix`），不在别处手工维护第二份。
-> 正文只出现 `[R-XX-N]` 角标；此处给出编号、级别、标题、机构、版本、访问日期与支撑的论断位置。
-> 标「链接待核验」者为池外候选来源，按 D-10 不编造 URL；季度复核计划见 10.5。
+> 本附录由全书统一的章级引用登记表生成，不在别处手工维护第二份。
+> 每条给出编号、级别、标题、机构、版本、访问日期与支撑的论断位置。
+> 原站已下线的条目按名称引用，只登记文献信息、不提供失效链接。
 
 ## 第 1 章（8 条）
 
@@ -86,8 +86,8 @@
   - 支撑：支撑 §3.1 反模式三、§3.2 公理 6「回滚方案先行」与公理 7「SLO 先行于告警」
   - 链接：https://sre.google/ ｜ 访问日期 2026-11-10
 - **R-03-8**｜L2 权威著作与共识｜Implementing SLOs（Google SRE Workbook）｜Google SRE Workbook｜在线版
-  - 支撑：支撑 §3.4 最小 SLO 卡片字段与第 20 章正式体系的口径一致性（SP-02）；SLO 正式定义详见第 20 章
-  - 链接：https://sre.google/workbook/implementing-slos/ ｜ 访问日期 2026-11-10
+  - 支撑：支撑 §3.4 最小 SLO 卡片字段与第 20 章正式体系的口径一致性；SLO 正式定义详见第 20 章
+  - 链接：https://sre.google/workbook/implementing-slos/ ｜ 访问日期 2026-11-11
 
 ## 第 4 章（9 条）
 
@@ -239,8 +239,8 @@
 
 - **R-08-1**｜L1 规范与官方｜Configure Liveness, Readiness and Startup Probes（任务页，当前路径）｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：§8.1 三类探针语义；§8.2 语义对照表；§8.4 全部探针字段；§8.5 参数回退
-  - 链接：https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ ｜ 访问日期 2026-11-10
-  - 备注：旧路径漂移记录（供附录 A 版本矩阵使用）：旧任务页路径 .../tasks/configure-pod-container/configure-liveness-readiness-probes/ 与旧概念页路径 .../concepts/workloads/pods/probes/ 在本轮直连中超时，仅检索核验存在；references/_verified.md 第 34 行明确要求第 8 章引用上表「任务页，当前路径」。另：book/references/_registry.yaml 的 R-K8S-PROBE-TASK 仍登记旧路径 .../configure-liveness-readiness-probes/，与本章采用的当前路径不一致，该冲突已写入本章「一致性备注」⑤，由统稿统一裁决
+  - 链接：https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ ｜ 访问日期 2026-11-11
+  - 备注：Kubernetes 官方探针配置任务页的当前路径；旧路径 /configure-liveness-readiness-probes/ 已被官方重定向，引用以当前路径为准
 - **R-08-2**｜L1 规范与官方｜Liveness, Readiness, and Startup Probes（概念页）｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：§8.1/§8.2 readiness 与 liveness 失败后果区分
   - 链接：https://kubernetes.io/docs/concepts/workloads/pods/probes/ ｜ 访问日期 2026-11-10
@@ -260,16 +260,16 @@
   - 链接：https://kubernetes.io/docs/concepts/services-networking/service/ ｜ 访问日期 2026-11-10
 - **R-08-7**｜L2 权威著作与共识｜SRE Book《Monitoring Distributed Systems》｜Google｜在线版
   - 支撑：§8.2 零停机四条件；§8.4 连续请求统计判据
-  - 链接：https://sre.google/sre-book/monitoring-distributed-systems/ ｜ 访问日期 2026-11-10
-  - 备注：检索核验存在，直连经代理超时，P4 复核
-- **R-08-8**｜L2 权威著作与共识｜Site Reliability Engineering（全书入口）｜Google｜在线版，含第 2 版
+  - 链接：https://sre.google/sre-book/monitoring-distributed-systems/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 6 章《Monitoring Distributed Systems》原文；适用边界：面向分布式在线服务，不规定具体监控工具选型
+- **R-08-8**｜L2 权威著作与共识｜Site Reliability Engineering《Addressing Cascading Failures》｜Google｜SRE Book 第 22 章（在线版）
   - 支撑：§8.1 重启级联；§8.2 本书观点里重启是放大器的论证
-  - 链接：https://sre.google/ ｜ 访问日期 2026-11-10
-  - 备注：检索核验存在，直连经代理超时，P4 复核
-- **R-08-9**｜L2 权威著作与共识｜Zalando 工程博客：探针误用经验｜Zalando｜工程博客条目
+  - 链接：https://sre.google/sre-book/addressing-cascading-failures/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 22 章；给出级联失败的触发条件与「重启为何是放大器」的原始论证
+- **R-08-9**｜L2 权威著作与共识｜Liveness Probes are Dangerous｜Henning Jacobs（Zalando 首席工程师）｜2019 年发布，持续在线
   - 支撑：§8.1 liveness 误用反模式
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：P1 卡片名称级候选，未核验，链接待 P3 补齐；不得冒充已核验背书
+  - 链接：https://srcco.de/posts/kubernetes-liveness-probes-are-dangerous.html ｜ 访问日期 2026-11-11
+  - 备注：作者为 Zalando 首席工程师，基于其生产实践与对 Kubernetes 文档的反馈整理；适用边界：面向典型 HTTP 服务，集群成员相互探活的有状态应用需另行评估
 - **R-08-10**｜L2 权威著作与共识｜Thoughtworks Technology Radar｜Thoughtworks｜持续更新
   - 支撑：§8.2 零停机四条件为工程共识
   - 链接：https://www.thoughtworks.com/radar ｜ 访问日期 2026-11-10
@@ -290,8 +290,8 @@
   - 备注：Kubernetes v1.32 概念页（含 immutable 语义）
 - **R-09-3**｜L1 规范与官方｜External Secrets Operator Docs｜External Secrets Operator｜版本 2.x（apiVersion external-secrets.io/v1）
   - 支撑：§9.1 生产密钥外部托管；§9.3 唯一示例实现；§9.4 SecretStore / ExternalSecret / envFrom
-  - 链接：https://external-secrets.io/latest/ ｜ 访问日期 2026-11-10
-  - 备注：按 book/decisions.md U-05，ESO 2.x + 占位后端 vault 为全书唯一密钥注入实现，第 14、26 章须对齐
+  - 链接：https://external-secrets.io/latest/ ｜ 访问日期 2026-11-11
+  - 备注：按本书选型基线，ESO 2.x + 占位后端 vault 为全书唯一密钥注入实现，第 14、26 章与本章一致
 - **R-09-4**｜L1 规范与官方｜NIST SP 800-190 Application Container Security Guide｜NIST｜SP 800-190
   - 支撑：§9.1 凭据泄露与洗不掉的历史；§9.2 凭据全生命周期；§9.5 审计留痕验收
   - 链接：https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf ｜ 访问日期 2026-11-10
@@ -304,8 +304,8 @@
   - 链接：https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/ ｜ 访问日期 2026-11-10
 - **R-09-7**｜L2 权威著作与共识｜Cloud Native Security Whitepaper v2｜CNCF TAG Security｜v2
   - 支撑：§9.2 凭据全生命周期（分发/轮换/吊销/审计）；§9.2 本书观点论证；§9.5 审计验收
-  - 链接：https://github.com/cncf/tag-security ｜ 访问日期 2026-11-10
-  - 备注：CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）
+  - 链接：https://github.com/cncf/tag-security/blob/main/community/resources/security-whitepaper/v2/CNCF_cloud-native-security-whitepaper-May2022-v2.pdf ｜ 访问日期 2026-11-11
+  - 备注：CNCF TAG Security 发布的云原生安全白皮书 v2（2022 年 5 月）；适用边界：面向云原生通用架构，具体控制项需按本章清单裁剪
 - **R-09-8**｜L2 权威著作与共识｜SOPS（Secrets OPerationS）项目文档｜Mozilla / CNCF｜版本 3.x
   - 支撑：§9.3 选型矩阵中文件级加密 vs 运行时注入的取舍
   - 链接：https://github.com/mozilla/sops ｜ 访问日期 2026-11-10
@@ -331,16 +331,16 @@
   - 备注：与 R-10-2 为互相竞争工具（模板+包管理 vs 无模板 patch）的官方文档，共同满足选型章 ≥2 条 L1 要求；Chart 刻意不注入 Helm 特有标签以保证与 overlay 渲染产物等价
 - **R-10-2**｜L1 规范与官方｜Kustomize Documentation（含 FAQ）｜Kustomize｜版本 5.x
   - 支撑：§10.1 继承链过深；§10.2 判据表；§10.3 选型矩阵；§10.4 overlay 骨架
-  - 链接：https://kustomize.io/ ｜ 访问日期 2026-11-10
-  - 备注：按 book/decisions.md U-05，Kustomize 5.x overlay 为多环境基线；base + 单层 overlay 两层上限
+  - 链接：https://kustomize.io/ ｜ 访问日期 2026-11-11
+  - 备注：按本书选型基线，Kustomize 5.x overlay 为多环境基线；base + 单层 overlay 两层上限
 - **R-10-3**｜L1 规范与官方｜conftest｜Open Policy Agent｜版本 0.x
   - 支撑：§10.1 渲染产物进 CI；§10.3 选型矩阵；§10.4 关卡 4；§10.6 CL-S-03
-  - 链接：https://www.conftest.dev/ ｜ 访问日期 2026-11-10
-  - 备注：CI 里的组织策略静态校验，不得称为「准入」；集群侧策略库与准入见第 25 章（SP-16）
+  - 链接：https://www.conftest.dev/ ｜ 访问日期 2026-11-11
+  - 备注：CI 里的组织策略静态校验，不等同于「准入」；集群侧策略库与准入见第 25 章
 - **R-10-4**｜L1 规范与官方｜Declarative Object Management｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：§10.1 清单与提交分离；§10.2 manifests 与 rendered manifests 定义；§10.5 回到 Git
-  - 链接：https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/ ｜ 访问日期 2026-11-10
-  - 备注：rendered manifests 在本章首次提及并正式定义，深入展开见第 14 章（book/concept-ladder.md）
+  - 链接：https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/ ｜ 访问日期 2026-11-11
+  - 备注：rendered manifests 在本章首次提及并定义，深入展开见第 14 章
 - **R-10-5**｜L1 规范与官方｜kubeconform 项目文档｜kubeconform（yannh）｜版本 0.x
   - 支撑：§10.2 语法封闭判据；§10.3 选型矩阵；§10.4 关卡 3
   - 链接：https://github.com/yannh/kubeconform ｜ 访问日期 2026-11-10
@@ -392,22 +392,22 @@
   - 备注：Kubernetes 官方版本偏差策略
 - **R-11-7**｜L1 规范与官方｜Kyverno Documentation（CLI 离线校验）｜Kyverno｜版本 1.x
   - 支撑：§11.3 策略离线校验与第 25 章分工；§11.4 选型矩阵
-  - 链接：https://kyverno.io/docs/ ｜ 访问日期 2026-11-10
-  - 备注：按 book/decisions.md U-04，Kyverno 1.x 为唯一策略引擎示例；本章只讲离线校验，集群侧策略库与准入见第 25 章（SP-16）
+  - 链接：https://kyverno.io/docs/ ｜ 访问日期 2026-11-11
+  - 备注：按本书选型基线，Kyverno 1.x 为唯一策略引擎示例；本章只讲离线校验，集群侧策略库与准入见第 25 章
 - **R-11-8**｜L2 权威著作与共识｜Thoughtworks Technology Radar｜Thoughtworks｜持续更新
   - 支撑：§11.1 热更新绕过审查；§11.2 四层顺序与本书观点论证
   - 链接：https://www.thoughtworks.com/radar ｜ 访问日期 2026-11-10
 - **R-11-9**｜L2 权威著作与共识｜Continuous Delivery｜Martin Fowler｜bliki 条目
   - 支撑：§11.1 声明与收敛之别；§11.2 短反馈回路；§11.5 回到 Git
   - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-10
-- **R-11-10**｜L2 权威著作与共识｜Kubernetes SIG Testing 材料｜Kubernetes SIG Testing｜持续更新
+- **R-11-10**｜L2 权威著作与共识｜Writing Good e2e Tests for Kubernetes（SIG Testing 指南）｜Kubernetes SIG Testing｜当前主干版本
   - 支撑：§11.1 反模式三；§11.2 第 3 层声明式断言
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：P1 卡片名称级候选，链接待 P3 核验；与 R-11-8、R-11-9 来自不同机构、无利益关联
+  - 链接：https://github.com/kubernetes/community/blob/master/contributors/devel/sig-testing/writing-good-e2e-tests.md ｜ 访问日期 2026-11-11
+  - 备注：Kubernetes 官方仓库的 e2e 测试写作指南（模式与反模式）；适用边界：只覆盖端到端层，单元与集成测试的分层判据见本章正文
 - **R-11-11**｜L3 案例与实证｜CNCF Annual Survey 2023｜CNCF｜2023
   - 支撑：§11.1 / §11.2 多版本并存的实证背景
-  - 链接：https://www.cncf.io/reports/cncf-annual-survey-2023/ ｜ 访问日期 2026-11-10
-  - 备注：按 references/_verified.md 第三节，L3 只作背景实证，不用于证明某次虚构事故真实发生
+  - 链接：https://www.cncf.io/reports/cncf-annual-survey-2023/ ｜ 访问日期 2026-11-11
+  - 备注：公开事故复盘索引；L3 来源在本书只作行业背景实证，不用于证明本书合成案例真实发生
 
 ## 第 12 章（9 条）
 
@@ -433,20 +433,20 @@
   - 备注：OCI Image Spec v1.1 规范站点
 - **R-12-6**｜L2 权威著作与共识｜Continuous Delivery｜Martin Fowler｜bliki 条目
   - 支撑：§12.1 build once 反模式、§12.2 fail fast 阶段顺序与越晚发现越贵
-  - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-10
-  - 备注：已核验入口池 L2 条目，book/references/_registry.yaml 亦登记 R-FOWLER-CD
+  - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-11
+  - 备注：Martin Fowler bliki 条目；与本章 build once 论述互补，不覆盖具体工具语法
 - **R-12-7**｜L2 权威著作与共识｜The Twelve-Factor App · III. Config｜Heroku / 12factor.net｜在线版
   - 支撑：§12.1 配置与凭据分离、§12.2 环境等价判据
   - 链接：https://12factor.net/config ｜ 访问日期 2026-11-10
   - 备注：适用边界：面向无状态 Web 服务；有状态组件见第 16 章
 - **R-12-8**｜L2 权威著作与共识｜CNCF Cloud Native Security Whitepaper v2｜CNCF TAG Security｜v2
   - 支撑：§12.1 机密脱敏与供应链共识、§12.4 OIDC 最小权限
-  - 链接：https://github.com/cncf/tag-security ｜ 访问日期 2026-11-10
-  - 备注：CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）
-- **R-12-9**｜L3 案例与实证｜公开 CI/CD 流水线配置失误与供应链 postmortem 合集（名称级候选）｜各机构｜合集入口（按章择取，待核验）
-  - 支撑：§12.1 反模式的方法论；合成案例不得冒充真实事件
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+  - 链接：https://github.com/cncf/tag-security/blob/main/community/resources/security-whitepaper/v2/CNCF_cloud-native-security-whitepaper-May2022-v2.pdf ｜ 访问日期 2026-11-11
+  - 备注：CNCF TAG Security 发布的云原生安全白皮书 v2（2022 年 5 月）；适用边界：面向云原生通用架构，具体控制项需按本章清单裁剪
+- **R-12-9**｜L3 案例与实证｜CircleCI 2023 年 1 月事件复盘（第三方集成被攻破导致客户凭据外泄）｜CircleCI｜2023 年 1 月
+  - 支撑：§12.1 反模式的方法论（CI 侧凭据是供应链薄弱点）；合成案例不冒充真实事件
+  - 链接：https://circleci.com/blog/jan-4-2023-incident-report/ ｜ 访问日期 2026-11-11
+  - 备注：CI 服务商自身被攻破、导致下游客户长期令牌与密钥外泄的官方复盘；适用边界：揭示「CI 是凭据集中地」，不覆盖流水线配置语法
 
 ## 第 13 章（9 条）
 
@@ -460,32 +460,32 @@
   - 备注：已核验入口池 L1 条目
 - **R-13-3**｜L1 规范与官方｜Argo Rollouts Documentation｜Argo｜1.x
   - 支撑：§13.3 金丝雀控制器对比；与 R-13-1 构成原生滚动 vs 控制器灰度的互相竞争实现官方文档
-  - 链接：https://argoproj.github.io/rollouts/ ｜ 访问日期 2026-11-10
-  - 备注：官方规范入口；直连经代理超时，P4 复核
+  - 链接：https://argoproj.github.io/rollouts/ ｜ 访问日期 2026-11-11
+  - 备注：Argo Rollouts 官方文档；与 R-13-1 构成「原生滚动 vs 控制器灰度」的互相竞争实现
 - **R-13-4**｜L1 规范与官方｜Configure Liveness, Readiness and Startup Probes｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：§13.2 零停机前提、§13.4 minReadySeconds、§13.5 发布期零 5xx
-  - 链接：https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ ｜ 访问日期 2026-11-10
-  - 备注：取 references/_verified.md 标注的「任务页，当前路径」；book/references/_registry.yaml 的 R-K8S-PROBE-TASK 仍为旧路径，见本章一致性备注
+  - 链接：https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ ｜ 访问日期 2026-11-11
+  - 备注：Kubernetes 官方文档的当前路径；旧路径已被官方重定向，引用以当前路径为准
 - **R-13-5**｜L2 权威著作与共识｜BlueGreenDeployment｜Martin Fowler｜bliki 条目
   - 支撑：§13.1 合成案例的切流失败、§13.2 蓝绿策略列、§13.3 保留旧版本
-  - 链接：https://martinfowler.com/bliki/BlueGreenDeployment.html ｜ 访问日期 2026-11-10
-  - 备注：已核验入口池 L2 条目；book/references/_registry.yaml 亦登记 R-FOWLER-BG，并注明支撑 schema 排序（第 16 章）
+  - 链接：https://martinfowler.com/bliki/BlueGreenDeployment.html ｜ 访问日期 2026-11-11
+  - 备注：Martin Fowler bliki《BlueGreenDeployment》；与 R-13-6 来自不同机构、无利益关联
 - **R-13-6**｜L2 权威著作与共识｜CanaryRelease｜Danilo Sato (martinfowler.com)｜bliki 条目
   - 支撑：§13.2 金丝雀策略列、§13.3 流量分批对比
-  - 链接：https://martinfowler.com/bliki/CanaryRelease.html ｜ 访问日期 2026-11-10
-  - 备注：已核验入口池 L2 条目；book/references/_registry.yaml 亦登记 R-SATO-CANARY
-- **R-13-7**｜L2 权威著作与共识｜Site Reliability Engineering《Release Engineering》｜Google｜在线版（含第 2 版）
+  - 链接：https://martinfowler.com/bliki/CanaryRelease.html ｜ 访问日期 2026-11-11
+  - 备注：Sato 关于金丝雀发布的实践总结；适用边界：面向 Web 服务灰度，不覆盖数据层兼容
+- **R-13-7**｜L2 权威著作与共识｜Site Reliability Engineering《Release Engineering》｜Google｜SRE Book 第 8 章（在线版）
   - 支撑：§13.1 回滚方案先于发布、§13.2 回滚方案六要素定义
-  - 链接：https://sre.google/ ｜ 访问日期 2026-11-10
-  - 备注：检索核验存在；直连经代理超时，P4 复核。book/references/_registry.yaml 登记 R-SRE-BOOK
+  - 链接：https://sre.google/sre-book/release-engineering/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 8 章《Release Engineering》；给出发布流水线、配置管理与发布节奏的官方实践，不规定具体工具
 - **R-13-8**｜L2 权威著作与共识｜Continuous Delivery (Humble & Farley, 2010)｜Jez Humble / David Farley, Addison-Wesley｜2010
   - 支撑：§13.2 发布门禁与回滚预案；与 R-13-7 来自不同机构、无利益关联
   - 链接：https://continuousdelivery.com/ ｜ 访问日期 2026-11-10
   - 备注：Jez Humble / David Farley 持续交付官方站点
-- **R-13-9**｜L3 案例与实证｜公开发布 / 回滚失败事故复盘（名称级候选）｜各机构｜公开 postmortem 合集（按章择取，待核验）
-  - 支撑：§13.1 反模式的方法论；合成案例不冒充真实事件
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+- **R-13-9**｜L3 案例与实证｜Cloudflare 2020 年 7 月 17 日全球中断复盘（单条配置规则全量下发）｜Cloudflare｜2020 年 7 月
+  - 支撑：§13.1 回滚方案先于发布：全量下发的变更只能靠全局回滚收场
+  - 链接：https://blog.cloudflare.com/cloudflare-outage-on-july-17-2020/ ｜ 访问日期 2026-11-11
+  - 备注：一条变更后的正则规则被全量下发，边缘 CPU 耗尽导致半数流量中断，最终靠全局回滚恢复；适用边界：面向配置类变更，不覆盖代码缺陷导致的回滚
 
 ## 第 14 章（13 条）
 
@@ -506,8 +506,8 @@
   - 链接：https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/ ｜ 访问日期 2026-11-10
   - 备注：已核验入口池 L1 条目
 - **R-14-5**｜L1 规范与官方｜Kustomize Documentation｜Kustomize｜5.x
-  - 支撑：§14.3 仓库内渲染、§14.4 hack/render.sh 与 kustomization.yaml
-  - 链接：https://kustomize.io/ ｜ 访问日期 2026-11-10
+  - 支撑：§14.3 仓库内渲染、§14.4 渲染脚本与 kustomization.yaml
+  - 链接：https://kustomize.io/ ｜ 访问日期 2026-11-11
   - 备注：已核验入口池 L1 条目；多环境基线打包工具
 - **R-14-6**｜L1 规范与官方｜Helm Documentation｜Helm｜4.x
   - 支撑：§14.3 集群内渲染的 helm template 路径与渲染插件版本漂移
@@ -521,22 +521,22 @@
   - 支撑：§14.3 密钥方案对照（对比项）
   - 链接：https://github.com/bitnami-labs/sealed-secrets ｜ 访问日期 2026-11-10
   - 备注：已核验入口池 L1 条目；仅作对比，非本书示例实现
-- **R-14-9**｜L2 权威著作与共识｜Weaveworks 关于 GitOps 的论述｜Weaveworks｜在线版（候选待核验）
+- **R-14-9**｜L2 权威著作与共识｜GitOps - Operations by Pull Request（Weaveworks 2017）｜Weaveworks（已停止运营）｜2017 年 8 月
   - 支撑：§14.1 自愈是价值也是风险、§14.2 白名单与冻结窗口
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片标注「候选待核验」；池未登记正式链接，不编造
-- **R-14-10**｜L2 权威著作与共识｜CNCF App Delivery TAG 材料（GitOps 与多环境交付）｜CNCF App Delivery TAG｜在线版（候选待核验）
+  - 链接：**原站已下线**（访问日期 2026-11-11，按名称引用，不提供链接）
+  - 备注：Weaveworks 于 2024 年停止运营，原始博文所在站点已下线；本条按名称引用其历史贡献，不提供失效链接。该文提出的四原则现由 R-14-1 的 OpenGitOps 正式维护
+- **R-14-10**｜L2 权威著作与共识｜CNCF App Delivery TAG 工作组与产出索引｜CNCF TAG App Delivery｜持续更新
   - 支撑：§14.2 持续收敛共识、§14.3 晋升链路
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片标注「候选待核验」；与 R-14-9 来自不同机构、无利益关联
+  - 链接：https://tag-app-delivery.cncf.io/wgs/ ｜ 访问日期 2026-11-11
+  - 备注：TAG App Delivery 是 CNCF 应用交付领域的官方技术咨询组，其 GitOps 分工作组的正式产出即 R-14-1 的 OpenGitOps 原则；适用边界：工作组文档属方向性共识，不构成具体工具选型结论
 - **R-14-11**｜L2 权威著作与共识｜Continuous Delivery｜Martin Fowler｜bliki 条目
   - 支撑：§14.2 PR 即变更与可追溯、§14.5 git revert 统一回滚
-  - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-10
-  - 备注：已核验入口池 L2 条目；book/references/_registry.yaml 亦登记 R-FOWLER-CD
-- **R-14-12**｜L3 案例与实证｜公开 GitOps 配置漂移 / 手工变更事故复盘（名称级候选）｜各机构｜公开 postmortem 合集（按章择取，待核验）
-  - 支撑：§14.1 反模式的方法论；合成案例不冒充真实事件
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+  - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-11
+  - 备注：Martin Fowler bliki《Continuous Delivery》；与 R-14-2 构成 GitOps 与传统 CD 的对照
+- **R-14-12**｜L3 案例与实证｜AWS S3 2017 年 2 月 28 日事件摘要（运维执行既定剧本时输入参数错误）｜Amazon Web Services｜2017 年 2 月
+  - 支撑：§14.1 手工变更与配置漂移的方法论；合成案例不冒充真实事件
+  - 链接：https://aws.amazon.com/message/41926/ ｜ 访问日期 2026-11-11
+  - 备注：执行既定运维剧本时参数输错、移除的容量超出预期，导致区域级服务中断；官方在复盘中给出「限制并发、分批执行、加护栏」的改进项；适用边界：面向控制面操作，不覆盖应用层发布
 - **R-14-13**｜L1 规范与官方｜SOPS（Secrets OPerationS）Documentation｜CNCF / SOPS｜3.x
   - 支撑：§14.3 密钥方案对照、§14.4 .sops.yaml 对比配置
   - 链接：https://github.com/mozilla/sops ｜ 访问日期 2026-11-10
@@ -546,8 +546,8 @@
 
 - **R-15-1**｜L1 规范与官方｜Argo Rollouts Documentation（Rollout / AnalysisTemplate / Traffic Routing）｜Argo｜1.x
   - 支撑：§15.2 渐进式交付三要素定义、§15.4 Rollout 与 AnalysisTemplate 配置、§15.5 自动回滚
-  - 链接：https://argoproj.github.io/rollouts/ ｜ 访问日期 2026-11-10
-  - 备注：官方规范入口；直连经代理超时，P4 复核
+  - 链接：https://argoproj.github.io/rollouts/ ｜ 访问日期 2026-11-11
+  - 备注：Argo Rollouts 官方文档（Rollout / AnalysisTemplate / 流量路由）；适用边界：控制器级灰度，不覆盖服务网格侧的流量切分
 - **R-15-2**｜L1 规范与官方｜Gateway API（规范与文档站，含 HTTPRoute 权重）｜Kubernetes SIG Network｜1.x
   - 支撑：§15.3 流量层唯一实现、§15.4 HTTPRoute 配置、§15.5 先停在 5%
   - 链接：https://gateway-api.sigs.k8s.io/ ｜ 访问日期 2026-11-10
@@ -574,24 +574,24 @@
   - 备注：Istio 官方文档站；本书仅作选型对比
 - **R-15-8**｜L2 权威著作与共识｜CanaryRelease｜Danilo Sato (martinfowler.com)｜bliki 条目
   - 支撑：§15.1 合成案例、§15.2 金丝雀与渐进式交付定义
-  - 链接：https://martinfowler.com/bliki/CanaryRelease.html ｜ 访问日期 2026-11-10
-  - 备注：已核验入口池 L2 条目；book/references/_registry.yaml 亦登记 R-SATO-CANARY
+  - 链接：https://martinfowler.com/bliki/CanaryRelease.html ｜ 访问日期 2026-11-11
+  - 备注：Martin Fowler bliki《CanaryRelease》；提出金丝雀发布的基本形态与判据
 - **R-15-9**｜L2 权威著作与共识｜Feature Toggles（Feature Flags）｜Pete Hodgson / Martin Fowler｜在线文章
   - 支撑：§15.2 特性开关与渐进式交付边界这一本书观点的反例描述
-  - 链接：https://martinfowler.com/articles/feature-toggles.html ｜ 访问日期 2026-11-10
-  - 备注：已核验入口池 L2 条目；仅支撑反例，不作为本书主张的背书
+  - 链接：https://martinfowler.com/articles/feature-toggles.html ｜ 访问日期 2026-11-11
+  - 备注：仅支撑反例，不作为本书主张的背书
 - **R-15-10**｜L2 权威著作与共识｜SRE Workbook《Implementing SLOs》｜Google｜在线版
   - 支撑：§15.2 SLI / SLO 口径白话、用户可感信号；与 R-15-8 来自不同机构、无利益关联
-  - 链接：https://sre.google/workbook/implementing-slos/ ｜ 访问日期 2026-11-10
-  - 备注：已核验入口池 L2 条目；book/references/_registry.yaml 登记 R-SRE-SLOS
-- **R-15-11**｜L2 权威著作与共识｜SRE Workbook《Canarying Releases》｜Google｜在线版（候选待核验）
+  - 链接：https://sre.google/workbook/implementing-slos/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Workbook《Implementing SLOs》；与 R-15-8 来自不同机构、无利益关联
+- **R-15-11**｜L2 权威著作与共识｜SRE Workbook《Canarying Releases》｜Google｜SRE Workbook 第 16 章（在线版）
   - 支撑：§15.2 分批放量与阈值设定
-  - 链接：https://sre.google/workbook/canarying-releases/ ｜ 访问日期 2026-11-10
-  - 备注：Google SRE Workbook 规范入口；直连经代理超时，P4 复核
-- **R-15-12**｜L3 案例与实证｜公开渐进式交付 / 自动回滚事故复盘（名称级候选）｜各机构｜公开 postmortem 合集（按章择取，待核验）
-  - 支撑：§15.1 反模式的方法论；合成案例不冒充真实事件
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+  - 链接：https://sre.google/workbook/canarying-releases/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Workbook《Canarying Releases》；给出分批放量与阈值设定的官方做法，不覆盖具体控制器配置
+- **R-15-12**｜L3 案例与实证｜Fastly 2021 年 6 月 8 日中断复盘（未分批的配置推送触发全局失效）｜Fastly｜2021 年 6 月
+  - 支撑：§15.1 未分批的配置变更是全局故障的常见来源
+  - 链接：https://www.fastly.com/blog/summary-of-june-8-outage ｜ 访问日期 2026-11-11
+  - 备注：一次已存在数周的配置在特定客户条件下被触发，影响全球边缘节点，靠禁用该配置恢复；适用边界：说明「配置类变更同样需要分批放量与可回滚」，不构成对具体灰度控制器的选型建议
 
 ## 第 16 章（10 条）
 
@@ -621,20 +621,20 @@
   - 备注：书目条目（出版社信息页）
 - **R-16-7**｜L2 权威著作与共识｜BlueGreenDeployment｜Martin Fowler｜bliki 条目
   - 支撑：§16.1 回滚失效、§16.2 schema 变更排序与新旧共存；与 R-16-6 来自不同机构、无利益关联
-  - 链接：https://martinfowler.com/bliki/BlueGreenDeployment.html ｜ 访问日期 2026-11-10
-  - 备注：已核验入口池 L2 条目；book/references/_registry.yaml 亦登记 R-FOWLER-BG
-- **R-16-8**｜L2 权威著作与共识｜Site Reliability Engineering《Managing Incidents》｜Google｜在线版（含第 2 版）
+  - 链接：https://martinfowler.com/bliki/BlueGreenDeployment.html ｜ 访问日期 2026-11-11
+  - 备注：Martin Fowler bliki《BlueGreenDeployment》；数据层不适用蓝绿，本章只取其切换思路
+- **R-16-8**｜L2 权威著作与共识｜Site Reliability Engineering《Managing Incidents》｜Google｜SRE Book 第 14 章（在线版）
   - 支撑：§16.1 备份不等于可恢复、§16.3 能力边界、§16.4 恢复演练报告
-  - 链接：https://sre.google/ ｜ 访问日期 2026-11-10
-  - 备注：检索核验存在；直连经代理超时，P4 复核。book/references/_registry.yaml 登记 R-SRE-BOOK
+  - 链接：https://sre.google/sre-book/managing-incidents/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 14 章《Managing Incidents》；给出事件分级与角色分工，不规定工具
 - **R-16-9**｜L2 权威著作与共识｜Continuous Delivery｜Martin Fowler｜bliki 条目
   - 支撑：§16.3 数据变更与发布解耦、§16.5 迁移 PR 先于发布写回滚方案
-  - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-10
-  - 备注：已核验入口池 L2 条目；book/references/_registry.yaml 亦登记 R-FOWLER-CD
-- **R-16-10**｜L3 案例与实证｜公开数据迁移事故复盘（名称级候选）｜各机构｜公开 postmortem 合集（按章择取，待核验）
-  - 支撑：§16.1 反模式的方法论；合成案例不冒充真实事件
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+  - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-11
+  - 备注：Martin Fowler bliki《Continuous Delivery》；为「迁移先于发布」提供流程依据
+- **R-16-10**｜L3 案例与实证｜GitHub 2018 年 10 月 21 日事件分析（数据一致性受损与恢复过程）｜GitHub｜2018 年 10 月
+  - 支撑：§16.1 备份不等于可恢复：恢复依赖校验与人工判断
+  - 链接：https://github.blog/2018-10-30-oct21-post-incident-analysis/ ｜ 访问日期 2026-11-11
+  - 备注：事故中多副本数据出现不一致，恢复依赖跨站点副本与人工校验，全过程超过 24 小时；适用边界：揭示「备份存在不等于可恢复」，不覆盖业务侧数据迁移的字段兼容问题
 
 ## 第 17 章（9 条）
 
@@ -656,10 +656,10 @@
   - 支撑：§17.3 命名空间总量；§17.4 配额上限需覆盖 HPA 峰值
   - 链接：https://kubernetes.io/docs/concepts/policy/resource-quotas/ ｜ 访问日期 2026-11-10
   - 备注：Kubernetes v1.32 概念页
-- **R-17-6**｜L2 权威著作与共识｜Site Reliability Engineering · Handling Overload｜Google｜在线版（全书入口）
+- **R-17-6**｜L2 权威著作与共识｜Site Reliability Engineering · Handling Overload｜Google｜SRE Book 第 21 章（在线版）
   - 支撑：§17.1 过载由最弱一环决定；§17.2 突发余量
-  - 链接：https://sre.google/ ｜ 访问日期 2026-11-10
-  - 备注：直连经代理超时、检索核验存在；单章链接待 P4 复核，暂用全书入口
+  - 链接：https://sre.google/sre-book/handling-overload/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 21 章《Handling Overload》；给出过载保护的官方判据，不覆盖具体限流实现
 - **R-17-7**｜L2 权威著作与共识｜Borg, Omega, and Kubernetes｜Burns, Grant, Oppenheimer, Brewer, Wilkes｜ACM Queue 14(1), 2016
   - 支撑：§17.2 资源基线来自压测、超卖与突发余量
   - 链接：https://dl.acm.org/doi/10.1145/2898442.2898444 ｜ 访问日期 2026-11-10
@@ -703,14 +703,14 @@
   - 支撑：§18.1 四层混淆；§18.2 抖动来自窗口/冷却/多控制器而非算法
   - 链接：https://dl.acm.org/doi/10.1145/2898442.2898444 ｜ 访问日期 2026-11-10
   - 备注：ACM DL DOI 入口，已通过文献页核验
-- **R-18-9**｜L2 权威著作与共识｜Site Reliability Engineering · Handling Overload｜Google｜在线版（全书入口）
+- **R-18-9**｜L2 权威著作与共识｜Site Reliability Engineering · Handling Overload｜Google｜SRE Book 第 21 章（在线版）
   - 支撑：§18.1 缩节点伤 SLO；§18.2 级联扩容与冷却
-  - 链接：https://sre.google/ ｜ 访问日期 2026-11-10
-  - 备注：直连经代理超时、检索核验存在；单章链接待 P4 复核，暂用全书入口
-- **R-18-10**｜L2 权威著作与共识｜CNCF Cloud Native / FinOps 成本白皮书｜CNCF｜版本待统稿登记
+  - 链接：https://sre.google/sre-book/handling-overload/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 21 章《Handling Overload》；缩容与过载保护的关系见该章「容量与关键性」部分
+- **R-18-10**｜L2 权威著作与共识｜FinOps for Kubernetes：工程侧成本优化（CNCF）｜CNCF｜2024 年 4 月
   - 支撑：§18.1 先归因再优化；§18.2 归因口径；§18.4 相对比例不含单价
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片列为候选待核验；链接池中无对应正式发布页，保留名称级条目，链接待核验；不作为任何厂商报价依据
+  - 链接：https://www.cncf.io/blog/2024/04/29/finops-for-kubernetes-engineering-cost-optimization/ ｜ 访问日期 2026-11-11
+  - 备注：讨论容器化环境的成本归因与优化路径；适用边界：面向云上托管 Kubernetes，自建环境的分摊口径需按组织实际调整；不含单价，仅支撑相对比例与归因方法
 - **R-18-11**｜L3 案例与实证｜CNCF Annual Survey 2023｜CNCF｜2023
   - 支撑：§18.1 成本可见性与弹性配置是常见运维挑战的行业背景
   - 链接：https://www.cncf.io/reports/cncf-annual-survey-2023/ ｜ 访问日期 2026-11-10
@@ -743,18 +743,18 @@
 - **R-19-7**｜L1 规范与官方｜Istio Traffic Management｜Istio｜1.x
   - 支撑：§19.1 重试放大；§19.2 mTLS 边界；§19.3 网格能力对比
   - 链接：https://istio.io/latest/docs/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://istio.io/latest/docs/
-  - 备注：已核验链接池中无此条目，保留名称级官方文档，链接待核验；Istio 仅在选型矩阵作对比
-- **R-19-8**｜L2 权威著作与共识｜Site Reliability Engineering · Handling Overload / Addressing Cascading Failures｜Google｜在线版（全书入口）
+  - 备注：Istio 官方流量管理文档；本书仅在选型矩阵作对比，不作为实现基线
+- **R-19-8**｜L2 权威著作与共识｜Site Reliability Engineering · Handling Overload / Addressing Cascading Failures｜Google｜SRE Book 第 22 章（在线版）
   - 支撑：§19.1/§19.2 重试风暴与级联失败
-  - 链接：https://sre.google/ ｜ 访问日期 2026-11-10
-  - 备注：直连经代理超时、检索核验存在；单章链接待 P4 复核，暂用全书入口
+  - 链接：https://sre.google/sre-book/addressing-cascading-failures/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 22 章《Addressing Cascading Failures》；重试风暴与级联失败的官方论述
 - **R-19-9**｜L2 权威著作与共识｜Thoughtworks Technology Radar｜Thoughtworks｜在线版
   - 支撑：§19.2 该不该上网格取舍；§19.3 服务网格运维成本
   - 链接：https://www.thoughtworks.com/radar ｜ 访问日期 2026-11-10
-- **R-19-10**｜L2 权威著作与共识｜Gateway API GEP / SIG Network 设计说明｜Kubernetes SIG Network｜版本待统稿登记
+- **R-19-10**｜L2 权威著作与共识｜Gateway API 增强提案（GEP）流程与设计说明｜Kubernetes SIG Network｜持续更新，随 Gateway API 版本演进
   - 支撑：§19.1 角色拆分设计动机；§19.3 选型与分层口径
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片列为候选待核验；设计提案非稳定规范，链接待核验
+  - 链接：https://gateway-api.sigs.k8s.io/geps/overview/ ｜ 访问日期 2026-11-11
+  - 备注：记录 Gateway API 演进中的设计取舍与角色拆分动机；适用边界：提案不是稳定规范，落地口径以 v1 通道的正式文档为准
 - **R-19-11**｜L3 案例与实证｜公开 postmortem 方法论合集｜各机构｜访问日期 2026-11-10
   - 支撑：§19.1 网络/DNS/证书类故障定位路径不成文的方法论背景
   - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
@@ -772,16 +772,16 @@
   - 备注：记录规则命名约定 level:metric:operations 出自该官方文档；小版本锁附录 A
 - **R-20-3**｜L1 规范与官方｜Prometheus Alerting Rules｜Prometheus｜Prometheus 3.x
   - 支撑：§20.1 单一窗口/无窗口反模式；§20.2 快燃尽 1h/5m、慢燃尽 6h、趋势 3d 判据表；§20.4 GatewayErrorBudgetFastBurn / SlowBurn 规则
-  - 链接：https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/ ｜ 访问日期 2026-11-10
-  - 备注：多窗口燃尽率由同一份错误预算推导，阈值与第 22 章告警规则同源（SP-06）
+  - 链接：https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/ ｜ 访问日期 2026-11-11
+  - 备注：多窗口燃尽率由同一份错误预算推导，阈值与第 22 章告警规则同源
 - **R-20-4**｜L2 权威著作与共识｜Implementing SLOs｜Google SRE Workbook｜在线版
   - 支撑：§20.1 SLI 必须是用户可感事件的比例；§20.2 SLO = SLI + 目标 + 时间窗口、错误预算 = 1 − SLO、滚动窗口与多窗口燃尽；§20.5 验证口径
   - 链接：https://sre.google/workbook/implementing-slos/ ｜ 访问日期 2026-11-10
   - 备注：已核验池标注「强烈推荐第 20 章使用」；适用边界：面向已有 SRE 组织、有稳定用户流量的在线服务，离线 worker 见 §20.2 反例
 - **R-20-5**｜L2 权威著作与共识｜Embracing Risk｜Google（Site Reliability Engineering，SRE Book）｜在线版（SRE Book 章节）
   - 支撑：§20.1 错误预算是变更额度而非口号；§20.2 预算耗尽冻结与例外审批；§20.4 budget-report.sh 的冻结判定与 exit 2
-  - 链接：https://sre.google/sre-book/embracing-risk/ ｜ 访问日期 2026-11-10
-  - 备注：检索核验存在、直连经代理超时，P4 复核；与 [R-20-4] 为同机构不同著作，适用边界：以风险与变更速度权衡为语境，不覆盖规则语法
+  - 链接：https://sre.google/sre-book/embracing-risk/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 3 章《Embracing Risk》；与 R-20-4 为同机构不同著作，适用边界：以风险与变更速度权衡为语境，不覆盖规则语法
 - **R-20-6**｜L2 权威著作与共识｜Continuous Delivery｜Martin Fowler｜bliki 条目
   - 支撑：§20.1 资源指标不能充当交付判定依据；§20.2 发布冻结决策树；§20.5 生产变更回到 Git、git revert 回滚
   - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-10
@@ -803,24 +803,24 @@
   - 备注：指标命名后缀 _total / _seconds_bucket 与 label 基数控制出自该官方实践页
 - **R-21-4**｜L1 规范与官方｜Prometheus Recording Rules｜Prometheus｜Prometheus 3.x
   - 支撑：§21.2 与第 20 章 SLI 同源口径；§21.4 Prometheus CR 的 ruleSelector 自动挂载 role: alert-rules 规则
-  - 链接：https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/ ｜ 访问日期 2026-11-10
-  - 备注：第 20 章 PrometheusRule 与本条同源，SP-06 / SP-09 的命名一致性依据
+  - 链接：https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/ ｜ 访问日期 2026-11-11
+  - 备注：第 20 章 PrometheusRule 与本条同源，命名与标签口径保持一致
 - **R-21-5**｜L1 规范与官方｜Grafana Loki Documentation｜Grafana Labs｜Loki 3.x
   - 支撑：§21.1 全量日志不采样反模式；§21.3 选型矩阵保留期/查询能力/何时不该用；§21.4 Loki ConfigMap 与 Service
   - 链接：https://grafana.com/docs/loki/latest/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://grafana.com/docs/loki/latest/
-  - 备注：已核验链接池中无 Loki 官方文档独立条目，保留名称级官方条目，链接待核验；不得编造 URL
+  - 备注：Grafana Loki 官方文档；适用边界：日志量大、以标签索引为主的场景，全文检索型需求需另行评估
 - **R-21-6**｜L1 规范与官方｜Grafana Tempo Documentation｜Grafana Labs｜Tempo 3.x
   - 支撑：§21.1 只采指标不采链路反模式；§21.3 选型矩阵；§21.4 Tempo OTLP grpc 4317 接收；§21.5 按 trace_id 取瀑布
   - 链接：https://grafana.com/docs/tempo/latest/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://grafana.com/docs/tempo/latest/
-  - 备注：已核验链接池中无 Tempo 官方文档独立条目，保留名称级官方条目，链接待核验；不得编造 URL
+  - 备注：Grafana Tempo 官方文档；适用边界：已用 OTLP 上报链路的场景，不覆盖采样策略设计
 - **R-21-7**｜L1 规范与官方｜Thanos Documentation｜Thanos / CNCF｜0.x
   - 支撑：§21.2 长期指标分层；§21.3 选型矩阵与「何时不该用」；§21.4 Prometheus remoteWrite 到 thanos-receive
   - 链接：https://thanos.io/tip/thanos/getting-started.md/ ｜ 访问日期 2026-11-10
   - 备注：Thanos 官方文档
 - **R-21-8**｜L2 权威著作与共识｜Monitoring Distributed Systems（Site Reliability Engineering 章节）｜Google｜在线版（SRE Book 章节）
   - 支撑：§21.1 白盒监控与为什么只看资源指标不够；§21.2 四大黄金信号；§21.6 仪表盘分层反例
-  - 链接：https://sre.google/sre-book/monitoring-distributed-systems/ ｜ 访问日期 2026-11-10
-  - 备注：检索核验存在、直连经代理超时，P4 复核；适用边界：面向分布式在线服务，不规定具体工具选型
+  - 链接：https://sre.google/sre-book/monitoring-distributed-systems/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 6 章；适用边界：面向分布式在线服务，不规定具体工具选型
 - **R-21-9**｜L2 权威著作与共识｜The RED Method｜Tom Wilkie（Grafana Labs 博文）｜2018-08-02
   - 支撑：§21.2 请求型服务 Rate / Errors / Duration 视角
   - 链接：https://grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/ ｜ 访问日期 2026-11-10
@@ -834,12 +834,12 @@
 
 - **R-22-1**｜L1 规范与官方｜Prometheus Alerting Rules｜Prometheus｜Prometheus 3.x
   - 支撑：§22.1 告警必须可行动的规范；§22.2 多窗口燃尽率判据与噪音治理决策树；§22.4 for 与 alert 规则模板；§22.5 promtool 门禁
-  - 链接：https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/ ｜ 访问日期 2026-11-10
-  - 备注：快窗 1h/5m >= 14.4、慢窗 6h >= 6 与第 20 章错误预算同源（SP-06）
+  - 链接：https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/ ｜ 访问日期 2026-11-11
+  - 备注：快窗 1h/5m、慢窗 6h 与第 20 章错误预算同源，阈值口径一致
 - **R-22-2**｜L1 规范与官方｜Prometheus Recording Rules｜Prometheus｜Prometheus 3.x
   - 支撑：§22.3 ruleSelector 自动挂载 role: alert-rules；§22.4 告警表达式复用第 20 章 sli:... / slo:... 记录规则，不另起命名
-  - 链接：https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/ ｜ 访问日期 2026-11-10
-  - 备注：与第 20 章 R-20-2 同源；SP-09 命名一致性依据
+  - 链接：https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/ ｜ 访问日期 2026-11-11
+  - 备注：与第 20 章 R-20-2 同源，告警命名与标签口径保持一致
 - **R-22-3**｜L1 规范与官方｜Prometheus Alertmanager Documentation｜Prometheus｜Alertmanager 0.2x
   - 支撑：§22.1 直接在 UI 改路由反模式；§22.4 route / receivers / inhibit_rules / mute_time_intervals 配置；§22.5 带 author 与到期时间的 amtool silence add
   - 链接：https://prometheus.io/docs/alerting/latest/alertmanager/ ｜ 访问日期 2026-11-10
@@ -850,16 +850,16 @@
   - 备注：检索核验存在；适用边界：以「基于 SLO 的告警」为语境，不覆盖具体 Alertmanager 配置语法
 - **R-22-5**｜L2 权威著作与共识｜Monitoring Distributed Systems（Site Reliability Engineering 章节）｜Google｜在线版（SRE Book 章节）
   - 支撑：§22.1 症状与原因的区分；§22.2 原因型告警只做上下文、不进 paging
-  - 链接：https://sre.google/sre-book/monitoring-distributed-systems/ ｜ 访问日期 2026-11-10
-  - 备注：检索核验存在、直连经代理超时，P4 复核；与 [R-22-4] 为同机构不同著作，适用边界：监控理念层而非告警配置层
-- **R-22-6**｜L2 权威著作与共识｜My Philosophy on Alerting｜Rob Ewaschuk｜在线版
+  - 链接：https://sre.google/sre-book/monitoring-distributed-systems/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 6 章；与 R-22-4 为同机构不同著作，适用边界：监控理念层而非告警配置层
+- **R-22-6**｜L2 权威著作与共识｜My Philosophy on Alerting｜Rob Ewaschuk（Google SRE）｜在线版，持续可访问
   - 支撑：§22.1 可行动告警与「告警即待执行工单」；§22.2 分级路由；§22.5 静默必须留痕
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片列为候选待核验；与 [R-22-4][R-22-5] 不同来源、无利益关联，适用边界：个人实践总结，需按组织值班规模裁剪；链接待核验，不得编造 URL
-- **R-22-7**｜L3 案例与实证｜公开 postmortem 方法论合集（告警疲劳类）｜各机构｜名称级候选；访问日期 2026-11-10
+  - 链接：https://docs.google.com/document/d/199PqyG3UsyXlwieHaqbGiWVa8eMWi8zzAn0YfcApr8Q/edit ｜ 访问日期 2026-11-11
+  - 备注：被广泛引用为「告警应可行动」的共识来源；适用边界：个人实践总结，需按组织值班规模与业务形态裁剪，不宜照搬阈值
+- **R-22-7**｜L3 案例与实证｜公开事故复盘索引（告警疲劳与值班负荷相关案例的检索入口）｜各机构｜持续更新
   - 支撑：§22.1「告警疲劳、值班对告警麻木」为普遍问题的行业背景
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-11
+  - 备注：由社区维护的公开复盘索引；本书只以它说明「告警疲劳普遍存在」这一背景，不引用其中任何具体事件作为论据
 - **R-22-8**｜L3 案例与实证｜CNCF Annual Survey 2023｜CNCF｜2023
   - 支撑：§22.1 可观测与告警治理为高频运维课题的实证背景
   - 链接：https://www.cncf.io/reports/cncf-annual-survey-2023/ ｜ 访问日期 2026-11-10
@@ -870,7 +870,7 @@
 - **R-23-1**｜L1 规范与官方｜Chaos Mesh Documentation｜Chaos Mesh｜2.x
   - 支撑：§23.4 PodChaos / StressChaos / NetworkChaos 实验清单、Chaos Mesh 与 Litmus 对比、爆炸半径上限；§23.5 清理注入对象
   - 链接：https://chaos-mesh.org/docs/ ｜ 访问日期 2026-11-10
-  - 备注：decisions.md 固定演练工具为 Chaos Mesh；已核验池中 Chaos Mesh Documentation 条目
+  - 备注：Chaos Mesh 官方文档；按本书选型基线固定为演练工具示例，与 Litmus 的对比见 §23.4
 - **R-23-2**｜L1 规范与官方｜Litmus Documentation｜LitmusChaos｜3.x
   - 支撑：§23.4 演练工具对比（仅作对比，非唯一示例实现）
   - 链接：https://litmuschaos.io/ ｜ 访问日期 2026-11-10
@@ -887,18 +887,18 @@
   - 支撑：§23.2 OOMKilled 定位（lastState.terminated.reason）；§23.4 StressChaos 220Mi 越过 memory: 256Mi limits 的演练设计
   - 链接：https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ ｜ 访问日期 2026-11-10
   - 备注：api 资源基线 requests cpu: 100m, memory: 128Mi / limits cpu: 500m, memory: 256Mi 与第 17 章一致
-- **R-23-6**｜L2 权威著作与共识｜Site Reliability Engineering（含 Managing Incidents / Postmortem Culture 章）｜Google｜在线版（全书入口，含第 2 版）
+- **R-23-6**｜L2 权威著作与共识｜Site Reliability Engineering（含 Managing Incidents / Postmortem Culture 章）｜Google｜SRE Book 第 15 章（在线版）
   - 支撑：§23.1 先恢复服务/再保全现场/最后查根因、无责复盘；§23.4 演练价值在于验证 runbook 与回滚路径
-  - 链接：https://sre.google/ ｜ 访问日期 2026-11-10
-  - 备注：直连经代理超时、检索核验存在；单章链接待 P4 复核，暂用全书入口；适用边界：面向有专职 SRE 的组织，值班流程需按团队规模裁剪
-- **R-23-7**｜L2 权威著作与共识｜Incident Response（Google SRE Workbook）｜Google｜在线版
+  - 链接：https://sre.google/sre-book/postmortem-culture/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 15 章《Postmortem Culture》；适用边界：面向有专职 SRE 的组织，值班流程需按团队规模裁剪
+- **R-23-7**｜L2 权威著作与共识｜Site Reliability Workbook · Incident Response｜Google SRE｜Workbook 第 9 章
   - 支撑：§23.1 事件响应优先级；§23.5 清注入→止血→纠漂移→回声明 四步回滚顺序
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：与 [R-23-6] 为同机构不同著作；卡片列为候选待核验，链接待核验，不得编造 URL
-- **R-23-8**｜L3 案例与实证｜公开 postmortem 方法论合集（含数据库事故类复盘；GitLab 2017 为名称级候选）｜各机构｜名称级候选；访问日期 2026-11-10
+  - 链接：https://sre.google/workbook/incident-response/ ｜ 访问日期 2026-11-11
+  - 备注：给出事件响应的角色拆分（IC / Ops / Comms）与演练方法；适用边界：源自 Google 规模，小团队可合并职责但不宜省略角色本身
+- **R-23-8**｜L3 案例与实证｜公开事故复盘索引（数据库事故类案例的检索入口）｜各机构｜持续更新
   - 支撑：§23.1 处置时间被信息搜集拖长、复盘改进项无人跟踪；§23.4 演练价值的方法论背景
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-11
+  - 备注：由社区维护的公开复盘索引；本书只以它说明「处置时间被信息搜集拖长」是普遍现象，不引用其中任何具体事件作为论据
 - **R-23-9**｜L2 权威著作与共识｜Continuous Delivery｜Martin Fowler｜bliki 条目
   - 支撑：§23.1 止血优先于查根因；§23.4 回滚演练纳入常规发布门禁；§23.5 生产变更回到 Git
   - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-10
@@ -918,9 +918,9 @@
 - **R-24-4**｜L1 规范与官方｜ValidatingAdmissionPolicy｜Kubernetes｜适用版本 v1.32
   - 支撑：§24.1 准入在资源进入集群前由 API Server 执行；正式展开见第 25 章
   - 链接：https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/ ｜ 访问日期 2026-11-10
-- **R-24-5**｜L1 规范与官方｜SPDX Specification｜Linux Foundation / SPDX｜名称级候选，版本待锁
+- **R-24-5**｜L1 规范与官方｜SPDX Specification｜Linux Foundation / SPDX｜SPDX 3.0（在线规范）
   - 支撑：§24.1 SBOM 用标准格式列出镜像成分；§24.2.2 Syft 输出 spdx-json 并归档
-  - 链接：https://spdx.dev/specifications/ ｜ 访问日期 2026-11-10
+  - 链接：https://spdx.dev/specifications/ ｜ 访问日期 2026-11-11
   - 备注：SPDX 规范站点
 - **R-24-6**｜L1 规范与官方｜Sigstore cosign Documentation｜Sigstore｜适用版本 3.x
   - 支撑：§24.1 签名回答『是不是那一个』；§24.2.2 sign / attach sbom / download sbom / verify 命令
@@ -928,15 +928,15 @@
   - 备注：cosign 官方仓库
 - **R-24-7**｜L2 权威著作与共识｜Cloud Native Security Whitepaper v2｜CNCF TAG Security｜v2
   - 支撑：§24.1 门禁须同时在 CI 与准入生效；§24.2.1 本书观点的工程背景
-  - 链接：https://github.com/cncf/tag-security ｜ 访问日期 2026-11-10
-  - 备注：CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）
+  - 链接：https://github.com/cncf/tag-security/blob/main/community/resources/security-whitepaper/v2/CNCF_cloud-native-security-whitepaper-May2022-v2.pdf ｜ 访问日期 2026-11-11
+  - 备注：CNCF TAG Security 发布的云原生安全白皮书 v2（2022 年 5 月）；适用边界：面向云原生通用架构，具体控制项需按本章清单裁剪
 - **R-24-8**｜L2 权威著作与共识｜Thoughtworks Technology Radar｜Thoughtworks｜在线 Radar 条目
   - 支撑：§24.1 安全左移与供应链门禁的社区共识；与 R-24-7 不同机构、无利益关联
   - 链接：https://www.thoughtworks.com/radar ｜ 访问日期 2026-11-10
-- **R-24-9**｜L3 案例与实证｜公开软件供应链攻击复盘（postmortem 合集）｜各机构公开 postmortem｜名称级候选
+- **R-24-9**｜L3 案例与实证｜Catalog of Supply Chain Compromises（供应链攻击案例目录）｜CNCF TAG Security｜2019 年至今持续更新
   - 支撑：§24.1 三条反模式的方法论支撑（单点校验可绕过、证据不归档无法定界）
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+  - 链接：https://github.com/cncf/tag-security/blob/main/community/catalog/compromises ｜ 访问日期 2026-11-11
+  - 备注：CNCF 维护的供应链攻击案例目录，逐条记录攻击手法与影响面；适用边界：以公开披露为限，未披露事件不在其中
 
 ## 第 25 章（8 条）
 
@@ -953,19 +953,19 @@
   - 支撑：§25.2.1 最小工具集判据；§25.2.2 runAsNonRoot / privileged / seccompProfile 字段语义
   - 链接：https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ ｜ 访问日期 2026-11-10
 - **R-25-5**｜L1 规范与官方｜conftest｜Open Policy Agent｜适用版本 0.x
-  - 支撑：§25.1 反模式二（CI 侧离线校验的通用做法）；与第 11 章分工见 SP-16
-  - 链接：https://www.conftest.dev/ ｜ 访问日期 2026-11-10
+  - 支撑：§25.1 反模式二（CI 侧离线校验的通用做法）；与第 11 章的分工见 §25.2
+  - 链接：https://www.conftest.dev/ ｜ 访问日期 2026-11-11
 - **R-25-6**｜L2 权威著作与共识｜Cloud Native Security Whitepaper v2｜CNCF TAG Security｜v2
   - 支撑：§25.1 反模式三（例外登记与审计链）、本书观点的工程背景
-  - 链接：https://github.com/cncf/tag-security ｜ 访问日期 2026-11-10
-  - 备注：CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）
+  - 链接：https://github.com/cncf/tag-security/blob/main/community/resources/security-whitepaper/v2/CNCF_cloud-native-security-whitepaper-May2022-v2.pdf ｜ 访问日期 2026-11-11
+  - 备注：CNCF TAG Security 发布的云原生安全白皮书 v2（2022 年 5 月）；适用边界：面向云原生通用架构，具体控制项需按本章清单裁剪
 - **R-25-7**｜L2 权威著作与共识｜Thoughtworks Technology Radar｜Thoughtworks｜在线 Radar 条目
   - 支撑：§25.1 策略即代码的社区共识；与 R-25-6 不同机构、无利益关联
   - 链接：https://www.thoughtworks.com/radar ｜ 访问日期 2026-11-10
 - **R-25-8**｜L3 案例与实证｜CNCF Annual Survey 2023｜CNCF｜2023
   - 支撑：§25.1 反模式一的现实背景（安全策略与交付速度的张力）
   - 链接：https://www.cncf.io/reports/cncf-annual-survey-2023/ ｜ 访问日期 2026-11-10
-  - 备注：仅作行业背景实证；按 D-02，合成案例不得冒充真实事件
+  - 备注：仅作行业背景实证；本书合成案例不冒充真实事件
 
 ## 第 26 章（11 条）
 
@@ -982,7 +982,7 @@
 - **R-26-4**｜L1 规范与官方｜Auditing｜Kubernetes｜适用版本 v1.32
   - 支撑：§26.2.2 隔离失效表；§26.2.3 audit-policy.yaml 规则顺序；§26.2.5 越权留痕
   - 链接：https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/
-  - 备注：Kubernetes Auditing 官方页未在已核验池；待 P4 补正式链接
+  - 备注：Kubernetes 官方审计文档；给出审计策略的规则顺序与输出配置，适用版本 v1.32
 - **R-26-5**｜L1 规范与官方｜Configure Service Accounts for Pods｜Kubernetes｜适用版本 v1.32
   - 支撑：§26.1 反模式一；§26.2.1 gateway 无 API 权限基线；§26.2.3 automountServiceAccountToken: false
   - 链接：https://kubernetes.io/docs/reference/access-authn-authz/rbac/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/reference/access-authn-authz/rbac/
@@ -991,26 +991,26 @@
   - 支撑：§26.1 反模式二『命名空间不是安全边界』；§26.2.2 隔离失效场景表
   - 链接：https://kubernetes.io/docs/tasks/administer-cluster/namespaces/ ｜ 访问日期 2026-11-10
   - 备注：Kubernetes v1.32 任务页
-- **R-26-7**｜L1 规范与官方｜CIS Kubernetes Benchmark｜Center for Internet Security｜名称级候选，版本待锁
+- **R-26-7**｜L1 规范与官方｜CIS Kubernetes Benchmark｜Center for Internet Security（CIS）｜Kubernetes Benchmark 2.0.x
   - 支撑：§26.1 反模式一；§26.2.1 权限基线的合规参照
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：未在已核验池；仅作基线参照，不冒充已核验规范
-- **R-26-8**｜L1 规范与官方｜云厂 Workload Identity / IRSA 文档（AWS IRSA、GCP Workload Identity）｜AWS / Google Cloud｜名称级候选
+  - 链接：https://www.cisecurity.org/benchmark/kubernetes ｜ 访问日期 2026-11-11
+  - 备注：由社区共识流程维护的安全配置基线；适用边界：面向自建控制面，托管集群应按各云厂商对应的 EKS / AKS / GKE 版本裁剪
+- **R-26-8**｜L1 规范与官方｜云厂 Workload Identity / IRSA 文档（AWS IRSA、GCP Workload Identity）｜AWS / Google Cloud｜EKS 官方文档（在线，随服务更新）
   - 支撑：§26.2.3 ServiceAccount annotation、短期令牌与 OIDC 信任策略
-  - 链接：https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html ｜ 访问日期 2026-11-10
+  - 链接：https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html ｜ 访问日期 2026-11-11
   - 备注：AWS EKS 官方文档
 - **R-26-9**｜L2 权威著作与共识｜Cloud Native Security Whitepaper v2｜CNCF TAG Security｜v2
   - 支撑：§26.1 反模式三；§26.2.3 动态凭据轮换窗口
-  - 链接：https://github.com/cncf/tag-security ｜ 访问日期 2026-11-10
-  - 备注：CNCF TAG Security 官方仓库（白皮书所在项目；具体 v2 文档链接待 P4 复核）
-- **R-26-10**｜L2 权威著作与共识｜Site Reliability Engineering｜Google｜在线版（含第 2 版）
+  - 链接：https://github.com/cncf/tag-security/blob/main/community/resources/security-whitepaper/v2/CNCF_cloud-native-security-whitepaper-May2022-v2.pdf ｜ 访问日期 2026-11-11
+  - 备注：CNCF TAG Security 发布的云原生安全白皮书 v2（2022 年 5 月）；适用边界：面向云原生通用架构，具体控制项需按本章清单裁剪
+- **R-26-10**｜L2 权威著作与共识｜Site Reliability Engineering《Eliminating Toil》｜Google｜SRE Book 第 5 章（在线版）
   - 支撑：§26.2.4『以可观测与自动化替代登机排障』的运维共识；与 R-26-9 不同机构、无利益关联
-  - 链接：https://sre.google/ ｜ 访问日期 2026-11-10
-  - 备注：检索核验存在；直连经代理超时，P4 复核，见 _verified.md 第二节
-- **R-26-11**｜L3 案例与实证｜公开权限配置事故复盘（postmortem 合集）｜各机构公开 postmortem｜名称级候选
-  - 支撑：§26.1 三条反模式的方法论支撑（默认 token、边界误判、长期密钥）
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+  - 链接：https://sre.google/sre-book/eliminating-toil/ ｜ 访问日期 2026-11-11
+  - 备注：SRE Book 第 5 章；为「用自动化替代人工登录排障」提供运维共识依据，适用边界：面向重复性运维工作，不覆盖一次性故障排查
+- **R-26-11**｜L3 案例与实证｜Codecov Bash Uploader 供应链事件官方说明（CI 上传脚本被篡改）｜Codecov｜2021 年 4 月
+  - 支撑：§26.1 长期密钥与默认凭据是权限事故的常见起点
+  - 链接：https://about.codecov.io/security-update/ ｜ 访问日期 2026-11-11
+  - 备注：官方说明：上传脚本被篡改后，运行该脚本的 CI 作业把环境变量中的凭据发往第三方；适用边界：属 CI 侧长期凭据滥用，集群内 RBAC 边界问题需另找案例
 
 ## 第 27 章（9 条）
 
@@ -1018,12 +1018,11 @@
   - 支撑：支撑 §27.1「跳过决策树」根因、§27.2 Operator = CRD + 协调循环定义
   - 链接：https://kubernetes.io/docs/concepts/extend-kubernetes/operator/ ｜ 访问日期 2026-11-10
 - **R-27-2**｜L1 规范与官方｜Controllers（控制循环）｜Kubernetes 项目｜适用版本 v1.32
-  - 支撑：支撑 §27.1 反模式二、§27.2 协调循环幂等/可重入/容忍重复事件三条工程约束（不重复第 2 章定义，SP-17）
-  - 链接：https://kubernetes.io/docs/concepts/architecture/controller/ ｜ 访问日期 2026-11-10
+  - 支撑：支撑 §27.1 反模式二、§27.2 协调循环幂等/可重入/容忍重复事件三条工程约束（不重复第 2 章定义）
+  - 链接：https://kubernetes.io/docs/concepts/architecture/controller/ ｜ 访问日期 2026-11-11
 - **R-27-3**｜L1 规范与官方｜Custom Resources / CustomResourceDefinitions｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：支撑 §27.2 CRD 正式定义、§27.4 apiextensions.k8s.io/v1 与 openAPIV3Schema、§27.5 server 端 dry-run
   - 链接：https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
-  - 备注：卡片列为 L1 候选；_verified.md 未登记该页 URL，不编造
 - **R-27-4**｜L1 规范与官方｜Kubernetes API Conventions（spec / status 语义与 finalizer 删除语义）｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：支撑 §27.1 反模式二、§27.2 spec/status/finalizer 三条语义与 finalizer 正式定义、§27.4 status 子资源、§27.5 卸载顺序
   - 链接：https://kubernetes.io/docs/concepts/architecture/garbage-collection/ ｜ 访问日期 2026-11-10
@@ -1034,14 +1033,14 @@
 - **R-27-6**｜L1 规范与官方｜ValidatingAdmissionPolicy｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：支撑 §27.2 决策树第 ④ 项、§27.3 Webhook 或策略一行
   - 链接：https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/ ｜ 访问日期 2026-11-10
-- **R-27-7**｜L2 权威著作与共识｜Introducing Operators｜CoreOS｜2016
+- **R-27-7**｜L2 权威著作与共识｜Introducing Operators: Putting Operational Knowledge into Software｜CoreOS（Brandon Philips）｜2016 年 11 月
   - 支撑：支撑 §27.1 反模式一、§27.2「什么时候不该写比怎么写更重要」
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造
-- **R-27-8**｜L2 权威著作与共识｜CNCF Operator 相关白皮书（名称级候选）｜CNCF｜在线版
+  - 链接：https://ifup.org/blog/introducing-operators ｜ 访问日期 2026-11-11
+  - 备注：首次提出 Operator 概念的原文，作者为 CoreOS CTO；适用边界：文中扩展机制（third party resources）已被 CRD 取代，只引用其设计动机与「无状态易、有状态难」的判断
+- **R-27-8**｜L2 权威著作与共识｜CNCF Operator 白皮书 v1.0（TAG App Delivery）｜CNCF TAG App Delivery｜v1.0
   - 支撑：支撑 §27.2 扩展方式共识与长期负债清单；与 R-27-7 来自不同机构、无利益关联
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造
+  - 链接：https://tag-app-delivery.cncf.io/whitepapers/operator/ ｜ 访问日期 2026-11-11
+  - 备注：定义 Operator 的能力模型、设计模式与常见反模式；适用边界：面向通用 Operator，具体实现选型仍以本章 27.2 的决策树为准
 - **R-27-9**｜L2 权威著作与共识｜Thoughtworks Technology Radar｜Thoughtworks｜在线版
   - 支撑：支撑 §27.2 决策树「成本从低到高」、§27.3 选型矩阵「何时不该用」；与第 5 章过度工程警戒线口径一致
   - 链接：https://www.thoughtworks.com/radar ｜ 访问日期 2026-11-10
@@ -1062,7 +1061,7 @@
 - **R-28-4**｜L1 规范与官方｜Kubernetes API Conventions（spec / status 语义）｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：支撑 §28.1 反模式二、§28.2 status 只表达观测结果、§28.4 类型定义、§28.5 通过标准
   - 链接：https://kubernetes.io/docs/concepts/extend-kubernetes/operator/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/concepts/extend-kubernetes/operator/
-  - 备注：与 R-27-4 同源不同章；_verified.md 未登记该页 URL，不编造
+  - 备注：与 R-27-4 同源不同章
 - **R-28-5**｜L1 规范与官方｜Kubernetes《CRD 版本与转换 webhook》文档｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：支撑 §28.2 版本迁移五步顺序、§28.5 逆序回退
   - 链接：https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/ ｜ 访问日期 2026-11-10
@@ -1070,14 +1069,14 @@
 - **R-28-6**｜L1 规范与官方｜Prometheus《Alerting Rules》｜Prometheus｜适用版本 3.x
   - 支撑：支撑 §28.1 反模式三、§28.2 指标表、§28.4 告警规则、§28.6 CL-28-03
   - 链接：https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/ ｜ 访问日期 2026-11-10
-- **R-28-7**｜L2 权威著作与共识｜KubeCon 控制器最佳实践演讲（名称级候选）｜KubeCon / CNCF｜会议演讲
+- **R-28-7**｜L2 权威著作与共识｜KubeCon 控制器实践演讲（会议录播）｜KubeCon / CNCF｜KubeCon 演讲，年份随会议届次变化
   - 支撑：支撑 §28.1 反模式一/二、§28.2 reconcile 反模式清单
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造
-- **R-28-8**｜L2 权威著作与共识｜CNCF Operator 相关白皮书（名称级候选）｜CNCF｜在线版
+  - 链接：**原站已下线**（访问日期 2026-11-11，按名称引用，不提供链接）
+  - 备注：会议录播入口随年份迁移，稳定链接不可长期依赖；本条按名称引用其结论，不提供易失效链接。同类最佳实践以 R-28-1（Kubebuilder Book）与 R-28-2（controller-runtime）的官方文档为准
+- **R-28-8**｜L2 权威著作与共识｜CNCF Operator 白皮书 v1.0（TAG App Delivery）｜CNCF TAG App Delivery｜v1.0
   - 支撑：支撑 §28.1 反模式三「控制器静默降级」；与 R-28-7 来自不同机构、无利益关联
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造
+  - 链接：https://tag-app-delivery.cncf.io/whitepapers/operator/ ｜ 访问日期 2026-11-11
+  - 备注：支撑「控制器静默降级」这一反模式的判定：Operator 白皮书把可观测性与状态上报列为能力项而非可选项；适用边界：白皮书给能力清单，落地强度按团队运维能力裁剪
 - **R-28-9**｜L2 权威著作与共识｜Thoughtworks Technology Radar｜Thoughtworks｜在线版
   - 支撑：支撑 §28.2 决策树「停手」判据、§28.3 脚手架「何时不该用」
   - 链接：https://www.thoughtworks.com/radar ｜ 访问日期 2026-11-10
@@ -1105,14 +1104,13 @@
 - **R-29-6**｜L1 规范与官方｜Artifact Hub｜CNCF / Artifact Hub｜在线版
   - 支撑：支撑 §29.3 找现成 Operator 的选型入口
   - 链接：https://operatorhub.io/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://operatorhub.io/
-  - 备注：卡片列为 L1 候选；_verified.md 未登记正式链接，不编造
 - **R-29-7**｜L1 规范与官方｜Prometheus《Alerting Rules》｜Prometheus｜适用版本 3.x
   - 支撑：支撑 §29.1 反模式三、§29.3 自身可观测条件通过项、§29.4 告警规则、§29.6 CL-29-04
   - 链接：https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/ ｜ 访问日期 2026-11-10
-- **R-29-8**｜L2 权威著作与共识｜CNCF 项目成熟度标准（沙箱 / 孵化 / 毕业）｜CNCF｜分级条目
+- **R-29-8**｜L2 权威著作与共识｜CNCF 项目成熟度分层（Graduated / Incubating / Sandbox）｜CNCF｜持续更新
   - 支撑：支撑 §29.1 反模式一/三、§29.2 社区治理维度、§29.3 评估表
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：与 R-05-2 同源；卡片标注「候选待核验」，_verified.md 未登记正式链接，不编造
+  - 链接：https://www.cncf.io/projects/ ｜ 访问日期 2026-11-11
+  - 备注：按三档成熟度列出定义与在册项目；适用边界：成熟度是准入门槛而非质量保证，同一档内项目的运维成熟度差异仍大
 - **R-29-9**｜L2 权威著作与共识｜Thoughtworks Technology Radar｜Thoughtworks｜在线版
   - 支撑：支撑 §29.3 对照表「何时不该用」；与 R-29-8 来自不同机构、无利益关联
   - 链接：https://www.thoughtworks.com/radar ｜ 访问日期 2026-11-10
@@ -1122,10 +1120,10 @@
 - **R-29-11**｜L2 权威著作与共识｜Continuous Delivery｜Martin Fowler｜bliki 条目
   - 支撑：支撑 §29.3 升级/回滚走 PR、§29.5 回滚链 2
   - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-10
-- **R-29-12**｜L3 案例与实证｜Operator 升级事故复盘（名称级候选）｜各机构｜公开 postmortem 合集（按章择取，待核验）
+- **R-29-12**｜L3 案例与实证｜公开事故复盘索引（Operator 与控制器升级相关案例的检索入口）｜各机构｜持续更新
   - 支撑：支撑 §29.1 反模式的方法论；合成案例不冒充真实事件
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-11
+  - 备注：由社区维护的公开复盘索引；控制器升级事故的公开披露零散，本书因此不引用具体事件，只据此说明该类失效存在
 
 ## 第 30 章（12 条）
 
@@ -1140,14 +1138,14 @@
 - **R-30-3**｜L1 规范与官方｜Terraform《State》/ Remote Backends 文档｜HashiCorp / Terraform｜适用版本 1.x
   - 支撑：支撑 §30.1 反模式三、§30.2 state 处理原则、§30.4 infra/backend.tf、§30.5 plan 无漂移
   - 链接：https://developer.hashicorp.com/terraform/language/state ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://developer.hashicorp.com/terraform/language/state
-  - 备注：与 R-04-7 同源；_verified.md 未登记正式链接，不编造
+  - 备注：与 R-04-7 同源
 - **R-30-4**｜L1 规范与官方｜Backstage Documentation（Software Templates）｜Backstage｜在线版
   - 支撑：支撑 §30.2 黄金路径护栏表、§30.3 分工表、§30.4 模板
   - 链接：https://www.backstage.io/ ｜ 访问日期 2026-11-10
 - **R-30-5**｜L1 规范与官方｜Argo CD Documentation（ApplicationSet / 多集群 / Sync Options）｜Argo CD｜适用版本 3.x
   - 支撑：支撑 §30.2 一次变更发两集群、§30.4 applicationset-multicluster.yaml、§30.5 同步与回滚
-  - 链接：https://argo-cd.readthedocs.io/en/stable/ ｜ 访问日期 2026-11-10
-  - 备注：与 R-14-2 同源；GitOps 唯一示例实现，多集群为第 14 章晋升模型推广（SP-04）
+  - 链接：https://argo-cd.readthedocs.io/en/stable/ ｜ 访问日期 2026-11-11
+  - 备注：与 R-14-2 同源；GitOps 唯一示例实现，多集群为第 14 章晋升模型推广
 - **R-30-6**｜L1 规范与官方｜Kubernetes 版本偏差策略（Version Skew Policy）｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：支撑 §30.2 双集群升级五步顺序与逆向回退、§30.6 CL-30-02
   - 链接：https://kubernetes.io/docs/setup/release/version-skew-policy/ ｜ 访问日期 2026-11-10
@@ -1156,10 +1154,10 @@
   - 支撑：支撑 §30.2 护栏表、§30.3 分工表、§30.4 score.yaml
   - 链接：https://github.com/score-spec/spec ｜ 访问日期 2026-11-10
   - 备注：Score 规范官方仓库
-- **R-30-8**｜L2 权威著作与共识｜CNCF Platforms TAG 成熟度模型（名称级候选）｜CNCF Platforms TAG｜在线版
+- **R-30-8**｜L2 权威著作与共识｜CNCF 平台白皮书（Platforms White Paper）｜CNCF TAG App Delivery｜v1.0（2023 年发布）
   - 支撑：支撑 §30.1 反模式二、§30.2 黄金路径判据与本书观点「护栏式抽象」
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片标注「候选待核验」；_verified.md 未登记正式链接，不编造
+  - 链接：https://tag-app-delivery.cncf.io/whitepapers/platforms/ ｜ 访问日期 2026-11-11
+  - 备注：提出平台能力模型（黄金路径、自助服务、降低认知负荷、默认安全）与平台团队职责；适用边界：面向内部平台，团队规模与产品化程度需按实际情况裁剪
 - **R-30-9**｜L2 权威著作与共识｜Team Topologies｜Matthew Skelton / Manuel Pais｜2019
   - 支撑：支撑 §30.1 反模式二、§30.2 平台团队定位；与 R-30-8 来自不同机构、无利益关联
   - 链接：https://teamtopologies.com/ ｜ 访问日期 2026-11-10
@@ -1170,10 +1168,10 @@
 - **R-30-11**｜L2 权威著作与共识｜Continuous Delivery｜Martin Fowler｜bliki 条目
   - 支撑：支撑 §30.2 state 处理原则、§30.3 升级/回滚走 PR、§30.5 一次 revert 修两集群
   - 链接：https://martinfowler.com/bliki/ContinuousDelivery.html ｜ 访问日期 2026-11-10
-- **R-30-12**｜L3 案例与实证｜CNCF Case Studies（名称级候选）｜CNCF｜案例栏目（按章择取，待核验）
+- **R-30-12**｜L3 案例与实证｜CNCF 用户案例库（Case Studies）｜CNCF｜持续更新
   - 支撑：支撑 §30.1 反模式的方法论；合成案例不冒充真实事件
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：卡片标注 L3 候选待核验；_verified.md 未登记正式链接，不编造
+  - 链接：https://www.cncf.io/case-studies/ ｜ 访问日期 2026-11-11
+  - 备注：按项目与行业归档的落地案例，用于观察多集群与平台化的真实形态；适用边界：案例多为成功叙事，失败与代价需结合各章反模式自行评估
 
 ## 第 31 章（7 条）
 
@@ -1196,8 +1194,8 @@
 - **R-31-6**｜L3 案例与实证｜CNCF Annual Survey 2023｜CNCF｜2023 年度报告
   - 支撑：支撑 §31.1 行业背景、§31.5「工具数量不等于成熟度」、§31.6「先上全套工具」失败路径；仅作背景
   - 链接：https://www.cncf.io/reports/cncf-annual-survey-2023/ ｜ 访问日期 2026-11-10
-- **R-31-7**｜L3 案例与实证｜公开 postmortem 合集（名称级候选）｜各机构｜公开 postmortem 合集（按章择取，待核验）
+- **R-31-7**｜L3 案例与实证｜公开事故复盘索引（复盘方法与事故重演相关案例的检索入口）｜各机构｜持续更新
   - 支撑：支撑 §31.1 合成案例声明、§31.3 事故重演的方法论；合成案例不冒充真实事件
-  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-10
-  - 备注：公开 postmortem 索引；合成案例不得冒充真实事件
+  - 链接：https://github.com/danluu/post-mortems ｜ 访问日期 2026-11-11
+  - 备注：由社区维护的公开复盘索引；用于观察复盘文档的通用结构，本书的重演脚本为合成设计，不引用其中具体事件
 

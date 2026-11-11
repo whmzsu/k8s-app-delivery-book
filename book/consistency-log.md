@@ -342,3 +342,28 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - **附录 E**：删除「E.5 待补术语（终稿扩写时补齐）」，把 7 个术语补进 E.1 表格（金丝雀/蓝绿/AnalysisTemplate/QoS 三档/PriorityClass 与抢占/Pod Security Standards/Workload Identity）。
 - **全书目录 + README 重写**：去掉「完整初稿 v1.0 / 15.7 万汉字 / 终稿目标 30–35 万字 / 扩写点见章末」，改为成书口径（32.8 万汉字、298 条引用）；README 删除 P0–P5 状态表、Actions 激活排障过程（含私有仓库地址与 SSH 凭据说明）与本地校验命令清单。
 - **未做**：`书籍大纲-v2/v3.md` 保留原样——它们是写作过程文档，不随书分发。
+
+### D-46 引用库元数据去内部化 + L3 来源去「硬凑」（2026-11-11，P6 第 3 步收尾）
+
+触发：附录 I 仍有 12 处「待核验」，但 `book_tools.py pending` 报告为空。查明是两件事：
+① `appendix()` 只 `print` 不落盘，附录 I 是上一次手工重定向的旧快照（现已改为直接写文件，并给 `--stdout` 供 CI 逐字节比对）；
+② 真正的残留不在链接行，而在 `title` / `version_or_date` / `note` 里——附录 I 会把这些字段原样印给读者。
+
+- **按 v3.2 三级背书规则复查 L3**，发现一类系统性问题：`danluu/post-mortems` 一个索引页被当了 **11 次**「L3 案例实证」，去支撑 11 个互不相同的论断。这正是本书规则里「禁止硬凑来源」的典型形态——索引页只能证明「这类事故存在」，不能证明某个具体论断。
+- **处理分两档**：
+  - 有具体、可验证、且与论断吻合的公开复盘 → 直接换掉（7 处，全部 `curl 200` 或官方仓库 README 直链核验）：
+    | 编号 | 新来源 | 支撑的论断 |
+    |---|---|---|
+    | R-12-9 | CircleCI 2023-01 事件复盘 | CI 是凭据集中地 |
+    | R-13-9 | Cloudflare 2020-07-17 复盘 | 全量下发的变更只能靠全局回滚收场 |
+    | R-14-12 | AWS S3 2017-02-28 事件摘要 | 手工执行剧本的操作失误 |
+    | R-15-12 | Fastly 2021-06-08 复盘 | 未分批的配置推送致全局失效 |
+    | R-16-10 | GitHub 2018-10-21 事件分析 | 备份存在 ≠ 可恢复 |
+    | R-24-9 | CNCF《Catalog of Supply Chain Compromises》 | 供应链攻击的手法谱系 |
+    | R-26-11 | Codecov Bash Uploader 事件说明 | 长期凭据滥用 |
+  - 找不到具体案例的 4 处（R-22-7 告警疲劳、R-23-8 处置拖长、R-29-12 控制器升级、R-31-7 复盘方法）→ **诚实降格**：标题改为「公开事故复盘索引（…类案例的检索入口）」，`note` 写明「只以它说明该类失效普遍存在，不引用其中任何具体事件作为论据」。宁降格，不硬凑。
+- **6 条 SRE Book 根页 → 章节页**（原先一律指 `sre.google/` 全书入口）：`release-engineering`（13-7）、`managing-incidents`（16-8）、`postmortem-culture`（23-6）、`handling-overload`（17-6 / 18-9）、`addressing-cascading-failures`（19-8 / 08-8）、`eliminating-toil`（26-10）。
+- **5 条 CNCF 白皮书 → 正式 PDF**：原先指向 `github.com/cncf/tag-security` 仓库根（备注里还写着「具体 v2 文档链接待复核」）。真实路径从仓库 README 取得：`community/resources/security-whitepaper/v2/CNCF_cloud-native-security-whitepaper-May2022-v2.pdf`。
+- **正文同步**：`hack/sync-ref-titles.py` 按 yaml 重建 19 行依据段的标题与机构；并改写 9 处行文措辞，例如「参照公开的流水线配置失误与供应链复盘」→「参照公开的 CI 供应链与凭据外泄复盘」（换源后原措辞已不准确）。
+- **兜底清理**（`hack/fix-ref-metadata.py` 的 `STRIP` 表）：`book/references/_registry.yaml 亦登记 R-xxx`、`_verified.md 未登记该页 URL，不编造`、`（SP-NN）`、`直连经代理超时，P4 复核`、`名称级候选`、`卡片列为 L1 候选` 等 ~55 处字段级污染清零；附录 I 现役内部指涉 0。
+- **验证**：`book_tools.py check` problem=0；`check-consistency.sh` 六项全过；附录 I 73,373 字、298 条、0 处「待核验」。正文 328,366 汉字（较外迁后微降 315 字，为措辞改写所致）。

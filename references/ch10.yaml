@@ -20,11 +20,11 @@
   level: "L1"
   url: "https://kustomize.io/"
   version_or_date: "版本 5.x"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§10.1 继承链过深；§10.2 判据表；§10.3 选型矩阵；§10.4 overlay 骨架"
   status: "verified"
-  note: "按 book/decisions.md U-05，Kustomize 5.x overlay 为多环境基线；base + 单层 overlay 两层上限"
+  note: "按本书选型基线，Kustomize 5.x overlay 为多环境基线；base + 单层 overlay 两层上限"
 
 - id: R-10-3
   title: "conftest"
@@ -32,11 +32,11 @@
   level: "L1"
   url: "https://www.conftest.dev/"
   version_or_date: "版本 0.x"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§10.1 渲染产物进 CI；§10.3 选型矩阵；§10.4 关卡 4；§10.6 CL-S-03"
   status: "verified"
-  note: "CI 里的组织策略静态校验，不得称为「准入」；集群侧策略库与准入见第 25 章（SP-16）"
+  note: "CI 里的组织策略静态校验，不等同于「准入」；集群侧策略库与准入见第 25 章"
 
 - id: R-10-4
   title: "Declarative Object Management"
@@ -44,11 +44,11 @@
   level: "L1"
   url: "https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/"
   version_or_date: "适用版本 v1.32"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§10.1 清单与提交分离；§10.2 manifests 与 rendered manifests 定义；§10.5 回到 Git"
   status: "verified"
-  note: "rendered manifests 在本章首次提及并正式定义，深入展开见第 14 章（book/concept-ladder.md）"
+  note: "rendered manifests 在本章首次提及并定义，深入展开见第 14 章"
 
 - id: R-10-5
   title: "kubeconform 项目文档"

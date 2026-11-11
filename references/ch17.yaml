@@ -64,13 +64,13 @@
   title: "Site Reliability Engineering · Handling Overload"
   author_or_org: "Google"
   level: "L2"
-  url: "https://sre.google/"
-  version_or_date: "在线版（全书入口）"
-  accessed: "2026-11-10"
+  url: "https://sre.google/sre-book/handling-overload/"
+  version_or_date: "SRE Book 第 21 章（在线版）"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§17.1 过载由最弱一环决定；§17.2 突发余量"
   status: "verified"
-  note: "直连经代理超时、检索核验存在；单章链接待 P4 复核，暂用全书入口"
+  note: "SRE Book 第 21 章《Handling Overload》；给出过载保护的官方判据，不覆盖具体限流实现"
 
 - id: R-17-7
   title: "Borg, Omega, and Kubernetes"

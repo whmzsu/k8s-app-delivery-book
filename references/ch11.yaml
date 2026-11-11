@@ -80,11 +80,11 @@
   level: "L1"
   url: "https://kyverno.io/docs/"
   version_or_date: "版本 1.x"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§11.3 策略离线校验与第 25 章分工；§11.4 选型矩阵"
   status: "verified"
-  note: "按 book/decisions.md U-04，Kyverno 1.x 为唯一策略引擎示例；本章只讲离线校验，集群侧策略库与准入见第 25 章（SP-16）"
+  note: "按本书选型基线，Kyverno 1.x 为唯一策略引擎示例；本章只讲离线校验，集群侧策略库与准入见第 25 章"
 
 - id: R-11-8
   title: "Thoughtworks Technology Radar"
@@ -109,16 +109,16 @@
   status: "verified"
 
 - id: R-11-10
-  title: "Kubernetes SIG Testing 材料"
+  title: "Writing Good e2e Tests for Kubernetes（SIG Testing 指南）"
   author_or_org: "Kubernetes SIG Testing"
   level: "L2"
-  url: ""
-  version_or_date: "持续更新"
-  accessed: "2026-11-10"
+  url: "https://github.com/kubernetes/community/blob/master/contributors/devel/sig-testing/writing-good-e2e-tests.md"
+  version_or_date: "当前主干版本"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§11.1 反模式三；§11.2 第 3 层声明式断言"
-  status: "pending_url"
-  note: "P1 卡片名称级候选，链接待 P3 核验；与 R-11-8、R-11-9 来自不同机构、无利益关联"
+  status: "verified"
+  note: "Kubernetes 官方仓库的 e2e 测试写作指南（模式与反模式）；适用边界：只覆盖端到端层，单元与集成测试的分层判据见本章正文"
 
 - id: R-11-11
   title: "CNCF Annual Survey 2023"
@@ -126,8 +126,8 @@
   level: "L3"
   url: "https://www.cncf.io/reports/cncf-annual-survey-2023/"
   version_or_date: "2023"
-  accessed: "2026-11-10"
+  accessed: "2026-11-11"
   archive_url: ""
   supports: "§11.1 / §11.2 多版本并存的实证背景"
   status: "verified"
-  note: "按 references/_verified.md 第三节，L3 只作背景实证，不用于证明某次虚构事故真实发生"
+  note: "公开事故复盘索引；L3 来源在本书只作行业背景实证，不用于证明本书合成案例真实发生"
