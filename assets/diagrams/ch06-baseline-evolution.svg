@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="196" viewBox="0 0 900 196" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="900" height="196" fill="#ffffff"/>
+  <defs>
+    <marker id="ar06a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#52525b"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" font-size="12.5" fill="#52525b">每一章只在四件套上「加字段」，不改 6.4 的字段契约（命名空间 / 标签 / 端口 / 镜像命名冻结）</text>
+
+  <rect x="20" y="44" width="136" height="70" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="88" y="66" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1d4ed8">第 6 章 · 基线</text>
+  <text x="88" y="86" text-anchor="middle" font-size="11.5" fill="#1e3a8a">四件套</text>
+  <text x="88" y="104" text-anchor="middle" font-size="10.5" fill="#64748b">跑通即止</text>
+
+  <rect x="170" y="44" width="136" height="70" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="238" y="66" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#166534">第 7 章</text>
+  <text x="238" y="86" text-anchor="middle" font-size="11.5" fill="#14532d">工作负载</text>
+  <text x="238" y="104" text-anchor="middle" font-size="10.5" fill="#64748b">补齐 4 类</text>
+
+  <rect x="320" y="44" width="136" height="70" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="388" y="66" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#166534">第 8 章</text>
+  <text x="388" y="86" text-anchor="middle" font-size="11.5" fill="#14532d">探针 / 优雅退出</text>
+  <text x="388" y="104" text-anchor="middle" font-size="10.5" fill="#64748b">终止 / PDB</text>
+
+  <rect x="470" y="44" width="136" height="70" rx="6" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="538" y="66" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#6d28d9">第 9 章</text>
+  <text x="538" y="86" text-anchor="middle" font-size="11.5" fill="#5b21b6">配置 / 密钥</text>
+  <text x="538" y="104" text-anchor="middle" font-size="10.5" fill="#64748b">不可变 CM</text>
+
+  <rect x="620" y="44" width="136" height="70" rx="6" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="688" y="66" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#6d28d9">第 10 章</text>
+  <text x="688" y="86" text-anchor="middle" font-size="11.5" fill="#5b21b6">模板 / overlay</text>
+  <text x="688" y="104" text-anchor="middle" font-size="10.5" fill="#64748b">双骨架</text>
+
+  <rect x="770" y="44" width="110" height="70" rx="6" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="825" y="66" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#b45309">第 11 章</text>
+  <text x="825" y="86" text-anchor="middle" font-size="11.5" fill="#92400e">校验 / CI</text>
+  <text x="825" y="104" text-anchor="middle" font-size="10.5" fill="#64748b">静态门禁</text>
+
+  <line x1="158" y1="79" x2="166" y2="79" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar06a)"/>
+  <line x1="308" y1="79" x2="316" y2="79" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar06a)"/>
+  <line x1="458" y1="79" x2="466" y2="79" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar06a)"/>
+  <line x1="608" y1="79" x2="616" y2="79" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar06a)"/>
+  <line x1="758" y1="79" x2="766" y2="79" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar06a)"/>
+
+  <rect x="20" y="134" width="860" height="44" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="40" y="152" font-size="11.5" fill="#3f3f46">加固顺序不可交换：先有稳定入口与可观察配置（第 6–9 章），模板化才有正确样本（第 10 章），CI 门禁才拦得准（第 11 章）。</text>
+  <text x="40" y="170" font-size="11.5" fill="#71717a">任何一层加固后 <tspan font-family="'Cascadia Mono','Consolas',monospace">curl gateway/healthz</tspan> 不再 200 —— 锅在这一层新增的字段，不在四件套本身。</text>
+</svg>

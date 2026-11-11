@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="382" viewBox="0 0 900 382" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="900" height="382" fill="#ffffff"/>
+  <defs>
+    <marker id="ar24" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#a1a1aa"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="24" font-size="12" fill="#52525b">T1–T6 在集群之外（构建与出仓），T7–T10 在准入（入集群）；每个 T 都是一次可注入的演练点</text>
+
+  <!-- 泳道 -->
+  <rect x="20" y="40" width="200" height="322" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="36" y="64" font-size="12.5" font-weight="bold" fill="#334155">开发者</text>
+
+  <rect x="240" y="40" width="200" height="322" rx="8" fill="#f0f9ff" stroke="#bae6fd"/>
+  <text x="256" y="64" font-size="12.5" font-weight="bold" fill="#0369a1">CI（构建层）</text>
+
+  <rect x="460" y="40" width="200" height="322" rx="8" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="476" y="64" font-size="12.5" font-weight="bold" fill="#6d28d9">制品库（出仓 / 归档层）</text>
+
+  <rect x="680" y="40" width="200" height="322" rx="8" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="696" y="64" font-size="12.5" font-weight="bold" fill="#b45309">准入（入集群层）</text>
+
+  <!-- 开发者 -->
+  <rect x="34" y="78" width="172" height="46" rx="5" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="46" y="99" font-size="10.5" fill="#334155">git push</text>
+  <text x="46" y="115" font-size="10" fill="#64748b">触发构建（仅一次）</text>
+
+  <rect x="34" y="186" width="172" height="58" rx="5" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="46" y="205" font-size="10.5" fill="#334155">晋升 PR 合并</text>
+  <text x="46" y="221" font-size="10" fill="#94a3b8">Git 是唯一变更入口</text>
+  <text x="46" y="236" font-size="10" fill="#94a3b8">（第 14 章）</text>
+
+  <!-- CI -->
+  <rect x="254" y="78" width="172" height="52" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+  <text x="266" y="96" font-size="10.5" font-weight="bold" fill="#0369a1">T1 一次构建并推送</text>
+  <text x="266" y="112" font-size="10" fill="#64748b">唯一标签 :git-&lt;sha7&gt;（第 12 章）</text>
+  <text x="266" y="126" font-size="10" fill="#64748b">digest 此刻定下</text>
+
+  <rect x="254" y="140" width="172" height="52" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+  <text x="266" y="158" font-size="10.5" font-weight="bold" fill="#0369a1">T2 Syft 1.x 生成 SBOM</text>
+  <text x="266" y="174" font-size="10" fill="#64748b">两份：SPDX + CycloneDX</text>
+  <text x="266" y="188" font-size="10" fill="#b91c1c">失败即退出，镜像不推送</text>
+
+  <rect x="254" y="202" width="172" height="52" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+  <text x="266" y="220" font-size="10.5" font-weight="bold" fill="#0369a1">T3 Trivy 0.x 分级扫描</text>
+  <text x="266" y="236" font-size="10" fill="#64748b">可修复 HIGH 即退出</text>
+  <text x="266" y="250" font-size="10" fill="#64748b">（分级口径见 24.2.4）</text>
+
+  <rect x="254" y="264" width="172" height="52" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+  <text x="266" y="282" font-size="10.5" font-weight="bold" fill="#0369a1">T4 cosign 3.x 签名</text>
+  <text x="266" y="298" font-size="10" fill="#64748b">按 @sha256: 摘要签</text>
+  <text x="266" y="312" font-size="10" fill="#b91c1c">签 tag 等于没签</text>
+
+  <!-- 制品库 -->
+  <rect x="474" y="78" width="172" height="58" rx="5" fill="#ffffff" stroke="#ddd6fe"/>
+  <text x="486" y="96" font-size="10.5" font-weight="bold" fill="#6d28d9">T5 attach sbom + 归档</text>
+  <text x="486" y="112" font-size="10" fill="#64748b">按 git-&lt;sha7&gt; 归档扫描报告</text>
+  <text x="486" y="126" font-size="10" fill="#64748b">证据挂在 digest 上</text>
+
+  <rect x="474" y="146" width="172" height="58" rx="5" fill="#ffffff" stroke="#ddd6fe"/>
+  <text x="486" y="164" font-size="10.5" font-weight="bold" fill="#6d28d9">T6 保留规则定时执行</text>
+  <text x="486" y="180" font-size="10" fill="#64748b">每日 3:00，按 tag 前缀</text>
+  <text x="486" y="194" font-size="10" fill="#64748b">清理不删证据链对象</text>
+
+  <!-- 准入 -->
+  <rect x="694" y="78" width="172" height="52" rx="5" fill="#ffffff" stroke="#fde68a"/>
+  <text x="706" y="96" font-size="10.5" font-weight="bold" fill="#b45309">T7 GitOps 同步</text>
+  <text x="706" y="112" font-size="10" fill="#64748b">Pod 创建请求进入准入</text>
+  <text x="706" y="126" font-size="10" fill="#64748b">（第 14 章）</text>
+
+  <rect x="694" y="140" width="172" height="52" rx="5" fill="#ffffff" stroke="#fde68a"/>
+  <text x="706" y="158" font-size="10.5" font-weight="bold" fill="#b45309">T8 verifyImages</text>
+  <text x="706" y="174" font-size="10" fill="#64748b">验签 + 摘要核验</text>
+  <text x="706" y="188" font-size="10" fill="#b91c1c">未签名即拒绝（F4）</text>
+
+  <rect x="694" y="202" width="172" height="52" rx="5" fill="#ffffff" stroke="#fde68a"/>
+  <text x="706" y="220" font-size="10.5" font-weight="bold" fill="#b45309">T9 mutateDigest</text>
+  <text x="706" y="236" font-size="10" fill="#64748b">把引用固定为已验摘要</text>
+  <text x="706" y="250" font-size="10" fill="#64748b">此后 tag 再变也不影响</text>
+
+  <rect x="694" y="264" width="172" height="52" rx="5" fill="#ffffff" stroke="#fde68a"/>
+  <text x="706" y="282" font-size="10.5" font-weight="bold" fill="#b45309">T10 放行</text>
+  <text x="706" y="298" font-size="10" fill="#64748b">Pod 起来，承载流量</text>
+  <text x="706" y="312" font-size="10" fill="#64748b">证据链到此闭合</text>
+
+  <!-- 交接箭头 -->
+  <line x1="206" y1="101" x2="252" y2="101" stroke="#a1a1aa" stroke-width="1.3" marker-end="url(#ar24)"/>
+  <line x1="206" y1="215" x2="252" y2="290" stroke="#a1a1aa" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#ar24)"/>
+  <text x="150" y="266" font-size="9.5" fill="#94a3b8">晋升时</text>
+  <line x1="426" y1="104" x2="472" y2="104" stroke="#a1a1aa" stroke-width="1.3" marker-end="url(#ar24)"/>
+  <line x1="646" y1="104" x2="692" y2="104" stroke="#a1a1aa" stroke-width="1.3" marker-end="url(#ar24)"/>
+</svg>

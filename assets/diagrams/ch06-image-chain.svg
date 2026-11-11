@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="330" viewBox="0 0 900 330" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="900" height="330" fill="#ffffff"/>
+  <defs>
+    <marker id="ar06b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#52525b"/>
+    </marker>
+  </defs>
+
+  <rect x="30" y="16" width="470" height="52" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="50" y="38" font-size="12.5" font-weight="bold" fill="#334155">git commit（短 SHA）</text>
+  <text x="50" y="58" font-size="11.5" fill="#475569">docker build -t registry.example.com/order-demo/gateway:git-&lt;sha&gt;</text>
+
+  <line x1="265" y1="68" x2="265" y2="90" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar06b)"/>
+  <text x="277" y="85" font-size="11" fill="#52525b">构建</text>
+
+  <rect x="30" y="94" width="470" height="52" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="50" y="116" font-size="12.5" font-weight="bold" fill="#1d4ed8">① 宿主机 Docker daemon 的镜像存储</text>
+  <text x="50" y="136" font-size="11.5" fill="#1e3a8a">镜像只在这一跳诞生</text>
+
+  <text x="520" y="116" font-size="11.5" fill="#b91c1c">构建失败在这一跳就停</text>
+  <text x="520" y="136" font-size="11" fill="#71717a">docker images 能查到，才算 ① 有了</text>
+
+  <line x1="265" y1="146" x2="265" y2="168" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar06b)"/>
+  <text x="277" y="163" font-size="11" fill="#52525b">kind load docker-image（打 tar 直灌，不走仓库协议）</text>
+
+  <rect x="30" y="172" width="470" height="52" rx="6" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="50" y="194" font-size="12.5" font-weight="bold" fill="#6d28d9">② kind 节点容器内 containerd 的镜像存储</text>
+  <text x="50" y="214" font-size="11.5" fill="#5b21b6">① 有镜像 ≠ ② 有镜像，这是带内传输的意义</text>
+
+  <text x="520" y="194" font-size="11.5" fill="#6d28d9">crictl images 在这一跳核对</text>
+  <text x="520" y="214" font-size="11" fill="#71717a">docker exec order-demo-control-plane crictl images</text>
+
+  <line x1="265" y1="224" x2="265" y2="246" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar06b)"/>
+  <text x="277" y="241" font-size="11" fill="#52525b">kubelet 创建 Pod：IfNotPresent 先查 ②</text>
+
+  <rect x="30" y="250" width="470" height="52" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="50" y="272" font-size="12.5" font-weight="bold" fill="#166534">③ 容器进程启动</text>
+  <text x="50" y="292" font-size="11.5" fill="#14532d">到这里才第一次接受流量</text>
+
+  <text x="520" y="272" font-size="11.5" fill="#166534">curl /healthz 在这一跳验证</text>
+  <text x="520" y="292" font-size="11" fill="#71717a">响应 200 才说明三跳都齐</text>
+
+  <rect x="30" y="308" width="860" height="0" fill="none"/>
+  <text x="30" y="322" font-size="11" fill="#71717a">三跳缺任何一跳，症状都汇成同一个 ImagePullBackOff —— 但事件文本不同，6.4.3 的三条失败注入就是按这个差别固化的。</text>
+</svg>

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="486" viewBox="0 0 900 486" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="900" height="486" fill="#ffffff"/>
+  <defs>
+    <marker id="ar17" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#52525b"/>
+    </marker>
+  </defs>
+
+  <!-- 入口 -->
+  <rect x="330" y="18" width="240" height="44" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="450" y="46" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#334155">现象：Pod 出问题</text>
+
+  <path d="M450,62 V78 H210 V92" fill="none" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar17)"/>
+  <path d="M450,78 H690 V92" fill="none" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar17)"/>
+
+  <!-- 两个分支 -->
+  <rect x="20" y="96" width="380" height="46" rx="6" fill="#f0f9ff" stroke="#bae6fd"/>
+  <text x="40" y="118" font-size="12.5" font-weight="bold" fill="#0369a1">① 容器重启（Pod 还在，restartCount 增长）</text>
+  <text x="40" y="134" font-size="11" fill="#075985">进程活着又死了 —— 责任在容器自身</text>
+
+  <rect x="500" y="96" width="380" height="46" rx="6" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="520" y="118" font-size="12.5" font-weight="bold" fill="#b91c1c">② Pod 消失或排不上</text>
+  <text x="520" y="134" font-size="11" fill="#991b1b">对象不在了 —— 责任在调度与节点</text>
+
+  <line x1="210" y1="142" x2="210" y2="166" stroke="#a1a1aa" stroke-width="1.3" marker-end="url(#ar17)"/>
+  <line x1="690" y1="142" x2="690" y2="166" stroke="#a1a1aa" stroke-width="1.3" marker-end="url(#ar17)"/>
+
+  <!-- 左叶 -->
+  <rect x="20" y="170" width="380" height="92" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="40" y="193" font-size="12" font-weight="bold" fill="#18181b">lastState.reason = OOMKilled</text>
+  <text x="40" y="214" font-size="11.5" fill="#3f3f46">容器级 memory.max 越线</text>
+  <text x="40" y="234" font-size="11.5" fill="#71717a">→ 按 17.4.1 查 working_set / sidecar / tmpfs</text>
+  <text x="40" y="252" font-size="11" fill="#a1a1aa">表 17-6 第 8 行</text>
+
+  <rect x="20" y="276" width="380" height="76" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="40" y="299" font-size="12" font-weight="bold" fill="#18181b">其它退出码</text>
+  <text x="40" y="320" font-size="11.5" fill="#3f3f46">探针误杀或进程崩溃</text>
+  <text x="40" y="340" font-size="11.5" fill="#71717a">→ 见第 8 章（本章不处理）</text>
+
+  <!-- 右叶 -->
+  <rect x="500" y="170" width="380" height="92" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="520" y="193" font-size="12" font-weight="bold" fill="#18181b">Evicted · MemoryPressure</text>
+  <text x="520" y="214" font-size="11.5" fill="#3f3f46">kubelet 排序：QoS 档 → 超出 requests 的幅度 → priority</text>
+  <text x="520" y="234" font-size="11.5" fill="#71717a">→ 表 17-6 第 1–4 行</text>
+  <text x="520" y="252" font-size="11" fill="#a1a1aa">内存驱逐先挑 Burstable 里超卖最多的那个</text>
+
+  <rect x="500" y="276" width="380" height="92" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="520" y="299" font-size="12" font-weight="bold" fill="#18181b">Evicted · DiskPressure</text>
+  <text x="520" y="320" font-size="11.5" fill="#3f3f46">nodefs / inodes 压力，QoS 仍参与排序</text>
+  <text x="520" y="340" font-size="11.5" fill="#71717a">→ 表 17-6 第 7 行</text>
+  <text x="520" y="358" font-size="11" fill="#a1a1aa">Guaranteed 不豁免 —— 常被误当成「最高档不会被动」</text>
+
+  <rect x="500" y="382" width="380" height="76" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="520" y="405" font-size="12" font-weight="bold" fill="#18181b">Pending（没被驱逐，只是调度不上）</text>
+  <text x="520" y="426" font-size="11.5" fill="#3f3f46">调度器视角：PriorityClass 触发抢占，QoS 不参与</text>
+  <text x="520" y="446" font-size="11.5" fill="#71717a">→ 表 17-6 第 6 行</text>
+
+  <!-- 底注 -->
+  <rect x="20" y="382" width="380" height="76" rx="6" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="40" y="405" font-size="12" font-weight="bold" fill="#b45309">两列为什么必须分开看</text>
+  <text x="40" y="426" font-size="11.5" fill="#92400e">① 的处置在容器与探针，② 的处置在资源与调度；</text>
+  <text x="40" y="446" font-size="11.5" fill="#92400e">认错列，会把「加内存」用在一次误杀上。</text>
+</svg>
