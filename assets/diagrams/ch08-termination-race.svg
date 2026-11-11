@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="440" viewBox="0 0 900 440" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="900" height="440" fill="#ffffff"/>
+  <defs>
+    <marker id="ar8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#b91c1c"/>
+    </marker>
+    <marker id="ar8b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#52525b"/>
+    </marker>
+  </defs>
+
+  <!-- 竞态窗口底色 -->
+  <rect x="336" y="52" width="188" height="256" fill="#fee2e2" opacity="0.55"/>
+  <text x="430" y="72" text-anchor="middle" font-size="12" font-weight="bold" fill="#b91c1c">竞态窗口</text>
+
+  <!-- 时间轴 -->
+  <line x1="108" y1="46" x2="872" y2="46" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar8b)"/>
+  <text x="872" y="36" text-anchor="end" font-size="11.5" fill="#71717a">时间 →</text>
+
+  <!-- 事件刻度 -->
+  <line x1="150" y1="38" x2="150" y2="330" stroke="#a1a1aa" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="280" y1="38" x2="280" y2="330" stroke="#a1a1aa" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="524" y1="38" x2="524" y2="330" stroke="#a1a1aa" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="620" y1="38" x2="620" y2="330" stroke="#a1a1aa" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="790" y1="38" x2="790" y2="330" stroke="#a1a1aa" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- 泳道 -->
+  <line x1="108" y1="104" x2="872" y2="104" stroke="#e4e4e7" stroke-width="1"/>
+  <line x1="108" y1="160" x2="872" y2="160" stroke="#e4e4e7" stroke-width="1"/>
+  <line x1="108" y1="216" x2="872" y2="216" stroke="#e4e4e7" stroke-width="1"/>
+  <line x1="108" y1="272" x2="872" y2="272" stroke="#e4e4e7" stroke-width="1"/>
+
+  <text x="100" y="86" text-anchor="end" font-size="12.5" fill="#3f3f46">客户端</text>
+  <text x="100" y="142" text-anchor="end" font-size="12.5" fill="#3f3f46">kube-proxy</text>
+  <text x="100" y="198" text-anchor="end" font-size="12.5" fill="#3f3f46">Endpoint</text>
+  <text x="100" y="254" text-anchor="end" font-size="12.5" fill="#3f3f46">旧 Pod</text>
+
+  <!-- 时间点圆点与标签 -->
+  <circle cx="150" cy="46" r="3.5" fill="#52525b"/>
+  <text x="150" y="30" text-anchor="middle" font-size="11.5" fill="#3f3f46">删除 Pod</text>
+
+  <circle cx="280" cy="46" r="3.5" fill="#52525b"/>
+  <text x="280" y="30" text-anchor="middle" font-size="11.5" fill="#3f3f46">① 摘 Endpoint</text>
+
+  <circle cx="524" cy="46" r="3.5" fill="#52525b"/>
+  <text x="524" y="30" text-anchor="middle" font-size="11.5" fill="#3f3f46">② 规则生效</text>
+
+  <circle cx="620" cy="46" r="3.5" fill="#52525b"/>
+  <text x="620" y="30" text-anchor="middle" font-size="11.5" fill="#3f3f46">SIGTERM</text>
+
+  <circle cx="790" cy="46" r="3.5" fill="#52525b"/>
+  <text x="790" y="30" text-anchor="middle" font-size="11.5" fill="#3f3f46">排空完成</text>
+
+  <!-- 关键状态 -->
+  <rect x="278" y="128" width="8" height="8" fill="#0369a1"/>
+  <text x="294" y="136" font-size="11.5" fill="#0c4a6e">iptables 开始重写（异步）</text>
+
+  <rect x="522" y="128" width="8" height="8" fill="#0369a1"/>
+  <text x="538" y="136" font-size="11.5" fill="#0c4a6e">重写完成，新请求走新 Pod</text>
+
+  <rect x="278" y="184" width="8" height="8" fill="#0369a1"/>
+  <text x="294" y="192" font-size="11.5" fill="#0c4a6e">subsets 里已无旧 IP（这一步很快）</text>
+
+  <!-- 竞态中的请求 -->
+  <path d="M430,96 V262" fill="none" stroke="#b91c1c" stroke-width="1.4" marker-end="url(#ar8)"/>
+  <text x="418" y="248" text-anchor="end" font-size="11.5" fill="#b91c1c">请求仍被转发到旧 IP</text>
+
+  <!-- preStop 区间 -->
+  <rect x="150" y="288" width="470" height="26" rx="4" fill="#dcfce7" stroke="#86efac"/>
+  <text x="385" y="306" text-anchor="middle" font-size="12" fill="#166534">preStop 静默（本章取 5s）：不接新请求，只排空在途</text>
+
+  <!-- 覆盖关系标注 -->
+  <line x1="336" y1="330" x2="336" y2="340" stroke="#b91c1c" stroke-width="1"/>
+  <line x1="524" y1="330" x2="524" y2="340" stroke="#b91c1c" stroke-width="1"/>
+  <line x1="336" y1="340" x2="524" y2="340" stroke="#b91c1c" stroke-width="1"/>
+  <text x="430" y="356" text-anchor="middle" font-size="11.5" fill="#b91c1c">这段空隙必须被 preStop 完全盖住</text>
+
+  <!-- 底注 -->
+  <rect x="25" y="372" width="850" height="52" rx="6" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="42" y="394" font-size="12.5" fill="#92400e">没有 preStop 时，旧 Pod 在「① 之后、② 之前」仍会收到请求，而它已经在退出 ——</text>
+  <text x="42" y="414" font-size="12.5" fill="#92400e">这就是滚动更新期间那批 5xx 的来源。preStop 的时长要按 ①→② 的实测间隔定，不是随手填。</text>
+</svg>

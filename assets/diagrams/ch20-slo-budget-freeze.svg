@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="486" viewBox="0 0 900 486" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="900" height="486" fill="#ffffff"/>
+  <defs>
+    <marker id="ar20" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#52525b"/>
+    </marker>
+  </defs>
+
+  <!-- 定义链 -->
+  <rect x="25" y="36" width="200" height="66" rx="6" fill="#f0f9ff" stroke="#bae6fd"/>
+  <text x="125" y="60" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#0369a1">SLI</text>
+  <text x="125" y="82" text-anchor="middle" font-size="12.5" fill="#3f3f46">好请求 ÷ 总请求</text>
+
+  <line x1="227" y1="69" x2="301" y2="69" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar20)"/>
+  <text x="264" y="60" text-anchor="middle" font-size="11.5" fill="#52525b">＋目标</text>
+  <text x="264" y="88" text-anchor="middle" font-size="11.5" fill="#52525b">＋窗口</text>
+
+  <rect x="305" y="36" width="200" height="66" rx="6" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="405" y="60" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#6d28d9">SLO</text>
+  <text x="405" y="82" text-anchor="middle" font-size="12.5" fill="#3f3f46">99.9% ／ 28 天滚动</text>
+
+  <line x1="507" y1="69" x2="581" y2="69" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar20)"/>
+  <text x="544" y="62" text-anchor="middle" font-size="11.5" fill="#52525b">1 − SLO</text>
+
+  <rect x="585" y="36" width="200" height="66" rx="6" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="685" y="60" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#b45309">错误预算</text>
+  <text x="685" y="82" text-anchor="middle" font-size="12.5" fill="#3f3f46">0.1% ＝ 可花的额度</text>
+
+  <!-- 预算分叉 -->
+  <path d="M685,102 V128 H205 V150" fill="none" stroke="#a1a1aa" stroke-width="1.3" marker-end="url(#ar20)"/>
+  <path d="M685,102 V128 H700 V150" fill="none" stroke="#a1a1aa" stroke-width="1.3" marker-end="url(#ar20)"/>
+
+  <rect x="75" y="152" width="260" height="70" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="205" y="176" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">预算未耗尽</text>
+  <text x="205" y="198" text-anchor="middle" font-size="12.5" fill="#15803d">有变更余量 → 可以发、可以试</text>
+
+  <rect x="570" y="152" width="260" height="70" rx="6" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="700" y="176" text-anchor="middle" font-size="14" font-weight="bold" fill="#b91c1c">预算耗尽</text>
+  <text x="700" y="198" text-anchor="middle" font-size="12.5" fill="#b91c1c">用冻结换稳定；例外须审批</text>
+
+  <!-- 双窗口 -->
+  <text x="25" y="258" font-size="13" fill="#71717a">同一份预算，两个时间尺度各回答一个不同的问题</text>
+
+  <rect x="25" y="270" width="400" height="84" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="45" y="294" font-size="13.5" font-weight="bold" fill="#18181b">快燃尽窗口 · 1 小时</text>
+  <text x="45" y="318" font-size="12.5" fill="#3f3f46">回答：现在要不要叫人</text>
+  <text x="45" y="339" font-size="12.5" fill="#71717a">出口 → paging（第 22 章）</text>
+
+  <rect x="475" y="270" width="400" height="84" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="495" y="294" font-size="13.5" font-weight="bold" fill="#18181b">慢燃尽窗口 · 数天</text>
+  <text x="495" y="318" font-size="12.5" fill="#3f3f46">回答：要不要改季度计划</text>
+  <text x="495" y="339" font-size="12.5" fill="#71717a">出口 → ticket 与复盘</text>
+
+  <!-- 底注 -->
+  <rect x="25" y="372" width="850" height="46" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="45" y="394" font-size="12.5" fill="#1e40af">只设一个窗口必然出错：今天下午那次 20 分钟故障，在「全年」尺度上是一根毛刺，</text>
+  <text x="45" y="411" font-size="12.5" fill="#1e40af">在「一小时」尺度上是全站不可用 —— 同一件事，结论差两个数量级。</text>
+
+  <rect x="25" y="430" width="850" height="42" rx="6" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="450" y="456" text-anchor="middle" font-size="13" fill="#92400e">目标是承诺，预算是额度：花得满不等于违约，花得太快才是信号</text>
+</svg>

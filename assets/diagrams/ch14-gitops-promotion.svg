@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="440" viewBox="0 0 900 440" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="900" height="440" fill="#ffffff"/>
+  <defs>
+    <marker id="ar14" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#52525b"/>
+    </marker>
+    <marker id="ar14r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <!-- 仓库 -->
+  <rect x="55" y="24" width="790" height="74" rx="7" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="450" y="46" text-anchor="middle" font-size="14" font-weight="bold" fill="#6d28d9">Git 仓库 · 唯一变更入口</text>
+  <rect x="110" y="56" width="180" height="30" rx="4" fill="#ede9fe" stroke="#c4b5fd"/>
+  <text x="200" y="76" text-anchor="middle" font-size="12.5" fill="#5b21b6">gitops/envs/dev/</text>
+  <rect x="360" y="56" width="180" height="30" rx="4" fill="#ede9fe" stroke="#c4b5fd"/>
+  <text x="450" y="76" text-anchor="middle" font-size="12.5" fill="#5b21b6">gitops/envs/staging/</text>
+  <rect x="610" y="56" width="180" height="30" rx="4" fill="#ede9fe" stroke="#c4b5fd"/>
+  <text x="700" y="76" text-anchor="middle" font-size="12.5" fill="#5b21b6">gitops/envs/prod/</text>
+
+  <!-- 箭头 -->
+  <line x1="200" y1="100" x2="200" y2="166" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar14)"/>
+  <text x="212" y="130" font-size="11.5" fill="#52525b">合入 PR</text>
+  <text x="212" y="146" font-size="11.5" fill="#71717a">改动在此落地</text>
+
+  <line x1="450" y1="100" x2="450" y2="166" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar14)"/>
+  <text x="462" y="130" font-size="11.5" fill="#52525b">晋升 PR</text>
+  <text x="462" y="146" font-size="11.5" fill="#71717a">只改 image tag</text>
+
+  <line x1="700" y1="100" x2="700" y2="166" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar14)"/>
+  <text x="712" y="130" font-size="11.5" fill="#52525b">晋升 PR ＋ 评审</text>
+  <text x="712" y="146" font-size="11.5" fill="#71717a">冻结窗口内需例外</text>
+
+  <!-- 三个环境 -->
+  <rect x="110" y="170" width="180" height="92" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="200" y="194" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#166534">order-demo-dev</text>
+  <text x="200" y="216" text-anchor="middle" font-size="11.5" fill="#15803d">Argo CD 持续收敛</text>
+  <text x="200" y="236" text-anchor="middle" font-size="11.5" fill="#15803d">先在这里验证</text>
+  <text x="200" y="254" text-anchor="middle" font-size="11" fill="#71717a">selfHeal: on</text>
+
+  <rect x="360" y="170" width="180" height="92" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="450" y="194" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#166534">order-demo-staging</text>
+  <text x="450" y="216" text-anchor="middle" font-size="11.5" fill="#15803d">Argo CD 持续收敛</text>
+  <text x="450" y="236" text-anchor="middle" font-size="11.5" fill="#15803d">同一份产物重放</text>
+  <text x="450" y="254" text-anchor="middle" font-size="11" fill="#71717a">selfHeal: on</text>
+
+  <rect x="610" y="170" width="180" height="92" rx="6" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="700" y="194" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#b91c1c">order-demo-prod</text>
+  <text x="700" y="216" text-anchor="middle" font-size="11.5" fill="#b91c1c">Argo CD 持续收敛</text>
+  <text x="700" y="236" text-anchor="middle" font-size="11.5" fill="#b91c1c">对外承诺在这里</text>
+  <text x="700" y="254" text-anchor="middle" font-size="11" fill="#71717a">selfHeal: on</text>
+
+  <!-- 同一产物横线 -->
+  <line x1="200" y1="286" x2="200" y2="304" stroke="#0369a1" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="450" y1="286" x2="450" y2="304" stroke="#0369a1" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="700" y1="286" x2="700" y2="304" stroke="#0369a1" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="200" y1="304" x2="700" y2="304" stroke="#0369a1" stroke-width="1.2"/>
+  <text x="450" y="322" text-anchor="middle" font-size="12" fill="#0c4a6e">同一个 image digest 沿链路传递：任何环境都不重新构建</text>
+
+  <!-- 底注 -->
+  <rect x="25" y="340" width="850" height="76" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="42" y="362" font-size="12.5" fill="#1e40af">三环境的 Secret 对象同名、命名空间不同，凭据互不可见（第 4、9 章）；晋升只搬 image tag，不搬配置差异。</text>
+  <text x="42" y="384" font-size="12.5" fill="#1e40af">如果有人手工改 prod，集群不会「慢慢偏离」：控制器下一次比对就会把它改回，并留下审计记录 ——</text>
+  <text x="42" y="404" font-size="12.5" fill="#1e40af">这正是「GitOps」与「用 Git 触发的 apply」的分界：前者会纠正，后者只会被下一次 CI 覆盖。</text>
+</svg>

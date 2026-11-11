@@ -66,4 +66,37 @@ echo "== 6. 章内代码块与物化产物一致 =="
 # 改章不同步 examples/by-chapter 是历史上最容易漏的一步（CI 单独一步才暴露）
 python hack/materialize.py --check
 
+echo "== 7. 插图引用可达（Markdown 正常但成品缺图的防线） =="
+# v1.1.0 的教训：mermaid 块在 Markdown 里看得见，在 PDF/EPUB/DOCX 里是裸文本，
+# 六道闸门全没抓到。插图用 ![](路径) 后必须确认文件真实存在，且不是遗留的
+# 不可渲染语法（mermaid / ASCII art 混入图片位）。
+python - <<'PY'
+import glob, os, re, sys
+bad, total = [], 0
+for f in sorted(glob.glob('chapters/*.md')) + sorted(glob.glob('appendices/*.md')):
+    t = open(f, encoding='utf-8').read()
+    for m in re.finditer(r'!\[([^\]]*)\]\(([^)]+)\)', t):
+        total += 1
+        src = m.group(2).strip()
+        if src.startswith(('http://', 'https://')):
+            bad.append((f, src, '外链图不入库，构建期无法内联'))
+            continue
+        p = os.path.normpath(os.path.join(os.path.dirname(f), src))
+        if not os.path.exists(p):
+            bad.append((f, src, '文件不存在'))
+        elif not src.endswith('.svg'):
+            bad.append((f, src, '只接受 SVG（三形态共用矢量源）'))
+print('插图引用 %d 处，问题 %d' % (total, len(bad)))
+for f, src, why in bad:
+    print('  ', f, '->', src, ':', why)
+sys.exit(1 if bad else 0)
+PY
+echo "全部插图可达"
+# mermaid 在成品里不可渲染：出现即说明有人写了构建管线吃不到的东西
+if grep -rn '^```mermaid' chapters/ appendices/ >/dev/null 2>&1; then
+  echo "!! 发现 mermaid 块：构建器不渲染它，成品会是裸文本。改用 SVG + ![]()"
+  grep -rn '^```mermaid' chapters/ appendices/
+  exit 1
+fi
+
 echo "== 全书一致性闸门：通过 =="

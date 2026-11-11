@@ -125,6 +125,13 @@ def parse_md(text: str) -> list[dict]:
             blocks.append({"kind": "code", "lang": lang, "text": "\n".join(body)})
             continue
 
+        # 图片：`![alt](../assets/diagrams/x.svg)`，路径相对 chapters/ 或 appendices/
+        m = re.fullmatch(r"!\[([^\]]*)\]\(([^)]+)\)", s)
+        if m:
+            blocks.append({"kind": "image", "alt": m.group(1).strip(), "src": m.group(2).strip()})
+            i += 1
+            continue
+
         # 分隔线
         if re.fullmatch(r"-{3,}|\*{3,}", s):
             blocks.append({"kind": "hr"})
@@ -333,7 +340,7 @@ def build_docx(docs: list[dict], dest: str) -> dict:
         rr.font.size = Pt(11)
     doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
-    stats = {"code": 0, "table": 0, "para": 0}
+    stats = {"code": 0, "table": 0, "para": 0, "image": 0}
 
     def add_runs(par, text, size=None):
         for style, chunk in inline(text):
@@ -359,7 +366,31 @@ def build_docx(docs: list[dict], dest: str) -> dict:
 
         for b in blocks:
             k = b["kind"]
-            if k == "code":
+            if k == "image":
+                svg_path = os.path.normpath(os.path.join(ROOT, "chapters", b["src"]))
+                png_dir = os.path.join(ROOT, "build", "diagrams")
+                os.makedirs(png_dir, exist_ok=True)
+                png_path = os.path.join(png_dir, os.path.basename(svg_path) + ".png")
+                ok = os.path.exists(png_path) and os.path.getsize(png_path) > 2048
+                if not ok:
+                    ok = os.path.exists(svg_path) and svg_to_png(svg_path, png_path)
+                if ok:
+                    doc.add_picture(png_path, width=Cm(15.5))
+                    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+                else:
+                    rn = doc.add_paragraph()
+                    rn.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    run = rn.add_run(f"［图：{b['alt']}（矢量版见 PDF / EPUB）］")
+                    run.italic = True
+                    run.font.size = Pt(9)
+                if b["alt"]:
+                    cap = doc.add_paragraph()
+                    cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    rc = cap.add_run(b["alt"])
+                    rc.italic = True
+                    rc.font.size = Pt(9)
+                stats["image"] += 1
+            elif k == "code":
                 par = doc.add_paragraph()
                 pf = par.paragraph_format
                 pf.left_indent = Cm(0.4)
@@ -466,6 +497,13 @@ th { background: #ececf1; font-family: "Heiti SC", "SimHei", "黑体", sans-seri
 tr { page-break-inside: avoid; }
 blockquote { margin: 6pt 0 8pt; padding: 2pt 0 2pt 9pt; border-left: 2.5pt solid #d8d8e0;
              color: #3f3f46; font-size: 9.6pt; }
+figure.diagram { margin: 8pt 0 10pt; text-align: center; text-indent: 0;
+                 page-break-inside: avoid; }
+figure.diagram svg { max-width: 100%; height: auto; }
+figure.diagram figcaption { font-size: 8.8pt; color: #52525b; text-indent: 0;
+                            margin-top: 4pt; text-align: center; }
+p.diagram-missing { color: #b00020; text-align: center; text-indent: 0;
+                    border: 0.5pt dashed #b00020; padding: 4pt; }
 blockquote p { text-indent: 0; margin: 0 0 3pt; }
 ul, ol { margin: 4pt 0 8pt 1.4em; padding: 0; }
 li { margin: 0 0 2.5pt; text-align: justify; }
@@ -478,13 +516,69 @@ hr { display: none; }
 """
 
 
+def load_diagram(src: str) -> str | None:
+    """把 SVG 内联进 HTML。
+
+    不引外部二进制（mermaid-cli / node）：图以 SVG 入库，构建期读文件内联。
+    内联而非 `![]()` 引外部文件，是为了让 PDF / EPUB / DOCX 三形态拿到同一份
+    矢量内容——引相对路径时 Chromium 打印与 epub 打包的基准目录不同，很容易
+    「Markdown 里看得见、成品里是破图」。
+    """
+    path = os.path.normpath(os.path.join(ROOT, "chapters", src))
+    if not path.endswith(".svg") or not os.path.exists(path):
+        return None
+    txt = open(path, encoding="utf-8").read()
+    txt = re.sub(r"^\s*<\?xml[^>]*\?>\s*", "", txt)
+    txt = re.sub(r"^\s*<!DOCTYPE[^>]*>\s*", "", txt, flags=re.I)
+    return txt.strip()
+
+
+def svg_to_png(svg_path: str, png_path: str) -> bool:
+    """用构建链已有的 Edge/Chrome 把 SVG 转 PNG，供 DOCX 嵌入。
+
+    python-docx 不支持 SVG（Word 的 SVG 支持没有开放 API），而再引一个
+    cairosvg/svglib 依赖与「构建只靠 python + Edge」的既有约定冲突。
+    转换失败时返回 False，调用方降级为文字图注——不静默丢图。
+    """
+    edge = find_edge()
+    if not edge:
+        return False
+    try:
+        head = open(svg_path, encoding="utf-8").read()
+        mw = re.search(r'\bwidth="(\d+(?:\.\d+)?)"', head)
+        mh = re.search(r'\bheight="(\d+(?:\.\d+)?)"', head)
+        w = int(float(mw.group(1))) if mw else 900
+        h = int(float(mh.group(1))) if mh else 520
+        png_abs = os.path.abspath(png_path)
+        if os.path.exists(png_abs):
+            os.remove(png_abs)
+        profile = tempfile.mkdtemp(prefix="bd-png-")
+        subprocess.run([edge, "--headless=new", "--disable-gpu", "--hide-scrollbars",
+                        "--force-device-scale-factor=2", f"--user-data-dir={profile}",
+                        f"--window-size={w},{h}", f"--screenshot={png_abs}",
+                        "file:///" + os.path.abspath(svg_path).replace("\\", "/")],
+                       capture_output=True, timeout=90)
+        shutil.rmtree(profile, ignore_errors=True)
+    except Exception:
+        return False
+    return os.path.exists(png_abs) and os.path.getsize(png_abs) > 2048
+
+
 def render_html_body(blocks: list[dict], first_h1: str | None, cls: str = "") -> str:
     out = []
     if first_h1:
         out.append(f'<h1 class="{cls}">{html.escape(first_h1)}</h1>')
     for b in blocks:
         k = b["kind"]
-        if k == "code":
+        if k == "image":
+            svg = load_diagram(b["src"])
+            if svg:
+                cap = f"<figcaption>{inline_html(b['alt'])}</figcaption>" if b["alt"] else ""
+                out.append(f'<figure class="diagram">{svg}{cap}</figure>')
+            else:
+                # 缺失必须显式可见：静默忽略会让「Markdown 正常、成品没有图」重演
+                out.append(f'<p class="diagram-missing">［图示缺失：{html.escape(b["src"])}］</p>')
+        elif k == "code":
             out.append("<pre><code>%s</code></pre>" % html.escape(b["text"]))
         elif k == "table":
             out.append("<table><thead><tr>")
@@ -667,6 +761,10 @@ table { border-collapse: collapse; width: 100%; font-size: 0.8em; margin: 0.6em 
 th, td { border: 1px solid #bbb; padding: 0.25em 0.35em; text-align: left; text-indent: 0; }
 th { background: #ececf1; }
 blockquote { border-left: 3px solid #ccc; margin: 0.6em 0; padding-left: 0.7em; color: #444; }
+figure.diagram { margin: 0.8em 0; text-align: center; text-indent: 0; }
+figure.diagram svg { max-width: 100%; height: auto; }
+figure.diagram figcaption { font-size: 0.8em; color: #555; margin-top: 0.3em; text-align: center; }
+p.diagram-missing { color: #b00020; text-align: center; text-indent: 0; }
 """
 
 
