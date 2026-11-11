@@ -497,9 +497,9 @@ th { background: #ececf1; font-family: "Heiti SC", "SimHei", "黑体", sans-seri
 tr { page-break-inside: avoid; }
 blockquote { margin: 6pt 0 8pt; padding: 2pt 0 2pt 9pt; border-left: 2.5pt solid #d8d8e0;
              color: #3f3f46; font-size: 9.6pt; }
-figure.diagram { margin: 8pt 0 10pt; text-align: center; text-indent: 0;
+figure.diagram { margin: 8pt -7mm 10pt; text-align: center; text-indent: 0;
                  page-break-inside: avoid; }
-figure.diagram svg { max-width: 100%; height: auto; }
+figure.diagram svg { width: 100%; max-width: none; height: auto; }
 figure.diagram figcaption { font-size: 8.8pt; color: #52525b; text-indent: 0;
                             margin-top: 4pt; text-align: center; }
 p.diagram-missing { color: #b00020; text-align: center; text-indent: 0;
