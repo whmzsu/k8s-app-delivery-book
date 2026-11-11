@@ -2,7 +2,7 @@
 
 > 一本**决策书**，不是 K8s API 手册。面向已会 `kubectl` 的平台工程师 / SRE / 后端负责人，回答的是「什么场景选什么、为什么、踩过什么坑、怎么验证和回滚」。
 
-本仓库既是书稿，也是全书唯一的配套示例仓库：**七篇 31 章 + 附录 A–I**，约 **32.8 万汉字**，**298 条分级引用**（L1 规范 / L2 权威著作 / L3 案例实证）。
+本仓库既是书稿，也是全书唯一的配套示例仓库：**七篇 31 章 + 附录 A–I**，正文约 **35.2 万汉字**（含附录 38.1 万），**298 条分级引用**（L1 规范 / L2 权威著作 / L3 案例实证）。
 
 ## 下载成品
 
@@ -10,9 +10,9 @@
 
 | 形态 | 适合 | 文件 |
 |---|---|---|
-| PDF | 通读 / 打印 / 评审 | `journey-of-a-change-v1.0.0.pdf`，440 页，带页脚页码 |
-| EPUB | 手机 / 电纸书 / 平板 | `journey-of-a-change-v1.0.0.epub`，可重排、带目录导航 |
-| Word | 写批注 / 摘录 / 改编内训 | `journey-of-a-change-v1.0.0.docx` |
+| PDF | 通读 / 打印 / 评审 | `journey-of-a-change-v1.1.0.pdf`，456 页，带页脚页码 |
+| EPUB | 手机 / 电纸书 / 平板 | `journey-of-a-change-v1.1.0.epub`，可重排、带目录导航 |
+| Word | 写批注 / 摘录 / 改编内训 | `journey-of-a-change-v1.1.0.docx` |
 
 自己重新生成：`pip install -r hack/requirements.txt` 后跑 `python hack/build_dist.py --out dist/<版本>`（不需要 pandoc；PDF 走本机 Edge headless 打印，`--out` 可避开被阅读器占用的旧文件）。
 
