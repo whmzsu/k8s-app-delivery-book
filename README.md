@@ -2,7 +2,7 @@
 
 > 一本**决策书**，不是 K8s API 手册。面向已会 `kubectl` 的平台工程师 / SRE / 后端负责人，回答的是「什么场景选什么、为什么、踩过什么坑、怎么验证和回滚」。
 
-本仓库既是书稿，也是全书唯一的配套示例仓库：**七篇 31 章 + 附录 A–I**，正文约 **35.2 万汉字**（含附录 38.1 万），**298 条分级引用**（L1 规范 / L2 权威著作 / L3 案例实证）。
+本仓库既是书稿，也是全书唯一的配套示例仓库：**七篇 31 章 + 附录 A–I**，正文约 **35.5 万汉字**（含附录 38.4 万），**298 条分级引用**（L1 规范 / L2 权威著作 / L3 案例实证）。
 
 ## 下载成品
 
@@ -10,9 +10,11 @@
 
 | 形态 | 适合 | 文件 |
 |---|---|---|
-| PDF | 通读 / 打印 / 评审 | `journey-of-a-change-v1.1.0.pdf`，456 页，带页脚页码 |
-| EPUB | 手机 / 电纸书 / 平板 | `journey-of-a-change-v1.1.0.epub`，可重排、带目录导航 |
-| Word | 写批注 / 摘录 / 改编内训 | `journey-of-a-change-v1.1.0.docx` |
+| PDF | 通读 / 打印 / 评审 | `journey-of-a-change-v1.2.0.pdf`，460 页，带页脚页码 |
+| EPUB | 手机 / 电纸书 / 平板 | `journey-of-a-change-v1.2.0.epub`，可重排、带目录导航 |
+| Word | 写批注 / 摘录 / 改编内训 | `journey-of-a-change-v1.2.0.docx`，含 6 张结构图 |
+
+> v1.2.0 起正文带 **6 张矢量结构图**（凭据轮换、七层工具链、摘流竞态、双凭据三段式、GitOps 晋升、SLO 与预算），源文件在 `assets/diagrams/`，PDF / EPUB / Word 三形态同源渲染。
 
 自己重新生成：`pip install -r hack/requirements.txt` 后跑 `python hack/build_dist.py --out dist/<版本>`（不需要 pandoc；PDF 走本机 Edge headless 打印，`--out` 可避开被阅读器占用的旧文件）。
 
