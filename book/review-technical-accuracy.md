@@ -128,3 +128,25 @@
 - **端口归属**：ch13/14/15 的 `port: 8080` 均属 `gateway`（name/镜像/端口自洽），**非 api 错配**；gateway=8080 / api=8081 / db=5432 三端口全书无串用。
 - **load-gen vs worker**：ch18:419-425 为 `busybox:1.36` 压测容器（`component: load-gen`），不计入 worker 基线，无需对齐 ch17 worker 值。
 
+## 六、运维专家修复记录（v0.2 闭环）
+
+2026-11-11 由运维专家（部署运维专家角色）按本报告逐条执行修复，已落盘并验证：
+
+| 编号 | 修复动作 | 验证 |
+|---|---|---|
+| TA-01 | `ch14.md:449` `target.name: order-demo/db-credentials` → `order-demo-db-credentials`；物化示例 `ch14/gitops/secrets/externalsecret.yaml:33` 同步修正 | `kubectl apply` 不再因 `/` 失败 |
+| TA-02 | `ch29.md:288` CNPG `bootstrap.initdb.secret.name` → `order-demo-db-credentials` | 对象名合法 |
+| TA-03 | `ch18.md:321` worker Secret 名 `db-credentials` → `order-demo-db-credentials`，与 ch09/16/26 统一 | 命名约定一致 |
+| TA-04 | `ch04.md:381` 检查清单措辞改「Secret 对象名（`order-demo-db-credentials`）/ Vault 路径（`order-demo/db-credentials`）」 | 与 ch26:205 对齐 |
+| TA-05 | `ch14.md:462`、`ch29.md:300` 注释改写为「对象名连字符 / Vault 路径含 `/` 不可混淆」，引 ch26:205 | 根因澄清 |
+| TA-07 | `ch29.md:291-297` CNPG `spec.resources` 改为 `cpu:250m/memory:512Mi`（requests==limits，Guaranteed），逐字对齐 ch17:55 | 与 db 基线一致 |
+| TA-08 | `ch13.md:162-168`、`ch14.md:365-371`、`ch15.md:313-319` 与 `:404-410` 的 gateway 资源改为 `cpu:50m/memory:64Mi → cpu:500m/memory:128Mi`，对齐 ch17:54 | 与 gateway 基线一致 |
+
+**回归验证**：
+- `python hack/materialize.py` 重跑：144 文件物化，ch14 `externalsecret.yaml` 现为 `order-demo-db-credentials`，无旧值残留。
+- `bash hack/check-consistency.sh`：**problem = 0**，全书一致性闸门通过。
+- 全文复扫 `order-demo/db-credentials`：剩余命中均为合法 Vault 路径（`remoteRef.key` / Runbook 描述 / 叙述文字），无 K8s 对象名误用。
+- 版本矩阵本地因缺 `kubectl` 跳过（CI 模式会强制校验，不假通过）。
+
+**遗留建议（非本批范围）**：一致性脚本建议增「K8s 对象名不得含 `/`」横扫规则防回归（见第三节第 3 条）。
+
