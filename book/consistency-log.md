@@ -384,3 +384,23 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
   原先只有 PyYAML，别人照 README 复现会缺包。
 - **验证**：`book_tools.py check` problem=0；`check-consistency.sh` 六项全过；
   release asset 下载回来 md5 与本地一致（epub `45f5c18…`）。
+
+### D-48 PDF 导航书签（2026-11-11，P6 收尾）
+
+- **用户反馈**：发布的 PDF 在 PDF 阅读器侧栏没有可点击的章节导航（outline 0 条）。
+- **根因**：装配脚本依赖 Edge 的 `--generate-pdf-document-outline` 生成书签，
+  但该开关在同管线实测**不可靠**：手工隔离跑得 550 条、经脚本跑得 0 条、再跑直接产出空文件
+  （`EmptyFileError`，Edge 对预创建的空目标文件偶尔不写盘）。属工具机制问题，非参数问题
+  （已证伪「去掉 `--virtual-time-budget` 即可」的假设）。
+- **修复**：改为由 `build_pdf_outline()` 按 HTML 的 h1/h2 文档顺序**自建书签树**——
+  页码用 stamped 后每页文本反查、从上一标题页向后单调搜索，保证「父页号 ≤ 子页号」合法；
+  临时 PDF 路径改为「确保不存在」的唯一名。不再依赖 Edge 的 outline 开关（CSS 里的
+  `bookmark-level`/`bookmark-label` 规则已无实际作用，保留无害）。
+- **结果**：440 页 PDF 含 **340 书签**（41 一级章/篇标题 + 299 二级小节），抽查页码全部正确、无倒挂。
+- **教训（重要）**：① 验证产物时**务必读对文件**——脚本产物是中文名 `一次变更的旅程.pdf`，
+  而此前一直拿上传 Release 时手动复制的 `journey-of-a-change-v1.0.0.pdf` 去查 outline，
+  导致误以为代码无效，浪费多轮排查；② 浏览器 headless 的书签/打印行为在脚本管线里不稳，
+  关键结构（导航）应自带生成逻辑而非依赖它。
+- **发布**：重建 `dist/v1.0.0/` 三形态（内容未变，仅 PDF 增加书签），
+  用 `gh release upload --clobber` 覆盖 Release 上三个 asset；下载回本地核对 PDF 书签 340 条一致。
+  本次只动构建脚本与 Release 资产，**书稿正文与 tag v1.0.0 指向的 commit 均未变**，未移动标签。
