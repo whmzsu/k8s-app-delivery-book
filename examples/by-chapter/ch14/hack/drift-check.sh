@@ -1,17 +1,29 @@
-# 路径 A（推荐，生产唯一合法路径）：回退 Git 声明，再让控制器同步
-git revert <晋升 PR 的 merge commit>
-git push origin main
-argocd app sync order-demo-prod
-argocd app wait order-demo-prod --health --timeout 120s
+#!/usr/bin/env bash
+set -euo pipefail
 
-# 路径 B（临时止血）：按 Argo CD 历史回滚，之后必须补路径 A
-HISTORY_ID="$(argocd app history order-demo-prod -o json | \
-  python3 -c 'import sys,json; d=json.load(sys.stdin); print(d[1]["id"])')"
-argocd app rollback order-demo-prod "${HISTORY_ID}"
-argocd app wait order-demo-prod --health --timeout 120s
-# 立即补：把上一版 SHA 重新渲染成 PR，见 hack/render.sh prod <上一个 sha7>
+APP=order-demo-dev
+NS=order-demo-dev
+REPORT="/tmp/drift-check-$(date +%Y%m%d%H%M%S).log"
+log() { echo "[$(date -u +%FT%TZ)] $*" | tee -a "${REPORT}"; }
 
-# 路径 C（冻结窗口，带有效期）：临时关掉自愈，必须以 PR 形式且到期 revert
-# 在 gitops/applicationset.yaml 把 selfHeal 置 false，PR 描述写明责任人与有效期（≤ 2h）
-git checkout -b freeze/order-demo-prod
-# ... 提交后由控制器同步；窗口结束 git revert 该 PR
+log "同步前基线"
+argocd app diff "${APP}" | tee -a "${REPORT}"
+
+log "手工把副本数改为 9（仅演练，生产禁止此操作）"
+kubectl -n "${NS}" scale deployment/gateway --replicas=9
+kubectl -n "${NS}" get deploy gateway -o jsonpath='{.spec.replicas}{"\n"}' | tee -a "${REPORT}"
+
+log "等待自愈（最多 180s）"
+for i in $(seq 1 36); do
+  REPLICAS="$(kubectl -n "${NS}" get deploy gateway -o jsonpath='{.spec.replicas}')"
+  [ "${REPLICAS}" = "4" ] && break
+  sleep 5
+done
+
+log "自愈后副本数: $(kubectl -n "${NS}" get deploy gateway -o jsonpath='{.spec.replicas}')"
+[ "$(kubectl -n "${NS}" get deploy gateway -o jsonpath='{.spec.replicas}')" = "4" ] || {
+  log "失败：漂移未被纠正"; exit 1;
+}
+DIFF="$(argocd app diff "${APP}")"
+[ -z "${DIFF}" ] || { log "失败：仍有漂移 ${DIFF}"; exit 1; }
+log "漂移检测与自愈通过，报告: ${REPORT}"

@@ -35,7 +35,31 @@ else
 fi
 
 echo "== 4. 脚本语法 =="
-for s in examples/order-demo/hack/*.sh hack/*.sh; do bash -n "$s"; done
+# 物化产物也算：by-chapter 的片段若被误当脚本，bash -n 会当场暴露
+for s in examples/order-demo/hack/*.sh hack/*.sh $(find examples/by-chapter -name '*.sh'); do bash -n "$s"; done
 echo "全部脚本语法通过"
+
+echo "== 5. 物化产物自检（Chart 元数据） =="
+python - <<'PY'
+import glob, sys
+try:
+    import yaml
+except ImportError:
+    print("!! 未安装 PyYAML，跳过本项（CI 会安装 hack/requirements.txt，本地请 pip install -r）")
+    sys.exit(0)
+bad, files = [], sorted(glob.glob('examples/by-chapter/**/Chart.yaml', recursive=True))
+for f in files:
+    d = yaml.safe_load(open(f, encoding='utf-8')) or {}
+    miss = [k for k in ('apiVersion', 'name', 'version') if not d.get(k)]
+    if miss:
+        bad.append((f, 'Chart.yaml 缺 ' + '/'.join(miss)))
+    elif not str(d.get('type', 'application')) == 'library' and 'dependencies' in d and d.get('apiVersion') != 'v2':
+        bad.append((f, "Chart.yaml 用 dependencies 时 apiVersion 必须是 v2"))
+print('Chart.yaml 检查 %d 份，问题 %d' % (len(files), len(bad)))
+for f, why in bad:
+    print('  ', f, why)
+sys.exit(1 if bad else 0)
+PY
+echo "全部 Chart 元数据通过"
 
 echo "== 全书一致性闸门：通过 =="

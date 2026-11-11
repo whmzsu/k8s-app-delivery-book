@@ -1,19 +1,20 @@
-# 链 1：应用侧回滚（与第 13 章相同）
-REV="$(kubectl -n order-demo-prod rollout history deployment/api | tail -n2 | head -n1 | awk '{print $1}')"
-kubectl -n order-demo-prod rollout undo deployment/api --to-revision="${REV}"
-kubectl -n order-demo-prod rollout status deployment/api --timeout=120s
+#!/usr/bin/env bash
+set -euo pipefail
+NS=order-demo-prod
 
-# 链 2：schema 侧 —— 只回退到「上一个共存阶段」，禁止逆向 DROP
-# 双写阶段出问题：删触发器、保留新列，应用退回 v1（v1 仍读旧列）
-kubectl -n order-demo-prod exec db-0 -- psql -U postgres -d orderdemo -v ON_ERROR_STOP=1 \
-  -c "DROP TRIGGER IF EXISTS orders_dual_write ON orders; DROP FUNCTION IF EXISTS orders_dual_write();"
-# 已到 contract：不可逆，唯一回退是把数据从备份恢复到新集群再切流
+echo "== 列出仍带 finalizer 的对象 =="
+kubectl -n "${NS}" get all,pvc,statefulset -o json | \
+  python3 -c '
+import sys, json
+d = json.load(sys.stdin)
+for item in d["items"]:
+    fs = item.get("metadata", {}).get("finalizers", [])
+    if fs:
+        print(item["kind"], item["metadata"]["name"], fs)
+'
 
-# 链 3：数据侧 —— 从备份恢复（生产唯一合法路径仍须回到 Git，见第 14 章）
-velero restore create --from-schedule order-demo-db --wait
-# 或恢复到演练/新集群做验证：./hack/restore-drill.sh <context> <backup>
-
-# 生产真相源：把 StatefulSet 与迁移脚本的回退写成 PR，由第 14 章控制器同步
-git revert <迁移 PR 的 merge commit>
-git push origin main
-argocd app sync order-demo-prod
+echo "== 卸载顺序：先删实例，等清理完成，最后删控制器 =="
+echo "1) kubectl -n ${NS} delete statefulset db --wait=true"
+echo "2) 确认上面的列表为空（清理钩子已执行完）"
+echo "3) 才允许删除 Operator / CRD（详见第 27 章）"
+echo "禁止用 --force --grace-period=0 或手工 patch 掉 finalizer 跳过清理。"

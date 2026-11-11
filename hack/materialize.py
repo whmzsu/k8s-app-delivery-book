@@ -37,6 +37,33 @@ LANG_BY_EXT = {
 }
 
 
+# 片段特征：回滚/处置/诊断片段常被误当作文件。首行命中这些即以片段计 0 分。
+FRAGMENT_HEAD = re.compile(
+    r"^(?:#\s*(?:方案|链|路径|回滚|止血|处置|注意)|"
+    r"kubectl|git|helm|kustomize|chmod|promtool|yq|curl|go|docker|kind|ct |bash|\./|"
+    r"[^\s#].*→)"
+)
+# 完整文件特征：命中即以完整计 2 分。
+COMPLETE_HEAD = re.compile(
+    r"^(?:#!|apiVersion:|kind:|metadata:|spec:|name:|dependencies:|"
+    r"values:|controllers:|rules:|groups:|global:|replicaCount:|"
+    r"FROM |ARG |package |module |provider |resource |terraform)"
+)
+
+
+def score_block(body):
+    """0=明显片段，1=中性，2=像完整文件。用于同路径多段代码块时挑权威副本。"""
+    lines = [l.strip() for l in body.splitlines() if l.strip()]
+    if not lines:
+        return 0
+    head = lines[0]
+    if FRAGMENT_HEAD.match(head):
+        return 0
+    if COMPLETE_HEAD.match(head):
+        return 2
+    return 1
+
+
 def is_match(path, lang):
     lang = (lang or "").strip().lower()
     if path.endswith("Dockerfile"):
@@ -46,12 +73,16 @@ def is_match(path, lang):
 
 
 def generate(out_dir):
-    """把章内代码块写到 out_dir，返回 (manifest, skipped)。"""
-    manifest, skipped, seen = [], [], set()
+    """把章内代码块写到 out_dir，返回 (manifest, skipped, decisions)。"""
+    manifest, skipped, decisions = [], [], []
     for ch in sorted(glob.glob(os.path.join(CHAPTERS, "ch*.md"))):
         n = os.path.basename(ch)[2:4]
         text = open(ch, encoding="utf-8").read()
         fences = [(m.start(), m.end(), m.group(1), m.group(2)) for m in FENCE.finditer(text)]
+        # 同一路径在本章可能出现多次（完整文件 + 后续片段）。先整章收集，再按
+        # 「完整度优先、其次最完整（行数最多）、再其次靠前」选出权威副本，
+        # 避免后出现的回滚片段覆盖掉前面可运行的完整文件（见 D-36）。
+        chosen, seen = {}, set()
         for tok in TOKEN.finditer(text):
             path = tok.group(1).strip()
             if not PATH_OK.match(path):
@@ -73,15 +104,41 @@ def generate(out_dir):
                     skipped.append((n, path, "相邻代码块语言与文件类型不符：" + (candidates[0][1] or "无")))
                 continue
             s, lang, body = matching[0]
-            key = (n, path, s)
-            if key in seen:
+            if (n, path, s) in seen:
                 continue
-            seen.add(key)
+            seen.add((n, path, s))
+            # 可执行脚本必须有 shebang；章节里常把「回滚/处置命令」也标注成 hack/*.sh，
+            # 那类片段只会误导读者（bash -n 还可能侥幸通过），一律不物化。
+            if path.endswith(".sh"):
+                head = next((l.strip() for l in body.splitlines() if l.strip()), "")
+                if not head.startswith("#!"):
+                    skipped.append((n, path, "无 shebang，判定为命令行片段，不物化"))
+                    continue
+            cand = (score_block(body), len(body.splitlines()), -s, s, body)
+            prev = chosen.get(path)
+            if prev is None:
+                chosen[path] = cand
+            elif cand[:3] > prev[:3]:
+                decisions.append((n, path, "选 L%d（%d 行，完整度 %d），弃 L%d（%d 行，完整度 %d）" % (
+                    text[:cand[3]].count("\n") + 1, cand[1], cand[0],
+                    text[:prev[3]].count("\n") + 1, prev[1], prev[0])))
+                chosen[path] = cand
+            else:
+                decisions.append((n, path, "保留 L%d（%d 行，完整度 %d），弃 L%d（%d 行，完整度 %d）" % (
+                    text[:prev[3]].count("\n") + 1, prev[1], prev[0],
+                    text[:cand[3]].count("\n") + 1, cand[1], cand[0])))
+
+        for path, (score, nlines, _, _, body) in chosen.items():
             dest = os.path.join(out_dir, "ch" + n, path)
             os.makedirs(os.path.dirname(dest), exist_ok=True)
             with open(dest, "w", encoding="utf-8", newline="\n") as f:
                 f.write(body.rstrip() + "\n")
-            manifest.append((n, path, len(body.splitlines())))
+            manifest.append((n, path, nlines))
+
+    manifest.sort()
+    # 同一路径若最终仍物化了（用了另一段完整块），就不再记「跳过」，避免清单自相矛盾
+    done = {(x[0], x[1]) for x in manifest}
+    skipped = [x for x in skipped if (x[0], x[1]) not in done]
     with open(os.path.join(out_dir, "_manifest.md"), "w", encoding="utf-8", newline="\n") as f:
         f.write("# 章节配置物化清单\n\n")
         f.write("> 由 `hack/materialize.py` 从 `chapters/chNN.md` 的路径标注与相邻代码块生成；\n")
@@ -89,10 +146,16 @@ def generate(out_dir):
         f.write("| 章 | 物化路径 | 行数 |\n|---|---|---|\n")
         for n, path, lines in manifest:
             f.write("| %s | `examples/by-chapter/ch%s/%s` | %d |\n" % (n, n, path, lines))
+        if decisions:
+            f.write("\n## 同路径多块裁决（%d）\n\n" % len(decisions))
+            f.write("> 同一路径在一章内出现多次时，按「完整度 → 行数 → 位置」选权威副本；\n")
+            f.write("> 被弃的多为回滚/处置片段，不当可复制文件。\n\n")
+            for n, path, why in decisions:
+                f.write("- ch%s `%s`：%s\n" % (n, path, why))
         f.write("\n## 跳过（%d）\n\n" % len(skipped))
         for n, path, why in skipped:
             f.write("- ch%s `%s`：%s\n" % (n, path, why))
-    return manifest, skipped
+    return manifest, skipped, decisions
 
 
 def rel_files(base):
@@ -130,9 +193,9 @@ def main():
         if "--clean" in sys.argv and os.path.isdir(OUT):
             shutil.rmtree(OUT)
 
-    manifest, skipped = generate(target)
-    print("物化 %d 个文件，覆盖 %d 章；跳过 %d 个标签" % (
-        len(manifest), len({x[0] for x in manifest}), len(skipped)))
+    manifest, skipped, decisions = generate(target)
+    print("物化 %d 个文件，覆盖 %d 章；同路径多块裁决 %d 处；跳过 %d 个标签" % (
+        len(manifest), len({x[0] for x in manifest}), len(decisions), len(skipped)))
 
     if check:
         try:

@@ -252,3 +252,14 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - **未决项（终稿优先级）**：① D-32/D-33 口径对齐（**已执行**）② D-34 逐章判定 18 非主责章（**已复核为假阳性，自销，无需改章**）③ D-35 强耦合 21 对回填（**已执行**）④ O-9 清单母版引用抽查封（P2，待终稿）⑤ 技术准确性「待裁决冲突 A/B/C」见各章一致性备注，不在本维度。
 - **评审交付物**：`book/review-architecture-report.md`（10 项结论 + D-32~D-35 + 机检命令）；本简报 `book/review-handoff-architecture.md` 仍作交接用，未提交 git（评审中可能被改）。
 
+
+### CI 修复 · 2026-11-11（扩写后回归）
+
+- **背景**：九波扩写把 ch10 的 GitOps/Helm 段落补全后，`render` job 的 `helm lint` 直接失败；同时 `examples/by-chapter` 下有 7 个脚本含 `git revert <...>` 回滚片段占位，`bash -n` 报语法错。两者同源：**同一路径在一章内出现多段代码块时，后出现的「回滚/处置片段」覆盖了前面的完整文件**。
+- **D-36（物化选块策略：完整度优先）**：`hack/materialize.py` 原逻辑「取路径标注后第一段语言匹配的块，后写覆盖先写」，导致 `ch10/deploy/charts/order-demo/Chart.yaml` 被 4 行 `dependencies` 片段覆盖（`apiVersion`/`name`/`version` 全丢），ch13/14/15/16/22/29/30 的 `hack/*.sh` 被回滚片段覆盖。改为**整章先收集、再裁决**：
+  1. 片段特征（首行为 `# 方案/# 链/# 路径/kubectl/git/helm/…` 或含 `→`）记 0 分；完整文件特征（`#!`、`apiVersion:`、`kind:`、`FROM`、`package`…）记 2 分；
+  2. 按「完整度 → 行数 → 靠前」选权威副本，被弃片段写入 `_manifest.md` 的「同路径多块裁决」；
+  3. **`.sh` 必须有 shebang**，否则判定命令行片段不物化（ch03/12/17/23 的 `hack/verify.sh` 属此类，实为回滚命令清单，已从物化产物移除）。
+  结果：物化 163（含 17 条重复计数）→ **142 个文件 / 28 章**，`bash -n` 40 个脚本 0 错，`helm lint` 通过。
+- **D-37（闸门前移）**：`hack/check-consistency.sh` 第 4 项扩到 `examples/by-chapter/**/*.sh`（片段误物化当轮暴露），新增第 5 项「物化产物自检：`Chart.yaml` 必须有 `apiVersion/name/version`，用 `dependencies` 时必须 `apiVersion: v2`」。此前这两类问题只能等 `ci.yml` 的 render job 报红，晚一个 job 且不指路径。
+- **本地等价复现口径**（无 GitHub 凭据时可自查）：`manuscript`／`manifests`／`render` 三个 job 全部步骤在 Windows 本地跑通——`check-consistency.sh`、`materialize.py --check`、`validate-manifests.py`、`build_book.py`、CRD/patch 结构断言、`helm lint` + `helm template`（helm v3.16.4）；kubeconform 二进制下载受阻，改用 `kubernetes-validate 1.37.0` 对 80 份内置清单在 1.32.0/1.37.0 双版本校验，0 问题。`example-app` 未跑：本机无 go/docker，但 `examples/order-demo/**` 自上次全绿（`bca4c46`）零改动。

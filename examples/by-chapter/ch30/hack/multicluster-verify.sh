@@ -1,16 +1,38 @@
-# 链 1：应用变更回滚（一次 revert 同时作用于两个 Application）
-git revert <晋升 PR 的 merge commit>
-git push origin main
-argocd app sync --prune order-demo-prod-cluster-a
-argocd app sync --prune order-demo-prod-cluster-b
-argocd app wait order-demo-prod-cluster-a --health --timeout 120s
-argocd app wait order-demo-prod-cluster-b --health --timeout 120s
+#!/usr/bin/env bash
+set -euo pipefail
+# 验证：一次变更、两集群同一 SHA、零漂移、state 远端加密。
+APP_A=order-demo-prod-cluster-a
+APP_B=order-demo-prod-cluster-b
+CTX_A=cluster-a
+CTX_B=cluster-b
+NS=order-demo-prod
 
-# 链 2：集群供应侧回退 IaC 版本，按 30.2 顺序逆向执行
-#   逆向 = 先生产集群 b → 再 canary 集群 a → 最后管理集群；控制面先于节点
-git revert <集群升级 PR 的 merge commit>
-terraform -chdir=infra plan
-terraform -chdir=infra apply
+echo "== 1) 两个 Application 由同一 ApplicationSet 生成 =="
+argocd app list -o wide | grep -E "${APP_A}|${APP_B}"
 
-# 链 3：若只回退某一个集群的发布（不回退 Git 真相源），
-#   仅允许作为有有效期、有责任人的冻结窗口，且窗口结束必须补等价 PR（见第 14 章）
+echo "== 2) 两集群 image 字段必须相同 =="
+IMG_A="$(kubectl --context "${CTX_A}" -n "${NS}" get deploy gateway \
+  -o jsonpath='{.spec.template.spec.containers[0].image}')"
+IMG_B="$(kubectl --context "${CTX_B}" -n "${NS}" get deploy gateway \
+  -o jsonpath='{.spec.template.spec.containers[0].image}')"
+echo "cluster-a: ${IMG_A}"
+echo "cluster-b: ${IMG_B}"
+[ "${IMG_A}" = "${IMG_B}" ] || { echo "两集群产物不一致" >&2; exit 1; }
+! grep -qE ':latest' <<<"${IMG_A}"
+
+echo "== 3) 两集群均 Healthy，且 app diff 为空 =="
+for APP in "${APP_A}" "${APP_B}"; do
+  argocd app wait "${APP}" --health --timeout 120s
+  DIFF="$(argocd app diff "${APP}")"
+  [ -z "${DIFF}" ] || { echo "${APP} 存在漂移: ${DIFF}" >&2; exit 1; }
+done
+
+echo "== 4) state 无本地副本、远端加密、plan 无漂移 =="
+if git ls-files '*.tfstate' | grep -q .; then
+  echo "state 文件入 Git，禁止" >&2; exit 1
+fi
+grep -q 'encrypt = true' infra/backend.tf
+terraform -chdir=infra plan -detailed-exitcode >/dev/null
+echo "terraform plan 无漂移"
+
+echo "双集群验证通过：一次变更、两集群同一 SHA、零漂移。"

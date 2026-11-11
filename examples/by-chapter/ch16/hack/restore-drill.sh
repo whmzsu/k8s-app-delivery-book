@@ -1,19 +1,43 @@
-# 链 1：应用侧回滚（与第 13 章相同）
-REV="$(kubectl -n order-demo-prod rollout history deployment/api | tail -n2 | head -n1 | awk '{print $1}')"
-kubectl -n order-demo-prod rollout undo deployment/api --to-revision="${REV}"
-kubectl -n order-demo-prod rollout status deployment/api --timeout=120s
+#!/usr/bin/env bash
+set -euo pipefail
 
-# 链 2：schema 侧 —— 只回退到「上一个共存阶段」，禁止逆向 DROP
-# 双写阶段出问题：删触发器、保留新列，应用退回 v1（v1 仍读旧列）
-kubectl -n order-demo-prod exec db-0 -- psql -U postgres -d orderdemo -v ON_ERROR_STOP=1 \
-  -c "DROP TRIGGER IF EXISTS orders_dual_write ON orders; DROP FUNCTION IF EXISTS orders_dual_write();"
-# 已到 contract：不可逆，唯一回退是把数据从备份恢复到新集群再切流
+TARGET_CLUSTER="${1:?用法: $0 <新集群 context> <backup 名>}"
+BACKUP="${2:?用法: $0 <新集群 context> <backup 名>}"
+REPORT="docs/restore-drill-report.md"
 
-# 链 3：数据侧 —— 从备份恢复（生产唯一合法路径仍须回到 Git，见第 14 章）
-velero restore create --from-schedule order-demo-db --wait
-# 或恢复到演练/新集群做验证：./hack/restore-drill.sh <context> <backup>
+echo "== 确认目标是演练集群，不是生产 =="
+kubectl config current-context | grep -q "${TARGET_CLUSTER}"
+! kubectl config current-context | grep -q 'prod'
 
-# 生产真相源：把 StatefulSet 与迁移脚本的回退写成 PR，由第 14 章控制器同步
-git revert <迁移 PR 的 merge commit>
-git push origin main
-argocd app sync order-demo-prod
+echo "== 在演练集群创建恢复 =="
+velero --kubecontext "${TARGET_CLUSTER}" restore create \
+  --from-backup "${BACKUP}" \
+  --namespace-mappings order-demo-prod:order-demo-restore \
+  --wait
+
+echo "== 数据一致性校验 =="
+kubectl --context "${TARGET_CLUSTER}" -n order-demo-restore get statefulset db
+kubectl --context "${TARGET_CLUSTER}" -n order-demo-restore wait \
+  --for=condition=Ready pod/db-0 --timeout=300s
+ROWS="$(kubectl --context "${TARGET_CLUSTER}" -n order-demo-restore exec db-0 -- \
+  psql -U postgres -d orderdemo -tAc 'SELECT count(*) FROM orders;')"
+MISSING="$(kubectl --context "${TARGET_CLUSTER}" -n order-demo-restore exec db-0 -- \
+  psql -U postgres -d orderdemo -tAc 'SELECT count(*) FROM orders WHERE amount_cents IS NULL;')"
+echo "restored_orders=${ROWS} missing_amount_cents=${MISSING}"
+[ "${MISSING}" = "0" ] || { echo "恢复后数据不一致" >&2; exit 1; }
+
+echo "== 写入演练报告 =="
+cat > "${REPORT}" <<EOF
+# 备份恢复演练报告
+
+- 日期：$(date -u +%FT%TZ)
+- 目标集群：${TARGET_CLUSTER}（演练专用，非生产）
+- 备份名：${BACKUP}
+- 恢复命名空间：order-demo-restore
+- 恢复订单行数：${ROWS}
+- 新列缺失行数：${MISSING}
+- 一致性校验：通过
+- 责任人：发布值班（主）／ 数据 owner（备）
+- 结论：本次备份可恢复；报告归档到发布 PR
+EOF
+echo "演练通过，报告: ${REPORT}"
