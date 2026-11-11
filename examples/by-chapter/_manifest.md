@@ -154,7 +154,7 @@
 > 被弃的多为回滚/处置片段，不当可复制文件。
 
 - ch06 `hack/verify.sh`：选 L581（41 行，完整度 2），弃 L390（20 行，完整度 2）
-- ch10 `deploy/charts/order-demo/Chart.yaml`：保留 L384（6 行，完整度 2），弃 L632（4 行，完整度 2）
+- ch10 `deploy/charts/order-demo/Chart.yaml`：保留 L402（6 行，完整度 2），弃 L652（4 行，完整度 2）
 
 ## 跳过（13）
 
