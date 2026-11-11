@@ -15,80 +15,78 @@ CHAPTERS = "chapters"
 
 # (文件, 锚点, 替换后的 Markdown)  —— 每个锚点必须只命中一个 fenced 块
 BLOCKS = [
-    ("ch20.md", "本周剩余预算 > 0", """| 级 | 判据（按序自问） | 命中 → 去处 |
+    ("ch08.md", "控制器决定替换 Pod", """| 步 | 谁在做 | 发生什么 | 为什么必须是这个顺序 |
+|---|---|---|---|
+| 1 | 控制器 | Pod 进入 `Terminating`，同时从 Service Endpoint 摘除 | 摘流先于停进程：让新请求不再被路由过来 |
+| 2 | kubelet | 执行 `preStop`（本章 `preStop.sleep.seconds: 5`），进程先静默 | 专门覆盖「Endpoint 摘除与转发规则更新」之间的竞态 |
+| 3 | kubelet | 发 SIGTERM，应用在 `terminationGracePeriodSeconds: 30` 内排空在途请求 | 给在途请求一个自然的完成窗口 |
+| 4 | kubelet | 宽限用尽 → SIGKILL | 兜底，不再等待 |"""),
+
+    ("ch10.md", "仓库内渲染（repo-side）", """| 维度 | 仓库内渲染（repo-side） | 集群内渲染（cluster-side） |
 |---|---|---|
-| 1 | 本周剩余预算 > 0？ | **否** → 冻结非必要发布，走例外审批（20.4）。**是** → 进入第 2 级 |
-| 2 | 近 1h / 5m 快燃尽 ≥ 14.4？ | **是** → 暂停发布并 paging，先止血（第 22、23 章）。**否** → 进入第 3 级 |
-| 3 | 近 6h 慢燃尽 ≥ 6？ | **是** → 允许已开始的发布收尾，禁止新开，建 ticket。**否** → 进入第 4 级 |
-| 4 | 本次变更是否在冻结豁免清单内？ | **是** → 放行但登记例外编号、审批人、到期时间，下次复盘核对（CL-G-10）。**否** → 正常放行，按第 13 章回滚方案先行 |"""),
+| 谁在渲染 | 开发者 / CI 跑 `helm template`、`kustomize build` | 控制器（如 Argo CD / Helm Operator）在集群里渲染 |
+| 产物是什么 | 静态 YAML | 控制器运行时生成 |
+| 是否进 Git | 进 Git / PR 附件 | 不进 Git，Git 只存模板 / overlay |
+| 下游怎么用 | GitOps 控制器直接 `apply` | 控制器自行 `apply` 运行时产物 |"""),
 
-    ("ch22.md", "这是一条用户可感的症状吗", """| 级 | 判据（按序自问） | 命中 → 去处 |
+    ("ch13.md", "rollout 卡住（UP-TO-DATE 不涨", """| Pod 现象 | 事件 / 状态 | 去处 |
 |---|---|---|
-| 1 | 这是一条用户可感的症状吗？ | **否** → 降为 ticket / info，不 paging。**是** → 进入第 2 级 |
-| 2 | 阈值由第 20 章错误预算推导了吗？ | **否** → 回第 20 章，禁止拍脑袋阈值。**是** → 进入第 3 级 |
-| 3 | 带 runbook / 首步动作 / 升级路径了吗？ | **否** → 不允许合并，先补注解。**是** → 进入第 4 级 |
-| 4 | 在抑制 / 静默 / 演练窗口内吗？ | **是** → 按登记放行或静默，不重复通知。**否** → 允许 paging；按分级表路由，并在周会复盘命中率 |"""),
+| `Pending` | `FailedScheduling: Insufficient cpu / memory` | 容量不足，按 13.2.1 处置（扩容回收余量，或临时调大 `maxUnavailable`） |
+| `Pending` | `FailedScheduling: node(s) had untolerated taint` | 节点在排水 / 维护，等排水结束或先扩容补位 |
+| `Pending` | `FailedScheduling: exceeded quota` | 命名空间 `ResourceQuota` 用尽，见下表第 4 行（注意此时可能根本没有 Pending Pod） |
+| `Pending` | `FailedScheduling: topology / anti-affinity / spread 约束` | 分布约束把可放节点排空，见下表第 5 行 |
+| `ImagePullBackOff` / `ErrImagePull` | 拉取失败 | 镜像不可拉取，见下表第 1 行 |
+| `Running` 但一直 `0/1 Ready` | 探针不过 | 见下表第 2 行 |"""),
 
-    ("ch22.md", "├── alertmanager.yaml", """| 路径（相对仓库根） | 在门禁中的角色 |
-|---|---|
-| `observability/alert-rules.yaml` | 告警规则（`PrometheusRule` CR，`ruleSelector` 按 `role: alert-rules` 挂载） |
-| `observability/alert-rules-test.yaml` | 规则单测输入序列（`promtool test rules` 门禁） |
-| `observability/alertmanager.yaml` | 路由 / 抑制 / 静默区间（挂成 Secret，`amtool check-config` 门禁） |
-| `docs/runbooks/` | runbook 索引与正文（CL-22-02 断链检查的对象） |
-| `hack/alert-drill.sh` | 注入测试告警的路由演练（CI 与发布后各跑一次） |"""),
+    ("ch15.md", "Rollout 进入 analysis step", """| 阶段 | 触发条件 | 计数动作 | 终态 |
+|---|---|---|---|
+| 测量（每 `interval` 一次） | 结果满足 `successCondition` | `measurement.phase = Successful` | 成功计数 +1 |
+| 测量 | 结果不满足 | `measurement.phase = Failed` | 失败计数 +1 |
+| 测量 | 查询报错 / 结果为空 | `measurement.phase = Error` | 连续错误计数 +1 |
+| 判定 | 失败计数 > `failureLimit` | — | `AnalysisRun = Failed` → Rollout abort（canary 归 0、`Degraded`） |
+| 判定 | 连续错误 ≥ `consecutiveErrorLimit` | — | `AnalysisRun = Error` → abort |
+| 判定 | 成功计数 ≥ `successLimit`，或投满 `count` 且失败数 ≤ `failureLimit` | — | `Successful` → 进入下一个 step |
+| 判定 | 被 Rollout abort 或人工终止 | — | `Inconclusive` → 权重停在原地，等人裁决 |"""),
 
-    ("ch24.md", "order-demo-dev / staging / prod 三个命名空间之一", """| 级 | 判据（按序自问） | 命中 → 结论 |
+    ("ch20.md", "[0] 触发：口径偏差证据", """| 步 | 动作 | 步间闸门 |
 |---|---|---|
-| 1 | 这个镜像会进 `order-demo-dev` / `staging` / `prod` 三个命名空间之一？ | **是**（生产证据链作用域）→ 必须走 CI 签名 + SBOM + 摘要核验；第三方镜像只接受「重新构建」或「验上游签名」两种信任根，无豁免路径。**否** → 进入第 2 级 |
-| 2 | （边界内）仓库在 `registry.example.com/order-demo/` 下？ | **是** → 允许 `unsigned-` 前缀临时镜像；不带 `git-` 前缀、不进保留策略、90 天清空。**否** → 归第 25 章策略体系约束，本章不背书 |"""),
+| 0 | 触发：口径偏差证据（新路由未进排除项 / 4xx 语义被判错 / 旅程拆分 / 低流量转绝对量） | 产出查询语句 + 时间窗 + 受影响请求数，写进 PR 描述（不接受「感觉不准」） |
+| 1 | 修订：同改三处声明 —— `observability/slo.yaml`、`observability/sli-recording-rules.yaml`、`docs/slo-contract.md` | 闸门 A：`promtool check rules` 退出码 0 |
+| 2 | 例外审批：`EXC` 编号 + 业务负责人、平台负责人双签（§20.4） | 闸门 B：无 `EXC` 编号的 `observability/` 变更，CI 拒绝合并 |
+| 3 | 回归单测：新增口径用例，同时保留旧用例做对照（用例矩阵见下） | 闸门 C：`promtool test rules` 全绿，四类用例齐全 |
+| 4 | 暗跑 7 天：新旧两条记录规则并行，只有一条有判定权 | 闸门 D：两口径差异 ≤ 预算的 10% |
+| 5 | 切主口径：`release_freeze` 指向新规则，旧规则标 `deprecated` 保留一个窗口 | 闸门 E：切换后首小时 `budget-report.sh` 与暗跑末值一致 |
+| 6 | 归档：契约版本 +1，记录断点日期与「预算不追溯」说明 | — |"""),
 
-    ("ch27.md", "这个动作的终态能用原生资源表达吗", """| 级 | 判据（按序自问，命中即停） | 命中 → 用什么 |
+    ("ch23.md", "演练报告 / 事故复盘", """| 步 | 产出 / 动作 | 通过与否的去处 |
 |---|---|---|
-| 1 | 这个动作的终态能用原生资源表达吗？（`Deployment` / `StatefulSet` / `CronJob` / `HPA` / `PDB`） | **是** → ① 原生资源，停 |
-| 2 | 差异只是「同源清单在不同环境取不同值」？ | **是** → ② 配置打包（Helm 4.x / Kustomize 5.x），停 |
-| 3 | 动作是一次性或周期性的，没有「持续比对并收敛」的需求？ | **是** → ③ CI 脚本 / CronJob，停 |
-| 4 | 需求是「在对象进集群前校验或改写它」，不需要长期运行状态？ | **是** → ④ Webhook 或策略（VAP / Kyverno 1.x），停 |
-| 5 | 需要持续观测 + 收敛 + 有明确领域模型，且团队能长期承担 CRD 负债（版本、备份、卸载、告警、责任人）？ | **是** → ⑤ 自定义控制器（CRD + Operator，Kubebuilder 4.x，见第 28 章） |
-| — | 五级都不命中 | 写一份「本项目不写 Operator」的 ADR，回 27.3 在前四种里选一种 |"""),
+| ① | runbook 缺口：只写可观测证据（哪个症状、哪条命令、哪次判据缺失） | 进入 ② |
+| ② | 复盘改进项 `ACT-nn`：负责人 / 截止日期 / 验收方式，缺一栏不算完成 | 进入 ③ |
+| ③ | 下一轮演练验证：同一实验、同一判据、同一爆炸半径 | **通过** → 关闭 `ACT`，判据写入 `CL-23-0x` 与 23.2 速查表；**未通过** → 缺口升级：runbook 问题回 23.3 补模板，权限问题转第 26 章，策略问题转第 25 章，工具能力问题回 23.4 调整实验设计 |"""),
 
-    ("ch28.md", "make test（envtest）通过、幂等断言为 1", """| 级 | 判据（逐级放行） | 不通过 → 去处 |
+    ("ch25.md", "开发者 ──提 PR", """| 步 | 动作 | 留痕点 |
 |---|---|---|
-| 1 | `make test`（envtest）通过、幂等断言为 1？ | 停在开发环境，禁止合并 |
-| 2 | `status` 是否只含观测字段、`observedGeneration` 对齐？ | 回 28.2 语义修正 |
-| 3 | 控制器 SA 是否最小权限、无 `cluster-admin`？ | 回 28.4 `role.yaml`（CL-S-02） |
-| 4 | 三条健康告警已加载且各带 runbook？ | 补 28.4 告警规则 |
-| 5 | CRD 版本迁移路径 + 升级 / 回滚演练已跑过？ | 先补演练（CL-G-07） |
-| — | 五条全过 | 允许进 staging；prod 仍走第 14 章 GitOps 晋升链 |"""),
-
-    ("ch30.md", "是否需要凭据 / 配额 / 故障域的硬隔离", """| 级 | 判据（逐级放行） | 不通过 → 去处 |
-|---|---|---|
-| 1 | 是否需要凭据 / 配额 / 故障域的硬隔离，或有合规审计要求？ | 停在第 4 章三套命名空间 |
-| 2 | 是否有平台组能维护标准化模板与策略库？ | 先补平台能力，不复制集群 |
-| 3 | 多个集群是否由同一份 IaC 模块供应、同一 GitOps 入口发布？ | 集中供应 + 一份 `ApplicationSet`，停 |
-| 4 | 一次变更能否在两个集群产生同一 SHA 且可一起回退？ | 回 30.4 检查双集群生成器 |
-| 5 | `state` 是否远端加密、`plan` 是否进 PR、升级顺序是否成文？ | 补护栏，不许升级生产集群 |
-| — | 五条全过 | 多集群拓扑成立；黄金路径按 30.4 模板开放自助 |"""),
-
-    ("ch30.md", "├── catalog-info.yaml", """| 路径（相对仓库根） | 内容 |
-|---|---|
-| `platform/golden-path/skeleton/catalog-info.yaml` | Backstage 目录实体，`owner` 取模板参数 |
-| `platform/golden-path/skeleton/deploy/base/` | base 四件套：`kustomization.yaml`、`deployment.yaml`、`service.yaml`、`networkpolicy.yaml` |
-| `platform/golden-path/skeleton/deploy/overlays/prod/kustomization.yaml` | prod overlay，只写与 base 不同的字段 |"""),
+| 1 | 开发者提 PR（改 `policies/` 或 `deploy/`）→ GitHub | — |
+| 2 | `policy.yml` 触发：`kyverno test` 四条断言 + 离线校验（25.2.3） | **① CI**：check run 结果记录在 PR 页面 |
+| 3 | review + merge → main | PR 评审记录 |
+| 4 | Argo CD 检测到 `policies/` 变化并同步（见第 14 章） | Argo CD 同步记录 |
+| 5 | sync：apply `ClusterPolicy` → Kyverno 热加载策略 | — |
+| 6 | 提交工作负载（Pod 创建或滚动更新），API Server 调 Kyverno webhook | **② 准入**：同步返回 allow / deny 与 message，审计日志记录本次判定 |
+| 7 | 对象进入集群（或被拒绝） | — |
+| 8 | background scan 周期重扫存量资源 | **③ 审计**：违规写入命名空间级 `PolicyReport` |"""),
 ]
 
 # 引言句改写：把「决策树」换成「判定表 / 放行表」，保持叙述自洽
 SENTENCES = [
-    ("ch20.md", "### 发布冻结判定决策树", "### 发布冻结判定表"),
-    ("ch22.md", "**噪音治理决策树**：", "**噪音治理判定表**："),
-    ("ch22.md", "决策树最后一行「在周会复盘命中率」不是口号", "判定表最后一行「在周会复盘命中率」不是口号"),
-    ("ch24.md", "三类边界收敛成一棵可判定的树，新镜像接入时先过这一问：",
-     "三类边界收敛成一张判定表，新镜像接入时先过这一问："),
-    ("ch24.md", "树的价值在「变更评审时先问作用域」", "这张表的价值在「变更评审时先问作用域」"),
-    ("ch24.md", "答案都由它在树上的位置决定", "答案都由它在表里的位置决定"),
-    ("ch24.md", "树上没有的分支（比如「临时放开某次 prod 部署」）", "表里没有的位置（比如「临时放开某次 prod 部署」）"),
-    ("ch27.md", "下面这棵决策树按「成本从低到高」排列", "下面这张判定表按「成本从低到高」排列"),
-    ("ch28.md", "**决策树**（判断一个控制器能不能进 staging）", "**放行表**（判断一个控制器能不能进 staging）"),
-    ("ch30.md", "**决策树**（判断当前该停在单集群还是升级）：", "**判定表**（判断当前该停在单集群还是升级）："),
+    ("ch08.md", "**下线时序**（Pod 被删除或滚动更新替换时，四步严格有序）[R-08-4][R-08-6]：",
+     "**下线时序**（Pod 被删除或滚动更新替换时，四步严格有序，顺序换一步就会漏请求）[R-08-4][R-08-6]："),
+    ("ch10.md", "> **双模式对照：仓库内渲染 vs 集群内渲染**（为第 14 章 GitOps 埋伏笔）",
+     "> **双模式对照：仓库内渲染 vs 集群内渲染**（为第 14 章 GitOps 埋伏笔）"),
+    ("ch13.md", "分歧点在 Pod 的 STATUS 与 Events：", "分歧点在 Pod 的 STATUS 与 Events："),
+    ("ch15.md", "**AnalysisRun 的生命周期**。每个带 `analysis` 的 step 都会创建一个 `AnalysisRun` 对象——它不是「一段逻辑」，而是能在集群里 `get` 到的资源，由 Rollout 控制器按 step 创建并持有：",
+     "**AnalysisRun 的生命周期**。每个带 `analysis` 的 step 都会创建一个 `AnalysisRun` 对象——它不是「一段逻辑」，而是能在集群里 `get` 到的资源，由 Rollout 控制器按 step 创建并持有。它只有四步：测量、计数、判定、交回 Rollout："),
+    ("ch23.md", "**闭环流程（三步一分支，缺任一步都算断链）**", "**闭环流程（三步一分支，缺任一步都算断链）**"),
+    ("ch25.md", "文字时序如下（①②③为留痕点）：", "下面按步拆开（①②③ 为留痕点）："),
 ]
 
 
