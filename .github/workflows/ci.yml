@@ -176,7 +176,11 @@ jobs:
           cache: pip
           cache-dependency-path: hack/requirements.txt
       - run: pip install -r hack/requirements.txt
+      # @v4 默认装「最新」Helm，实测曾装到 4.x（v4.3.1），与附录 A-07 的 Helm 3.x 基线不符；
+      # 显式钉 3.x 最后一个稳定版，见 D-38
       - uses: azure/setup-helm@v4
+        with:
+          version: v3.19.0
 
       - name: Helm Chart lint / template（第 10 章）
         run: |

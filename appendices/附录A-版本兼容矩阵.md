@@ -43,7 +43,7 @@
 | A-35 | PyYAML | **6.0.2**（`hack/requirements.txt` 锁定） | 清单逐文档拆分与结构断言 | 11 |
 | A-36 | GitHub Actions runner | `ubuntu-latest`；Go **1.23**、Python **3.12** | 快车道闸门与全书装配 | 11、附录 D |
 | A-37 | kind / kubectl（CI） | kind 版本与 `kindest/node` 镜像**成对锁定**（见 A-02）；kubectl 与集群 patch 版本一致，下载地址 `dl.k8s.io/release/v<k8s>/bin/linux/amd64/kubectl` | P5 真集群复核 | 11 |
-| A-38 | Helm / kustomize（CI） | Helm 3.x（由 `azure/setup-helm@v4` 提供）；kustomize 不作独立渲染闸门，原因见 D.7 | 模板渲染与 overlay 结构报告 | 10、11 |
+| A-38 | Helm / kustomize（CI） | Helm **3.19.0**（`azure/setup-helm@v4` 的 `version` 入参显式固定；该 action 默认装「最新」，实测曾装到 4.x，与 A-07 的 3.x 基线不符，见 D-38）；kustomize 不作独立渲染闸门，原因见 D.7 | 模板渲染与 overlay 结构报告 | 10、11 |
 
 ## A.2 关键 API 版本与字段
 

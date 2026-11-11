@@ -62,4 +62,8 @@ sys.exit(1 if bad else 0)
 PY
 echo "全部 Chart 元数据通过"
 
+echo "== 6. 章内代码块与物化产物一致 =="
+# 改章不同步 examples/by-chapter 是历史上最容易漏的一步（CI 单独一步才暴露）
+python hack/materialize.py --check
+
 echo "== 全书一致性闸门：通过 =="
