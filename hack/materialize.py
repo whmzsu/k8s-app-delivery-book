@@ -152,15 +152,15 @@ def generate(out_dir):
             prev = chosen.get(path)
             if prev is None:
                 chosen[path] = cand
+            # 记「行数 + 完整度」而不记 L 行号：行号会随正文任何增删漂移，
+            # 让生成物在无关改动里持续 churn，且读者也无从核对。
             elif cand[:3] > prev[:3]:
-                decisions.append((n, path, "选 L%d（%d 行，完整度 %d），弃 L%d（%d 行，完整度 %d）" % (
-                    text[:cand[3]].count("\n") + 1, cand[1], cand[0],
-                    text[:prev[3]].count("\n") + 1, prev[1], prev[0])))
+                decisions.append((n, path, "选 %d 行（完整度 %d）那份，弃 %d 行（完整度 %d）那份" % (
+                    cand[1], cand[0], prev[1], prev[0])))
                 chosen[path] = cand
             else:
-                decisions.append((n, path, "保留 L%d（%d 行，完整度 %d），弃 L%d（%d 行，完整度 %d）" % (
-                    text[:prev[3]].count("\n") + 1, prev[1], prev[0],
-                    text[:cand[3]].count("\n") + 1, cand[1], cand[0])))
+                decisions.append((n, path, "保留 %d 行（完整度 %d）那份，弃 %d 行（完整度 %d）那份" % (
+                    prev[1], prev[0], cand[1], cand[0])))
 
         for path, (score, nlines, _, _, body) in chosen.items():
             dest = os.path.join(out_dir, "ch" + n, path)
