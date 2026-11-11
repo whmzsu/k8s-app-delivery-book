@@ -707,35 +707,43 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", choices=["docx", "pdf", "epub"])
     ap.add_argument("--keep-html", action="store_true")
+    ap.add_argument("--out", default=DIST,
+                    help="产物输出目录，默认 dist/；目标文件被预览器占用时可指到别处")
     args = ap.parse_args()
 
-    os.makedirs(DIST, exist_ok=True)
+    out = os.path.abspath(args.out)
+    os.makedirs(out, exist_ok=True)
     docs = collect()
-    base = os.path.join(DIST, TITLE)
+    base = os.path.join(out, TITLE)
     extra: dict[str, str] = {}
 
-    if args.only in (None, "docx"):
-        st = build_docx(docs, base + ".docx")
-        extra["docx"] = (f"{os.path.getsize(base + '.docx') / 1024 / 1024:.1f} MB；"
-                         f"代码块 {st['code']} 处、表格 {st['table']} 张、正文段落 {st['para']} 段")
-        print("docx 完成")
+    try:
+        if args.only in (None, "docx"):
+            st = build_docx(docs, base + ".docx")
+            extra["docx"] = (f"{os.path.getsize(base + '.docx') / 1024 / 1024:.1f} MB；"
+                             f"代码块 {st['code']} 处、表格 {st['table']} 张、正文段落 {st['para']} 段")
+            print("docx 完成")
 
-    if args.only in (None, "pdf", "epub"):
-        html_path = os.path.join(DIST, "_book.html")
-        build_html(docs, html_path)
-        if args.only in (None, "pdf"):
-            pages = build_pdf(html_path, base + ".pdf")
-            extra["pdf"] = f"{pages} 页；{os.path.getsize(base + '.pdf') / 1024 / 1024:.1f} MB"
-            print(f"pdf 完成（{pages} 页）")
-        if args.only in (None, "epub"):
-            build_epub(docs, base + ".epub")
-            extra["epub"] = f"{os.path.getsize(base + '.epub') / 1024 / 1024:.1f} MB"
-            print("epub 完成")
-        if not args.keep_html:
-            os.remove(html_path)
+        if args.only in (None, "pdf", "epub"):
+            html_path = os.path.join(out, "_book.html")
+            build_html(docs, html_path)
+            if args.only in (None, "pdf"):
+                pages = build_pdf(html_path, base + ".pdf")
+                extra["pdf"] = f"{pages} 页；{os.path.getsize(base + '.pdf') / 1024 / 1024:.1f} MB"
+                print(f"pdf 完成（{pages} 页）")
+            if args.only in (None, "epub"):
+                build_epub(docs, base + ".epub")
+                extra["epub"] = f"{os.path.getsize(base + '.epub') / 1024 / 1024:.1f} MB"
+                print("epub 完成")
+            if not args.keep_html:
+                os.remove(html_path)
+    except PermissionError as e:
+        print(f"!! 写入被占用：{e.filename}")
+        print("   目标文件正在被阅读器/预览器打开；关掉它，或用 --out 指到另一个目录。")
+        return 2
 
     rep = report(docs, extra)
-    with open(os.path.join(DIST, "build-report.md"), "w", encoding="utf-8", newline="\n") as fh:
+    with open(os.path.join(out, "build-report.md"), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(rep)
     print(rep)
     return 0

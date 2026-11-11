@@ -20,10 +20,10 @@
 | A-10 | Flux | 2.x | 仅选型矩阵对比 | 14 |
 | A-11 | Argo Rollouts | 1.x + Gateway API traffic router 插件 | 渐进式交付 | 15 |
 | A-12 | Gateway API | v1（GA 通道） | 流量入口；实现为 Envoy Gateway | 15、19、21、30 |
-| A-13 | Envoy Gateway | 1.x | U-05 唯一示例实现 | 15、19 |
+| A-13 | Envoy Gateway | 1.x | 本书唯一示例实现 | 15、19 |
 | A-14 | Istio | 1.x | 仅选型矩阵对比 | 19 |
 | A-15 | cert-manager | 1.x | 证书自动化 | 19、29 |
-| A-16 | Kyverno | 1.x | U-04 唯一示例实现（策略与验签） | 24、25 |
+| A-16 | Kyverno | 1.x | 本书唯一示例实现（策略与验签） | 24、25 |
 | A-17 | ValidatingAdmissionPolicy | K8s 1.30+ 内置 | 轻量内置对比方案 | 25 |
 | A-18 | Gatekeeper | 3.x | 仅选型矩阵对比 | 25 |
 | A-19 | External Secrets Operator | **2.x**（`external-secrets.io/v1` 已 GA；`v1beta1` 为 0.x 时代写法，不再使用） | 密钥注入 | 9、14、26 |
