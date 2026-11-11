@@ -156,18 +156,12 @@
 - ch06 `hack/verify.sh`：选 L581（41 行，完整度 2），弃 L390（20 行，完整度 2）
 - ch10 `deploy/charts/order-demo/Chart.yaml`：保留 L402（6 行，完整度 2），弃 L652（4 行，完整度 2）
 
-## 跳过（13）
+## 跳过（7）
 
-- ch03 `hack/verify.sh`：无 shebang，判定为命令行片段，不物化
-- ch04 `deploy/overlays/<env>/kustomization.yaml`：占位路径（含 <>/模板占位），不物化
 - ch04 `gitops/bootstrap/env/cluster-a.tfvars`：相邻代码块语言与文件类型不符：bash
 - ch07 `hack/kind-up.sh`：相邻代码块语言与文件类型不符：yaml
-- ch12 `hack/verify.sh`：无 shebang，判定为命令行片段，不物化
 - ch14 `gitops/envs/<env>/config.yaml`：占位路径（含 <>/模板占位），不物化
 - ch14 `gitops/rendered/<env>/all.yaml`：占位路径（含 <>/模板占位），不物化
-- ch14 `gitops/rendered/<env>/all.yaml`：占位路径（含 <>/模板占位），不物化
-- ch17 `hack/verify.sh`：无 shebang，判定为命令行片段，不物化
 - ch21 `observability/metric-naming.md`：相邻代码块语言与文件类型不符：markdown
 - ch23 `hack/verify.sh`：无 shebang，判定为命令行片段，不物化
 - ch25 `deploy/base/deployment.yaml`：相邻代码块语言与文件类型不符：bash
-- ch28 `go.mod`：相邻代码块语言与文件类型不符：diff

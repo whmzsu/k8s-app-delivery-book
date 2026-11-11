@@ -72,6 +72,39 @@ def is_match(path, lang):
     return lang in LANG_BY_EXT.get(ext, {"", "text"})
 
 
+def annotations(text, fences):
+    """收集本章所有「路径出现」的位置与是否构成文件标注边界。
+
+    返回 [(start, end, path, is_boundary)]。三类必须排除，都是踩过的坑：
+    1) 代码块内部的反引号不是标注，那是代码里的字符串；
+    2) 表格行内的路径不是标注——`| `gitops/x.tf` | 说明 |` 只是正文引用，
+       把它当标注会让紧随其后的别的文件被错配成这个路径（实测把
+       providers.tf 的代码块物化成了 backend.tf）；
+    3) 正文里的行内提及（「见 `deploy/base/deployment.yaml`」）也不是标注。
+       它不能成为「换了文件」的分界，否则紧跟其后属于上一个文件的代码块
+       会被判给这个提及；占位路径（含 `<env>`）同理。
+    """
+    out = []
+    for tok in TOKEN.finditer(text):
+        path = tok.group(1).strip()
+        if not PATH_OK.match(path):
+            continue
+        if any(s <= tok.start() <= e for s, e, _, _ in fences):
+            continue
+        line_start = text.rfind("\n", 0, tok.start()) + 1
+        prefix = text[line_start:tok.start()]
+        if prefix.lstrip().startswith("|"):
+            continue
+        head = prefix.strip()
+        # 标注形态：独占段首 / 列表项开头 / 加粗包裹（本书 §N.4 的固定写法）
+        is_boundary = head in {"", "-", "*", "**", ">", "> **"} or (
+            head.endswith("**") and text[tok.end():tok.end() + 2] == "**")
+        if "<" in path or ">" in path:
+            is_boundary = False
+        out.append((tok.start(), tok.end(), path, is_boundary))
+    return out
+
+
 def generate(out_dir):
     """把章内代码块写到 out_dir，返回 (manifest, skipped, decisions)。"""
     manifest, skipped, decisions = [], [], []
@@ -83,19 +116,20 @@ def generate(out_dir):
         # 「完整度优先、其次最完整（行数最多）、再其次靠前」选出权威副本，
         # 避免后出现的回滚片段覆盖掉前面可运行的完整文件（见 D-36）。
         chosen, seen = {}, set()
-        for tok in TOKEN.finditer(text):
-            path = tok.group(1).strip()
-            if not PATH_OK.match(path):
-                continue
+        anns = annotations(text, fences)
+        boundaries = [a[0] for a in anns if a[3]]
+        for idx, (tok_s, tok_e, path, _) in enumerate(anns):
+            # 归属边界：一个代码块属于它之前最近的那条**标注**。中间若出现新的标注，
+            # 说明文件已经切换，不能跨过去配对——只靠 600 字符窗口时，删掉一段
+            # 无关内容就会把相邻文件的代码块吸进来（实测 backend.tf 被配成
+            # providers.tf 的 18 行块），这类漂移在 diff 里极难发现。
+            nxt = next((b for b in boundaries if b > tok_e), len(text))
             # 占位路径（含 <env> 之类尖括号）不是具体文件，跳过（Windows 也不允许 < > 作目录名）
             if "<" in path or ">" in path:
                 skipped.append((n, path, "占位路径（含 <>/模板占位），不物化"))
                 continue
-            # 跳过代码块内部的反引号路径
-            if any(s <= tok.start() <= e for s, e, _, _ in fences):
-                continue
             candidates = [(s, lang, body) for s, e, lang, body in fences
-                          if s > tok.end() and s - tok.end() <= 600]
+                          if s > tok_e and s < nxt and s - tok_e <= 600]
             # 同一路径标注后可能先出现别的代码块（如 diff、命令输出），
             # 取第一个语言与文件类型相符的块，避免误物化
             matching = [c for c in candidates if is_match(path, c[1])]
