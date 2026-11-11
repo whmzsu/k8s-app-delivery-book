@@ -23,15 +23,29 @@ UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
 
-def probe(url):
+def _curl(url, timeout):
     try:
         r = subprocess.run(
             ["curl", "-sS", "-L", "-o", "/dev/null", "-w", "%{http_code}",
-             "--http1.1", "--max-time", "25", "-A", UA, url],
-            capture_output=True, text=True, timeout=35)
-        code = (r.stdout or "000").strip().splitlines()[-1]
+             "--http1.1", "--max-time", str(timeout), "-A", UA, url],
+            capture_output=True, text=True, timeout=timeout + 10)
+        return (r.stdout or "000").strip().splitlines()[-1]
     except Exception:
-        code = "000"
+        return "000"
+
+
+def probe(url):
+    """先探一次，`000` 与 5xx 再试一次。
+
+    这是监控型检查，最怕把本机代理抖动或 TLS 握手的偶发失败当成
+    「链接已死」——一份误报率高的报告没人会看，等于没做（实测
+    `keda.sh` 首次 000、重试立即 200）。4xx 不重试：403/404 是确定性
+    结论，重试只是浪费对方配额。
+    """
+    code = _curl(url, 25)
+    if code == "000" or code.startswith("5"):
+        print("  retry %s（首次 %s）" % (url, code))
+        code = _curl(url, 40)
     return url, code
 
 
