@@ -65,12 +65,12 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: order-demo/db-credentials
+                  name: order-demo-db-credentials
                   key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: order-demo/db-credentials
+                  name: order-demo-db-credentials
                   key: password
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata

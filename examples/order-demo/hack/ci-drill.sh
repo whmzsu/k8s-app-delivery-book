@@ -160,7 +160,10 @@ assert_eq "${DEMO_READY}" "False" "readiness-demo 的 Ready 条件"
 kubectl -n "${NS}" delete pod readiness-demo svc readiness-demo --ignore-not-found --wait=false >/dev/null 2>&1 || true
 
 step "6. Pod 重建后服务仍可用"
-kubectl -n "${NS}" delete pod -l app.kubernetes.io/component=gateway --wait=false >/dev/null 2>&1 || true
+# 不用 --wait=false：旧 Pod 仍在优雅终止时 rollout status 会瞬间假 PASS，
+# 随后 healthz 打到 Terminating 的 Pod 上（1.34 腿实测，D-31）。等删除完成后
+# 再等替换 Pod Ready，判据才是确定的。
+kubectl -n "${NS}" delete pod -l app.kubernetes.io/component=gateway >/dev/null 2>&1
 if timeout 180 kubectl -n "${NS}" rollout status "deployment/${DEPLOY}" --timeout=170s >/dev/null 2>&1; then
   ok "重建后全部 Ready"
 else

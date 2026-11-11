@@ -211,6 +211,15 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - 修复后本地验证：`materialize.py --check` 一致、consistency problem=0、actionlint（ci.yml）零告警
 - 未决项更新：待 `f7b015c` 修复提交的重跑结论（第三轮）；其余同上
 
+### 第三轮结论与修复 · 2026-11-11（`87f683b` 重跑：ci #5 success / kind #5 两腿过一腿败）
+
+- **`ci.yml` #5 全绿** ✅：manuscript / 4 版本 manifests（含结构断言）/ example-app / render 全部通过——D-26/27/28/29 的 CI 侧修复全部验证生效
+- **kind #5**：1.32.2（写作基线）与 1.37.0（当前稳定）两腿 **全绿**——真实部署、滚动零 Endpoint 空窗、`rollout undo` 回明确 SHA、readiness 摘流、重建恢复，全链路通过（D-28 的 SHA 标签修复在真集群验证）；仅 1.34.11（书稿上界）一腿失败，两个独立根因：
+  - **D-30（书稿缺陷：K8s Secret 名误用 ESO 外部键）**：ch16 StatefulSet 的 `secretKeyRef.name: order-demo/db-credentials`——带 `/` 违反 RFC 1123，apiserver 拒绝。`order-demo/db-credentials` 是 ESO 的**外部键**（Vault 路径，允许 `/`，ch04/07/09 语境正确）；K8s Secret 资源名按第 9 章约定是 `order-demo-db-credentials`。ch16 清单两处修正，§16.1 契约句同步写清「外部键 vs K8s Secret 名」之别；该文件此前一直被软报告阈值掩盖，属「软失败掩盖真缺陷」的实例，修复后预计 0 软失败
+  - **D-31（演练脚本竞态，flaky 根因）**：`ci-drill.sh` 第 6 步 `delete pod --wait=false` 立即返回，旧 Pod 尚在优雅终止，`rollout status` 瞬间假 PASS，随后 healthz 经 port-forward 打到 Terminating Pod（日志实锤：`network namespace for sandbox ... is closed`、容器 `Stopping container gateway`）。1.32/1.37 只是时序躲过，属固有 flaky——本书零容忍 flaky（12.4），修法：去掉 `--wait=false`，删除完成后再等替换 Pod Ready，判据才确定
+- 修复后本地验证：materialize --check 一致、consistency problem=0、`bash -n` 通过
+- 未决项更新：待第三轮修复提交（ch16 + ci-drill）的第四轮重跑（预期全绿，即 P5 验收完成）；其余同上
+
 ### 统计快照（v1.0）
 
 | 项 | 值 |
