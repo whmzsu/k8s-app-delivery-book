@@ -235,8 +235,9 @@ def check():
             problems["多余回扣"].append(n)
         if n in HOOK_CHAPTERS and not hook_hit:
             problems["钩子章缺回扣"].append(n)
-        # 裸 URL
-        ext = [u for u in re.findall(r"https?://[^\s\"'`\)\]\|<>]+", t)
+        # 裸 URL（D-09 只约束正文：先去围栏代码块，配置/示例里的端点与链接不算裸 URL）
+        t_prose = re.sub(r"```.*?```", "", t, flags=re.S)
+        ext = [u for u in re.findall(r"https?://[^\s\"'`\)\]\|<>]+", t_prose)
                if not URL_WHITELIST.search(u)]
         if ext:
             problems["疑似裸 URL"].append((n, list(dict.fromkeys(ext))[:3]))
