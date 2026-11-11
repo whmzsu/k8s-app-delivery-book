@@ -78,7 +78,7 @@
 |---|---|
 | 命名空间 | `order-demo-dev` / `order-demo-staging` / `order-demo-prod` |
 | 镜像 | `registry.example.com/order-demo/<component>:git-<sha7>`，禁用 `latest` |
-| 公共标签 | `app.kubernetes.io/name=order-demo`、`component=<组件>`、`version=<SHA>`、`managed-by=<工具>` |
+| 公共标签 | `app.kubernetes.io/name=order-demo`、`app.kubernetes.io/component=<组件>`、`version=<SHA>`、`app.kubernetes.io/managed-by=<工具>` |
 | Service / 端口 | `gateway` 8080、`api` 8081、`db` 5432 |
 | 探针路径 | `/healthz` liveness、`/readyz` readiness、`/startup`（仅 api） |
 | 终止宽限 | `terminationGracePeriodSeconds: 30`，`preStop` 先摘流 |

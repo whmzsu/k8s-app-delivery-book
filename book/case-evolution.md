@@ -22,7 +22,7 @@
 | 命名空间 | `order-demo-dev` / `order-demo-staging` / `order-demo-prod` | 4 起 | 全部章的 `kubectl -n`、NetworkPolicy、RBAC、ApplicationSet |
 | 镜像仓库 | `registry.example.com/order-demo/<component>` | 6 起 | 6、12、14、24 |
 | 镜像标签 | `git-<7位短SHA>`，禁用 `latest` | 6 起 | 3、6、12、13、14、24 |
-| 公共标签 | `app.kubernetes.io/name=order-demo`、`component=<组件>`、`version=<SHA>`、`managed-by=<工具>` | 6 起 | 8、10、14、19、21 |
+| 公共标签 | `app.kubernetes.io/name=order-demo`、`app.kubernetes.io/component=<组件>`、`version=<SHA>`、`app.kubernetes.io/managed-by=<工具>` | 6 起 | 8、10、14、19、21 |
 | Service 名 | `gateway`、`api`、`db` | 6 起 | 6–11、19、21 |
 | 探针路径 | `/healthz`（liveness）、`/readyz`（readiness）、`/startup`（startup，仅 api） | 8 起 | 8、10、13、15、23 |
 | 终止宽限 | `terminationGracePeriodSeconds: 30`；`preStop` 先摘流再退出 | 8 起 | 8、13、15 |
