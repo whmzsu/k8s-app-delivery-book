@@ -56,6 +56,9 @@ jobs:
       - name: 装配全书单一 Markdown
         run: python hack/build_book.py --out dist
 
+      - name: 构建配套工件包(zip)
+        run: python hack/build_assets.py --out dist
+
       - uses: actions/upload-artifact@v7
         with:
           name: book-manuscript
