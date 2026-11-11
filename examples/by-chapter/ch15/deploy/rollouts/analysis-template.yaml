@@ -20,9 +20,9 @@ spec:
         prometheus:
           address: http://prometheus.monitoring.svc:9090
           query: |
-            sum(rate(http_requests_total{service="{{args.canary-service}}",code=~"5.."}[5m]))
+            sum(rate(order_demo_http_requests_total{service="{{args.canary-service}}",status_code=~"5.."}[5m]))
             /
-            sum(rate(http_requests_total{service="{{args.canary-service}}"}[5m]))
+            sum(rate(order_demo_http_requests_total{service="{{args.canary-service}}"}[5m]))
     - name: p99-latency
       interval: 1m
       count: 5
@@ -34,7 +34,7 @@ spec:
           query: |
             histogram_quantile(
               0.99,
-              sum(rate(http_request_duration_seconds_bucket{
+              sum(rate(order_demo_http_request_duration_seconds_bucket{
                 service="{{args.canary-service}}"
               }[5m])) by (le)
             )
