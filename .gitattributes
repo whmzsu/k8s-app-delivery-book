@@ -7,3 +7,6 @@
 *.yml       text eol=lf
 *.yaml      text eol=lf
 Dockerfile  text eol=lf
+# 书稿正文同样锁 LF：章节里嵌着大量 YAML / bash 代码块，reader 直接复制到 Linux
+# 时尾随 \r 会破坏 shebang 与缩进（见 D-25）。
+*.md        text eol=lf

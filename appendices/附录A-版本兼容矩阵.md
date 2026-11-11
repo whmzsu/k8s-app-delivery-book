@@ -89,6 +89,7 @@
 | 每次 push / PR | `ci.yml` | `check-consistency.sh`、`materialize.py --check`、`validate-manifests.py`、kubeconform × 4 版本、Go/Docker 冒烟、Helm 渲染 | job summary + 全书 Markdown artifact |
 | 每周一 / 示例基线变更 / 手动 | `kind-matrix.yml` | `check-version-matrix.sh --mode ci` × K8s 1.32.2（kind v0.27.0）/ 1.34.11、1.37.0（kind v0.33.0） | server dry-run 日志、集群事件、演练结论 |
 | 每周一 / 引用登记变更 / 手动 | `references.yml` | `check-references.sh`、`check-links.py` | 外链报告 TSV、失败清单 |
+| 每季度 | 人工 | `./hack/check-upstream-versions.sh`：逐仓库对比「书稿口径」与上游最新稳定版 | 主版本有变的按 A.3 逐项复核、改 CI 固定值与正文口径并记入 `consistency-log`；仅小版本漂移只改 A.1 说明 |
 | 每季度 | 人工 | 复核 `references/*.yaml`、`pending_url` 逐条补正式入口 | 失效链接切 `archive_url` 并在附录 I 标「已归档」 |
 
 1. **K8s 大版本发布后**：改 `ci.yml` 的 `matrix.k8s`、`kind-matrix.yml` 的 `matrix.include`（k8s / kind / role 三项与 dispatch 的 `single_version` 选项），按 A.3 表逐项复核，把结果写回本附录。`kindest/node` 镜像 tag 由 `kind-matrix.yml` 预检步骤强制校验，不存在会直接失败，**不会静默跳过**。
