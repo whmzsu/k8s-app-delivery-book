@@ -367,3 +367,20 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - **正文同步**：`hack/sync-ref-titles.py` 按 yaml 重建 19 行依据段的标题与机构；并改写 9 处行文措辞，例如「参照公开的流水线配置失误与供应链复盘」→「参照公开的 CI 供应链与凭据外泄复盘」（换源后原措辞已不准确）。
 - **兜底清理**（`hack/fix-ref-metadata.py` 的 `STRIP` 表）：`book/references/_registry.yaml 亦登记 R-xxx`、`_verified.md 未登记该页 URL，不编造`、`（SP-NN）`、`直连经代理超时，P4 复核`、`名称级候选`、`卡片列为 L1 候选` 等 ~55 处字段级污染清零；附录 I 现役内部指涉 0。
 - **验证**：`book_tools.py check` problem=0；`check-consistency.sh` 六项全过；附录 I 73,373 字、298 条、0 处「待核验」。正文 328,366 汉字（较外迁后微降 315 字，为措辞改写所致）。
+
+### D-47 首个正式发布 v1.0.0（2026-11-11）
+
+- **发布物**：tag `v1.0.0`（附注标签，指向 `f26fed7`）+ GitHub Release，三个 asset
+  `journey-of-a-change-v1.0.0.{pdf,epub,docx}`。正文内容与 `dist/v1.0.0` 逐字节对应。
+- **asset 名一律 ASCII**：中文文件名经 `gh release create` 上传后被降级成 `default.pdf` / `default.epub` / `default.docx`
+  （Windows 下路径转 URL 丢编码）。已改为 ASCII 名重新上传并删除 `default.*`；书内标题仍是中文书名。
+  这条要记住：**发布资产的命名不要依赖 CLI 对非 ASCII 的处理**。
+- **`build_dist.py` 新增 `--out`**：用户阅读器占用 `dist/一次变更的旅程.docx` 时，
+  `PermissionError` 直接抛 traceback。现在可 `--out dist/<版本>` 绕开，且异常转为可读提示。
+  发布物因此统一放 `dist/<版本>/`，不与日常预览产物混在一起。
+- **发布前终检补漏**：全库扫 `U-NN` 命中 2 处（附录 A 的「U-04/U-05 唯一示例实现」），
+  为 P6 第 2 步清理的漏网，已改为「本书唯一示例实现」。`D-NN` / `SP-NN` / `book/` 路径均 0 处。
+- **`hack/requirements.txt` 补全装配依赖**（python-docx 1.2.0 / pypdf 7.0.1 / reportlab 5.1.0），
+  原先只有 PyYAML，别人照 README 复现会缺包。
+- **验证**：`book_tools.py check` problem=0；`check-consistency.sh` 六项全过；
+  release asset 下载回来 md5 与本地一致（epub `45f5c18…`）。
