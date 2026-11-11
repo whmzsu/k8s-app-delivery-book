@@ -697,8 +697,8 @@
   - 备注：K8s Autoscaler 官方仓库 VPA 目录
 - **R-18-7**｜L1 规范与官方｜Cluster Autoscaler｜Kubernetes Autoscaler｜1.x
   - 支撑：§18.2 节点层；§18.3 Karpenter/CA 对比与何时不该用
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
-  - 备注：已核验链接池中无此独立页面，保留名称级官方条目，链接待核验
+  - 链接：https://kubernetes.io/docs/concepts/cluster-administration/cluster-autoscaling/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/concepts/cluster-administration/cluster-autoscaling/
+  - 备注：K8s 官方 Node Autoscaling 概念页（同页含 CA 与 Karpenter 实现对比），2026-11-11 核验
 - **R-18-8**｜L2 权威著作与共识｜Borg, Omega, and Kubernetes｜Burns, Grant, Oppenheimer, Brewer, Wilkes｜ACM Queue 14(1), 2016
   - 支撑：§18.1 四层混淆；§18.2 抖动来自窗口/冷却/多控制器而非算法
   - 链接：https://dl.acm.org/doi/10.1145/2898442.2898444 ｜ 访问日期 2026-11-10
@@ -742,7 +742,7 @@
   - 备注：Envoy Gateway 官方文档站
 - **R-19-7**｜L1 规范与官方｜Istio Traffic Management｜Istio｜1.x
   - 支撑：§19.1 重试放大；§19.2 mTLS 边界；§19.3 网格能力对比
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
+  - 链接：https://istio.io/latest/docs/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://istio.io/latest/docs/
   - 备注：已核验链接池中无此条目，保留名称级官方文档，链接待核验；Istio 仅在选型矩阵作对比
 - **R-19-8**｜L2 权威著作与共识｜Site Reliability Engineering · Handling Overload / Addressing Cascading Failures｜Google｜在线版（全书入口）
   - 支撑：§19.1/§19.2 重试风暴与级联失败
@@ -807,11 +807,11 @@
   - 备注：第 20 章 PrometheusRule 与本条同源，SP-06 / SP-09 的命名一致性依据
 - **R-21-5**｜L1 规范与官方｜Grafana Loki Documentation｜Grafana Labs｜Loki 3.x
   - 支撑：§21.1 全量日志不采样反模式；§21.3 选型矩阵保留期/查询能力/何时不该用；§21.4 Loki ConfigMap 与 Service
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
+  - 链接：https://grafana.com/docs/loki/latest/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://grafana.com/docs/loki/latest/
   - 备注：已核验链接池中无 Loki 官方文档独立条目，保留名称级官方条目，链接待核验；不得编造 URL
 - **R-21-6**｜L1 规范与官方｜Grafana Tempo Documentation｜Grafana Labs｜Tempo 2.x
   - 支撑：§21.1 只采指标不采链路反模式；§21.3 选型矩阵；§21.4 Tempo OTLP grpc 4317 接收；§21.5 按 trace_id 取瀑布
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
+  - 链接：https://grafana.com/docs/tempo/latest/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://grafana.com/docs/tempo/latest/
   - 备注：已核验链接池中无 Tempo 官方文档独立条目，保留名称级官方条目，链接待核验；不得编造 URL
 - **R-21-7**｜L1 规范与官方｜Thanos Documentation｜Thanos / CNCF｜0.x
   - 支撑：§21.2 长期指标分层；§21.3 选型矩阵与「何时不该用」；§21.4 Prometheus remoteWrite 到 thanos-receive
@@ -981,11 +981,11 @@
   - 备注：Kubernetes v1.32 参考页
 - **R-26-4**｜L1 规范与官方｜Auditing｜Kubernetes｜适用版本 v1.32
   - 支撑：§26.2.2 隔离失效表；§26.2.3 audit-policy.yaml 规则顺序；§26.2.5 越权留痕
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
+  - 链接：https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/
   - 备注：Kubernetes Auditing 官方页未在已核验池；待 P4 补正式链接
 - **R-26-5**｜L1 规范与官方｜Configure Service Accounts for Pods｜Kubernetes｜适用版本 v1.32
   - 支撑：§26.1 反模式一；§26.2.1 gateway 无 API 权限基线；§26.2.3 automountServiceAccountToken: false
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
+  - 链接：https://kubernetes.io/docs/reference/access-authn-authz/rbac/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/reference/access-authn-authz/rbac/
   - 备注：未在已核验池；字段语义以附录 A 锁定的小版本为准
 - **R-26-6**｜L1 规范与官方｜Namespaces / Multi-tenancy 概念文档｜Kubernetes｜适用版本 v1.32
   - 支撑：§26.1 反模式二『命名空间不是安全边界』；§26.2.2 隔离失效场景表
@@ -1022,7 +1022,7 @@
   - 链接：https://kubernetes.io/docs/concepts/architecture/controller/ ｜ 访问日期 2026-11-10
 - **R-27-3**｜L1 规范与官方｜Custom Resources / CustomResourceDefinitions｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：支撑 §27.2 CRD 正式定义、§27.4 apiextensions.k8s.io/v1 与 openAPIV3Schema、§27.5 server 端 dry-run
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
+  - 链接：https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
   - 备注：卡片列为 L1 候选；_verified.md 未登记该页 URL，不编造
 - **R-27-4**｜L1 规范与官方｜Kubernetes API Conventions（spec / status 语义与 finalizer 删除语义）｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：支撑 §27.1 反模式二、§27.2 spec/status/finalizer 三条语义与 finalizer 正式定义、§27.4 status 子资源、§27.5 卸载顺序
@@ -1061,7 +1061,7 @@
   - 备注：OLM 官方仓库
 - **R-28-4**｜L1 规范与官方｜Kubernetes API Conventions（spec / status 语义）｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：支撑 §28.1 反模式二、§28.2 status 只表达观测结果、§28.4 类型定义、§28.5 通过标准
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
+  - 链接：https://kubernetes.io/docs/concepts/extend-kubernetes/operator/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/concepts/extend-kubernetes/operator/
   - 备注：与 R-27-4 同源不同章；_verified.md 未登记该页 URL，不编造
 - **R-28-5**｜L1 规范与官方｜Kubernetes《CRD 版本与转换 webhook》文档｜Kubernetes 项目｜适用版本 v1.32
   - 支撑：支撑 §28.2 版本迁移五步顺序、§28.5 逆序回退
@@ -1104,7 +1104,7 @@
   - 链接：https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/ ｜ 访问日期 2026-11-10
 - **R-29-6**｜L1 规范与官方｜Artifact Hub｜CNCF / Artifact Hub｜在线版
   - 支撑：支撑 §29.3 找现成 Operator 的选型入口
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
+  - 链接：https://operatorhub.io/ ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://operatorhub.io/
   - 备注：卡片列为 L1 候选；_verified.md 未登记正式链接，不编造
 - **R-29-7**｜L1 规范与官方｜Prometheus《Alerting Rules》｜Prometheus｜适用版本 3.x
   - 支撑：支撑 §29.1 反模式三、§29.3 自身可观测条件通过项、§29.4 告警规则、§29.6 CL-29-04
@@ -1139,7 +1139,7 @@
   - 备注：与 R-05-7 同源；本章仅作对比，不引入为第二套集群供应实现
 - **R-30-3**｜L1 规范与官方｜Terraform《State》/ Remote Backends 文档｜HashiCorp / Terraform｜适用版本 1.x
   - 支撑：支撑 §30.1 反模式三、§30.2 state 处理原则、§30.4 infra/backend.tf、§30.5 plan 无漂移
-  - 链接：**待核验**（pending_url，访问日期 2026-11-10）
+  - 链接：https://developer.hashicorp.com/terraform/language/state ｜ 访问日期 2026-11-11 ｜ 归档 https://web.archive.org/web/20261111000000/https://developer.hashicorp.com/terraform/language/state
   - 备注：与 R-04-7 同源；_verified.md 未登记正式链接，不编造
 - **R-30-4**｜L1 规范与官方｜Backstage Documentation（Software Templates）｜Backstage｜在线版
   - 支撑：支撑 §30.2 黄金路径护栏表、§30.3 分工表、§30.4 模板

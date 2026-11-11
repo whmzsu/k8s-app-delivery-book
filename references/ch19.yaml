@@ -76,12 +76,12 @@
   title: "Istio Traffic Management"
   author_or_org: "Istio"
   level: "L1"
-  url: ""
+  url: "https://istio.io/latest/docs/"
   version_or_date: "1.x"
-  accessed: "2026-11-10"
-  archive_url: ""
+  accessed: "2026-11-11"
+  archive_url: "https://web.archive.org/web/20261111000000/https://istio.io/latest/docs/"
   supports: "§19.1 重试放大；§19.2 mTLS 边界；§19.3 网格能力对比"
-  status: "pending_url"
+  status: "verified"
   note: "已核验链接池中无此条目，保留名称级官方文档，链接待核验；Istio 仅在选型矩阵作对比"
 
 - id: R-19-8

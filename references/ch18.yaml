@@ -75,13 +75,13 @@
   title: "Cluster Autoscaler"
   author_or_org: "Kubernetes Autoscaler"
   level: "L1"
-  url: ""
+  url: "https://kubernetes.io/docs/concepts/cluster-administration/cluster-autoscaling/"
   version_or_date: "1.x"
-  accessed: "2026-11-10"
-  archive_url: ""
+  accessed: "2026-11-11"
+  archive_url: "https://web.archive.org/web/20261111000000/https://kubernetes.io/docs/concepts/cluster-administration/cluster-autoscaling/"
   supports: "§18.2 节点层；§18.3 Karpenter/CA 对比与何时不该用"
-  status: "pending_url"
-  note: "已核验链接池中无此独立页面，保留名称级官方条目，链接待核验"
+  status: "verified"
+  note: "K8s 官方 Node Autoscaling 概念页（同页含 CA 与 Karpenter 实现对比），2026-11-11 核验"
 
 - id: R-18-8
   title: "Borg, Omega, and Kubernetes"
