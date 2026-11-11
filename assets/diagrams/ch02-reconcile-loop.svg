@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="570" viewBox="0 0 900 570" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="900" height="570" fill="#ffffff"/>
+  <defs>
+    <marker id="ar02" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#52525b"/>
+    </marker>
+    <marker id="ar02g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#a1a1aa"/>
+    </marker>
+  </defs>
+
+  <!-- 期望状态 -->
+  <rect x="290" y="26" width="320" height="60" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="450" y="50" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1d4ed8">你的声明（期望状态）</text>
+  <text x="450" y="71" text-anchor="middle" font-size="12" fill="#3f3f46" font-family="'Cascadia Mono','Consolas',monospace">Deployment.spec.replicas: 2</text>
+
+  <line x1="450" y1="88" x2="450" y2="112" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar02)"/>
+  <text x="462" y="105" font-size="11" fill="#52525b">提交</text>
+
+  <!-- API Server -->
+  <rect x="290" y="116" width="320" height="56" rx="6" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="450" y="140" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#6d28d9">API Server（etcd）</text>
+  <text x="450" y="160" text-anchor="middle" font-size="11.5" fill="#5b21b6">期望状态只有一个落点</text>
+
+  <!-- 分叉到两块 -->
+  <path d="M450,172 V196 H230 V202" fill="none" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar02)"/>
+  <path d="M450,196 H670 V202" fill="none" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar02)"/>
+  <text x="238" y="192" font-size="11" fill="#52525b">LIST / WATCH</text>
+
+  <!-- Informer -->
+  <rect x="30" y="206" width="400" height="130" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="50" y="231" font-size="13.5" font-weight="bold" fill="#166534">【Informer】负责「感知」</text>
+  <text x="50" y="258" font-size="12" fill="#14532d">① LIST：启动时全量拉一次相关对象</text>
+  <text x="50" y="280" font-size="12" fill="#14532d">② WATCH：之后只收增量事件（增 / 改 / 删）</text>
+  <text x="50" y="302" font-size="12" fill="#14532d">③ 本地缓存 Store：查状态不反复打 API Server</text>
+  <text x="50" y="323" font-size="11.5" fill="#15803d">→ 既不靠定时轮询全量，延迟也低</text>
+
+  <!-- Workqueue -->
+  <rect x="470" y="206" width="400" height="130" rx="6" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="490" y="231" font-size="13.5" font-weight="bold" fill="#b45309">【Workqueue】负责「不漏、不崩」</text>
+  <text x="490" y="258" font-size="12" fill="#78350f">去重：同一对象连续 10 个事件合并成 1 个待办</text>
+  <text x="490" y="280" font-size="12" fill="#78350f">重试：reconcile 失败按指数退避重新入队</text>
+  <text x="490" y="302" font-size="12" fill="#78350f">兜底：周期性 resync（默认约 5 分钟）全量入队</text>
+  <text x="490" y="323" font-size="11.5" fill="#92400e">→ 抖动与临时 API 超时不会永久丢掉收敛</text>
+
+  <!-- Informer → Workqueue -->
+  <line x1="432" y1="296" x2="466" y2="296" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar02)"/>
+  <text x="449" y="286" text-anchor="middle" font-size="10.5" fill="#52525b">事件</text>
+
+  <!-- 汇入 Controller -->
+  <line x1="230" y1="338" x2="230" y2="376" stroke="#a1a1aa" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#ar02g)"/>
+  <text x="242" y="360" font-size="11.5" fill="#71717a">读缓存（实际状态）</text>
+
+  <line x1="670" y1="338" x2="670" y2="376" stroke="#52525b" stroke-width="1.4" marker-end="url(#ar02)"/>
+  <text x="682" y="360" font-size="11.5" fill="#52525b">取出对象 key（已去重）</text>
+
+  <!-- Controller 循环 -->
+  <rect x="30" y="380" width="840" height="130" rx="6" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="50" y="409" font-size="13.5" font-weight="bold" fill="#4338ca">【Controller 循环】负责「算与做」—— 这一圈叫一次 reconcile</text>
+  <text x="50" y="445" font-size="12.5" fill="#312e81">1. 从缓存读「实际状态」</text>
+  <text x="50" y="477" font-size="12.5" fill="#312e81">2. 从声明读「期望状态」</text>
+  <text x="470" y="445" font-size="12.5" fill="#312e81">3. 算 diff，发动作（建 / 删 / 改 Pod）</text>
+  <text x="470" y="477" font-size="12.5" fill="#312e81">4. 更新 status，回队列等下一个事件</text>
+
+  <!-- 底注 -->
+  <rect x="25" y="526" width="850" height="32" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="450" y="547" text-anchor="middle" font-size="12" fill="#3f3f46">控制器只关心「现在差多少」，不关心「刚才发生了什么」：level-triggered，不是 edge-triggered</text>
+</svg>

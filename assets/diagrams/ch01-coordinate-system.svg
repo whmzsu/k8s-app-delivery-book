@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="412" viewBox="0 0 900 412" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="900" height="412" fill="#ffffff"/>
+  <defs>
+    <marker id="ar01" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#52525b"/>
+    </marker>
+    <marker id="ar01g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#a1a1aa"/>
+    </marker>
+  </defs>
+
+  <!-- 篇分组标签 + 括号 -->
+  <text x="180" y="22" text-anchor="middle" font-size="12" fill="#71717a">第 2 篇　定义与打包</text>
+  <path d="M25,30 V38 H335 V30" fill="none" stroke="#cbd5e1" stroke-width="1.2"/>
+
+  <text x="450" y="22" text-anchor="middle" font-size="12" fill="#71717a">第 3 篇　部署与发布</text>
+  <path d="M349,30 V38 H551 V30" fill="none" stroke="#cbd5e1" stroke-width="1.2"/>
+
+  <text x="612" y="22" text-anchor="middle" font-size="12" fill="#71717a">第 4 篇　运行时</text>
+  <path d="M565,30 V38 H659 V30" fill="none" stroke="#cbd5e1" stroke-width="1.2"/>
+
+  <text x="774" y="22" text-anchor="middle" font-size="12" fill="#71717a">第 5 篇　观测与可靠</text>
+  <path d="M673,30 V38 H875 V30" fill="none" stroke="#cbd5e1" stroke-width="1.2"/>
+
+  <!-- 主线八环 -->
+  <rect x="25" y="50" width="94" height="44" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="72" y="77" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1d4ed8">定义</text>
+
+  <rect x="133" y="50" width="94" height="44" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="180" y="77" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1d4ed8">校验</text>
+
+  <rect x="241" y="50" width="94" height="44" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="288" y="77" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1d4ed8">打包</text>
+
+  <rect x="349" y="50" width="94" height="44" rx="6" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="396" y="77" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#6d28d9">晋升</text>
+
+  <rect x="457" y="50" width="94" height="44" rx="6" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="504" y="77" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#6d28d9">发布</text>
+
+  <rect x="565" y="50" width="94" height="44" rx="6" fill="#ecfdf5" stroke="#a7f3d0"/>
+  <text x="612" y="77" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#047857">运行</text>
+
+  <rect x="673" y="50" width="94" height="44" rx="6" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="720" y="77" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#b45309">观测</text>
+
+  <rect x="781" y="50" width="94" height="44" rx="6" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="828" y="77" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#b45309">响应</text>
+
+  <!-- 环间箭头 -->
+  <line x1="121" y1="72" x2="131" y2="72" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar01)"/>
+  <line x1="229" y1="72" x2="239" y2="72" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar01)"/>
+  <line x1="337" y1="72" x2="347" y2="72" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar01)"/>
+  <line x1="445" y1="72" x2="455" y2="72" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar01)"/>
+  <line x1="553" y1="72" x2="563" y2="72" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar01)"/>
+  <line x1="661" y1="72" x2="671" y2="72" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar01)"/>
+  <line x1="769" y1="72" x2="779" y2="72" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar01)"/>
+
+  <text x="25" y="110" font-size="12.5" fill="#52525b">主线：一次变更的旅程，八环按时间顺序推进。</text>
+
+  <!-- 横切 A -->
+  <rect x="25" y="124" width="850" height="46" rx="6" fill="#fef2f2" stroke="#fecaca"/>
+  <rect x="25" y="124" width="4" height="46" rx="2" fill="#ef4444"/>
+  <text x="48" y="145" font-size="13.5" font-weight="bold" fill="#b91c1c">横切 A　安全 · 策略 · 凭据</text>
+  <text x="48" y="163" font-size="12" fill="#7f1d1d">第 6 篇 · 24–26 章 ｜ 作用于主线的每一环：任何一环缺护栏，整条链都不可信</text>
+
+  <line x1="460" y1="124" x2="460" y2="100" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#ar01)"/>
+  <text x="470" y="116" font-size="11" fill="#b91c1c">作用于每一环</text>
+
+  <!-- 横切 B -->
+  <rect x="25" y="180" width="850" height="46" rx="6" fill="#f0f9ff" stroke="#bae6fd"/>
+  <rect x="25" y="180" width="4" height="46" rx="2" fill="#0284c7"/>
+  <text x="48" y="201" font-size="13.5" font-weight="bold" fill="#0369a1">横切 B　可观测 · 可回滚 · 可审计</text>
+  <text x="48" y="219" font-size="12" fill="#075985">第 5 篇 · 20–23 章集中展开 ｜ 同样是每一环的验收标准，而不只是一条支线</text>
+
+  <!-- 演进轴 -->
+  <text x="25" y="252" font-size="12.5" fill="#52525b">演进轴（第 7 篇）：团队与交付量变大后才需要往右走，不是越右越好。</text>
+  <text x="875" y="252" text-anchor="end" font-size="11.5" fill="#a1a1aa">工具数量 ≠ 成熟度</text>
+
+  <rect x="25" y="262" width="190" height="44" rx="6" fill="#fafafa" stroke="#e4e4e7"/>
+  <text x="120" y="289" text-anchor="middle" font-size="13" font-weight="bold" fill="#52525b">L0　手工</text>
+
+  <rect x="245" y="262" width="190" height="44" rx="6" fill="#f0f9ff" stroke="#bae6fd"/>
+  <text x="340" y="289" text-anchor="middle" font-size="13" font-weight="bold" fill="#0369a1">L1　自动化</text>
+
+  <rect x="465" y="262" width="190" height="44" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="560" y="289" text-anchor="middle" font-size="13" font-weight="bold" fill="#1d4ed8">L2　GitOps</text>
+
+  <rect x="685" y="262" width="190" height="44" rx="6" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="780" y="289" text-anchor="middle" font-size="13" font-weight="bold" fill="#4338ca">L3　自助平台</text>
+
+  <line x1="217" y1="284" x2="243" y2="284" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar01)"/>
+  <line x1="437" y1="284" x2="463" y2="284" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar01)"/>
+  <line x1="657" y1="284" x2="683" y2="284" stroke="#52525b" stroke-width="1.3" marker-end="url(#ar01)"/>
+
+  <!-- 地基 -->
+  <rect x="25" y="336" width="850" height="48" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-dasharray="6 4"/>
+  <text x="48" y="359" font-size="13.5" font-weight="bold" fill="#334155">地基（第 1 篇）</text>
+  <text x="48" y="377" font-size="12" fill="#475569">心智模型 · 原则 · 环境拓扑 · 工具链地图 —— 上面四层全部站在这一层上</text>
+
+  <line x1="450" y1="336" x2="450" y2="316" stroke="#a1a1aa" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#ar01g)"/>
+  <text x="460" y="331" font-size="11" fill="#64748b">支撑以上四层</text>
+</svg>
