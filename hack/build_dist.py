@@ -56,6 +56,49 @@ def _join(prev: str, nxt: str) -> str:
     return prev + " " + nxt
 
 
+def split_table_cells(line: str) -> list[str]:
+    """按 GFM 口径把一行管道表格切成单元格。
+
+    本书的检查清单大量把命令写在表格的反引号里，命令自身含 `|`（shell 管道、
+    grep 分支、PromQL 正则）。早期直接用 `split("|")` 会把它们当成列分隔符：
+    HTML 侧多输出一个 <td>，DOCX 侧用 max() 取列数给整张表补出空列，
+    成品表现就是「部分行的右边多出一列」。
+
+    三条规则：
+      1) `\\|` 是字面管道，不切列，渲染时反转义成 `|`（与 GitHub / GFM 一致）；
+      2) 反引号 code span 内的 `|` 也不切列（宽容兜底，防止漏转义时静默毁版式；
+         源码规范由 check-consistency.sh 第 8 步把关）；
+      3) 其余 `|` 为列分隔符，首尾边界管道产生的空元素丢弃。
+    """
+    cells, buf = [], []
+    in_code = False
+    i, n = 0, len(line)
+    while i < n:
+        ch = line[i]
+        if ch == "\\" and i + 1 < n and line[i + 1] == "|":
+            buf.append("|")
+            i += 2
+            continue
+        if ch == "`":
+            in_code = not in_code
+            buf.append(ch)
+            i += 1
+            continue
+        if ch == "|" and not in_code:
+            cells.append("".join(buf))
+            buf = []
+            i += 1
+            continue
+        buf.append(ch)
+        i += 1
+    cells.append("".join(buf))
+    if cells and not cells[0].strip():
+        cells.pop(0)
+    if cells and not cells[-1].strip():
+        cells.pop()
+    return [c.strip() for c in cells]
+
+
 def inline(text: str, _bold: bool = False) -> list[tuple[str, str]]:
     """把一段文字切成 (样式, 文本) 序列；样式 ∈ plain/bold/code/boldcode。
 
@@ -147,11 +190,11 @@ def parse_md(text: str) -> list[dict]:
 
         # 表格
         if "|" in s and i + 1 < n and re.match(r"^\s*\|?[\s:|-]+\|[\s:|-]*$", lines[i + 1]):
-            header = [c.strip() for c in s.strip("|").split("|")]
+            header = split_table_cells(s)
             i += 2
             rows = []
             while i < n and "|" in lines[i] and lines[i].strip():
-                rows.append([c.strip() for c in lines[i].strip().strip("|").split("|")])
+                rows.append(split_table_cells(lines[i]))
                 i += 1
             blocks.append({"kind": "table", "head": header, "rows": rows})
             continue

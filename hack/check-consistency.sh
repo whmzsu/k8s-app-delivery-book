@@ -99,4 +99,47 @@ if grep -rn '^```mermaid' chapters/ appendices/ >/dev/null 2>&1; then
   exit 1
 fi
 
+echo "== 8. 表格列口径（命令内管道必须转义） =="
+# PDF 里「部分行右边多一列」的根因：表格单元格里的 shell 管道 / grep 分支 /
+# PromQL 正则自带 `|`，早期解析器直接 split("|") 就把它当列分隔符。
+# 这里直接复用构建器的 split_table_cells，保证「闸门口径 == 成品口径」。
+python - <<'PY'
+import glob, re, sys
+sys.path.insert(0, 'hack')
+from build_dist import split_table_cells
+
+bad = []
+files = sorted(glob.glob('chapters/ch*.md')) + sorted(glob.glob('appendices/*.md'))
+for f in files:
+    lines = open(f, encoding='utf-8').read().split('\n')
+    i = 0
+    while i < len(lines):
+        if lines[i].lstrip().startswith('|') and i + 1 < len(lines) and \
+           re.match(r'^\s*\|[-: |]+\|\s*$', lines[i + 1]):
+            ncol = len(split_table_cells(lines[i]))
+            j = i + 2
+            while j < len(lines) and lines[j].lstrip().startswith('|'):
+                row = lines[j]
+                got = len(split_table_cells(row))
+                if got != ncol:
+                    bad.append(f'{f}:{j+1} 逻辑列 {got} != 表头 {ncol}')
+                # 反引号内的裸管道即便列数侥幸对齐，在 GitHub / GFM 下仍是坏表
+                in_code = False
+                for k, ch in enumerate(row):
+                    if ch == '`':
+                        in_code = not in_code
+                    elif ch == '|' and in_code and (k == 0 or row[k-1] != '\\'):
+                        bad.append(f'{f}:{j+1} 反引号内有未转义管道（应写 \\|）')
+                        break
+                j += 1
+            i = j
+        else:
+            i += 1
+if bad:
+    print('\n'.join(bad[:40]))
+    print(f'!! 共 {len(bad)} 处表格列口径问题')
+    sys.exit(1)
+print('全部表格列数一致、命令内管道已转义')
+PY
+
 echo "== 全书一致性闸门：通过 =="
