@@ -6,10 +6,12 @@
 | 章 | 物化路径 | 行数 |
 |---|---|---|
 | 01 | `examples/by-chapter/ch01/deploy/incident/order-demo-incident.yaml` | 80 |
+| 01 | `examples/by-chapter/ch01/hack/checklist-01.sh` | 7 |
 | 01 | `examples/by-chapter/ch01/hack/reproduce-incident.sh` | 33 |
 | 02 | `examples/by-chapter/ch02/deploy/base/deployment.yaml` | 49 |
 | 02 | `examples/by-chapter/ch02/deploy/base/namespace.yaml` | 6 |
 | 02 | `examples/by-chapter/ch02/deploy/base/service.yaml` | 18 |
+| 02 | `examples/by-chapter/ch02/hack/checklist-02.sh` | 7 |
 | 02 | `examples/by-chapter/ch02/hack/show-owner-chain.sh` | 19 |
 | 03 | `examples/by-chapter/ch03/deploy/base/deployment.yaml` | 49 |
 | 03 | `examples/by-chapter/ch03/observability/slo-card-minimal.yaml` | 16 |
@@ -43,15 +45,18 @@
 | 07 | `examples/by-chapter/ch07/deploy/base/service-db-headless.yaml` | 18 |
 | 07 | `examples/by-chapter/ch07/deploy/base/statefulset-db.yaml` | 61 |
 | 07 | `examples/by-chapter/ch07/hack/ch07-apply.sh` | 20 |
+| 07 | `examples/by-chapter/ch07/hack/checklist-07.sh` | 7 |
 | 08 | `examples/by-chapter/ch08/deploy/base/deployment-api.yaml` | 100 |
 | 08 | `examples/by-chapter/ch08/deploy/base/deployment.yaml` | 79 |
 | 08 | `examples/by-chapter/ch08/deploy/base/pdb.yaml` | 14 |
+| 08 | `examples/by-chapter/ch08/hack/checklist-08.sh` | 7 |
 | 08 | `examples/by-chapter/ch08/hack/rolling-5xx-test.sh` | 36 |
 | 09 | `examples/by-chapter/ch09/deploy/base/configmap.yaml` | 10 |
 | 09 | `examples/by-chapter/ch09/deploy/base/deployment-api.yaml` | 102 |
 | 09 | `examples/by-chapter/ch09/deploy/base/externalsecret.yaml` | 25 |
 | 09 | `examples/by-chapter/ch09/deploy/base/secretstore.yaml` | 19 |
 | 09 | `examples/by-chapter/ch09/hack/ch09-verify.sh` | 22 |
+| 09 | `examples/by-chapter/ch09/hack/checklist-09.sh` | 8 |
 | 10 | `examples/by-chapter/ch10/deploy/base/kustomization.yaml` | 15 |
 | 10 | `examples/by-chapter/ch10/deploy/charts/_order-demo-common/Chart.yaml` | 5 |
 | 10 | `examples/by-chapter/ch10/deploy/charts/_order-demo-common/templates/_helpers.tpl` | 9 |
@@ -102,6 +107,7 @@
 | 17 | `examples/by-chapter/ch17/deploy/base/limitrange.yaml` | 26 |
 | 17 | `examples/by-chapter/ch17/deploy/base/priorityclass.yaml` | 21 |
 | 17 | `examples/by-chapter/ch17/deploy/base/resourcequota.yaml` | 16 |
+| 17 | `examples/by-chapter/ch17/hack/checklist-17.sh` | 18 |
 | 17 | `examples/by-chapter/ch17/hack/cpu-limit-bench.sh` | 42 |
 | 17 | `examples/by-chapter/ch17/hack/oom-drill.sh` | 53 |
 | 18 | `examples/by-chapter/ch18/deploy/base/deployment-api.yaml` | 92 |
@@ -144,6 +150,7 @@
 | 29 | `examples/by-chapter/ch29/hack/operator-uninstall-drill.sh` | 40 |
 | 29 | `examples/by-chapter/ch29/observability/operator-slo.yaml` | 43 |
 | 30 | `examples/by-chapter/ch30/gitops/applicationset-multicluster.yaml` | 61 |
+| 30 | `examples/by-chapter/ch30/hack/checklist-30.sh` | 8 |
 | 30 | `examples/by-chapter/ch30/hack/multicluster-verify.sh` | 38 |
 | 31 | `examples/by-chapter/ch31/deploy/replay/order-demo-replay.yaml` | 129 |
 | 31 | `examples/by-chapter/ch31/hack/replay-incident.sh` | 80 |
