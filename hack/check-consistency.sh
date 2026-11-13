@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 全书一致性闸门：八项横扫（术语 / 版本 / YAML 字段 / 回滚命令 / tag / 坐标 / 钩子 / 检查清单）
+# 全书一致性闸门：九项横扫（术语 / 版本 / YAML 字段 / 回滚命令 / tag / 坐标 / 钩子 / 检查清单 / README 发版元数据）
 # 用法：./hack/check-consistency.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -140,6 +140,57 @@ if bad:
     print(f'!! 共 {len(bad)} 处表格列口径问题')
     sys.exit(1)
 print('全部表格列数一致、命令内管道已转义')
+PY
+
+echo "== 9. README 下载表版本与插图数（防发版漂移） =="
+# 教训：README 曾停在 v1.2.0 / 460 页 / 6 张图，而成品已到 v1.4.0 / 478 页 / 14 处插图，
+# 读者从仓库门面下载会拿到两代前的文件。版本号以根目录 VERSION 为唯一真相，
+# 插图数直接数全书 SVG 引用；页数与文件大小不入库、不校验，故不写进 README。
+python - <<'PY'
+import glob, os, re, sys
+
+bad = []
+if not os.path.exists('VERSION'):
+    bad.append('缺 VERSION 文件（版本号唯一真相）')
+    ver = None
+else:
+    ver = open('VERSION', encoding='utf-8').read().strip()
+    if not re.fullmatch(r'\d+\.\d+\.\d+', ver):
+        bad.append('VERSION 格式非法：%r（应为 X.Y.Z）' % ver)
+
+readme = open('README.md', encoding='utf-8').read()
+m = re.search(r'## 下载成品(.*?)(?=\n## )', readme, re.S)
+sec = m.group(1) if m else ''
+if not sec:
+    bad.append('README 找不到「下载成品」段')
+
+if ver and sec:
+    names = re.findall(r'`journey-of-a-change-v[\d.]+\.(?:pdf|epub|docx)`', sec)
+    if len(names) != 3:
+        bad.append('下载表应有 3 个成品文件名，实测 %d 个' % len(names))
+    for n in names:
+        if '-v%s.' % ver not in n:
+            bad.append('文件名版本与 VERSION=%s 不一致：%s' % (ver, n))
+    for v in sorted(set(re.findall(r'v(\d+\.\d+\.\d+)', sec))):
+        if v != ver:
+            bad.append('「下载成品」段残留旧版本号 v%s' % v)
+
+dm = re.search(r'\*\*(\d+) 处矢量插图\*\*', readme)
+if not dm:
+    bad.append('README 未声明「N 处矢量插图」')
+else:
+    declared = int(dm.group(1))
+    actual = 0
+    for f in glob.glob('chapters/ch*.md') + glob.glob('appendices/*.md') + ['全书目录.md']:
+        actual += len(re.findall(r'!\[[^]]*\]\([^)]*\.svg\)',
+                                 open(f, encoding='utf-8').read()))
+    if declared != actual:
+        bad.append('README 声明 %d 处插图，全书实际 %d 处' % (declared, actual))
+
+if bad:
+    print('\n'.join('  ' + b for b in bad))
+    sys.exit(1)
+print('下载表版本 v%s 与 VERSION 一致，插图数与全书 SVG 引用一致' % ver)
 PY
 
 echo "== 全书一致性闸门：通过 =="

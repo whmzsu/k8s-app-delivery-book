@@ -10,11 +10,13 @@
 
 | 形态 | 适合 | 文件 |
 |---|---|---|
-| PDF | 通读 / 打印 / 评审 | `journey-of-a-change-v1.2.0.pdf`，460 页，带页脚页码 |
-| EPUB | 手机 / 电纸书 / 平板 | `journey-of-a-change-v1.2.0.epub`，可重排、带目录导航 |
-| Word | 写批注 / 摘录 / 改编内训 | `journey-of-a-change-v1.2.0.docx`，含 6 张结构图 |
+| PDF | 通读 / 打印 / 评审 | `journey-of-a-change-v1.4.0.pdf`，带页脚页码与章节书签 |
+| EPUB | 手机 / 电纸书 / 平板 | `journey-of-a-change-v1.4.0.epub`，可重排、带章级目录导航 |
+| Word | 写批注 / 摘录 / 改编内训 | `journey-of-a-change-v1.4.0.docx`，含 14 处矢量插图 |
 
-> v1.2.0 起正文带 **6 张矢量结构图**（凭据轮换、七层工具链、摘流竞态、双凭据三段式、GitOps 晋升、SLO 与预算），源文件在 `assets/diagrams/`，PDF / EPUB / Word 三形态同源渲染。
+> 正文带 **14 处矢量插图**（13 张图，图 1-1 在第 31 章复用）：总论坐标系、控制循环、三环境凭据轮换、工具链七层、基线加固链、镜像三跳存储、摘流竞态、双凭据三段式、三环境晋升、排障判读、SLO 与预算、四层证据链、凭据生命周期。源文件在 `assets/diagrams/`，PDF / EPUB / Word 三形态同源渲染。
+>
+> 版本号以根目录 `VERSION` 为唯一真相：发版时先改它，再改本表，再装配；`hack/check-consistency.sh` 第 9 步会校验本表版本与插图数，漏改即失败。页数与文件大小每次装配都会变，不写进 README，以 Release 页的 `build-report.md` 为准。
 
 自己重新生成：`pip install -r hack/requirements.txt` 后跑 `python hack/build_dist.py --out dist/<版本>`（不需要 pandoc；PDF 走本机 Edge headless 打印，`--out` 可避开被阅读器占用的旧文件）。
 

@@ -1069,12 +1069,12 @@
 - **R-28-6**｜L1 规范与官方｜Prometheus《Alerting Rules》｜Prometheus｜适用版本 3.x
   - 支撑：支撑 §28.1 反模式三、§28.2 指标表、§28.4 告警规则、§28.6 CL-28-03
   - 链接：https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/ ｜ 访问日期 2026-11-10
-- **R-28-7**｜L2 权威著作与共识｜KubeCon 控制器实践演讲（会议录播）｜KubeCon / CNCF｜KubeCon 演讲，年份随会议届次变化
-  - 支撑：支撑 §28.1 反模式一/二、§28.2 reconcile 反模式清单
-  - 链接：**原站已下线**（访问日期 2026-11-11，按名称引用，不提供链接）
-  - 备注：会议录播入口随年份迁移，稳定链接不可长期依赖；本条按名称引用其结论，不提供易失效链接。同类最佳实践以 R-28-1（Kubebuilder Book）与 R-28-2（controller-runtime）的官方文档为准
+- **R-28-7**｜L1 规范与官方｜Kubernetes《Controllers（控制循环）》｜Kubernetes 项目｜适用版本 v1.32
+  - 支撑：支撑 §28.1 反模式一/二、§28.2 reconcile 反模式清单与幂等判据、§28.4 测试矩阵 C 组判据
+  - 链接：https://kubernetes.io/docs/concepts/architecture/controller/ ｜ 访问日期 2026-11-13
+  - 备注：只覆盖控制循环的通用语义：观察实际状态 → 与期望状态比较 → 修正，故可推得「被打断后能从零重来」；Reconciler API 与 RequeueAfter 的具体用法以 R-28-2 为准，控制器实现以 R-28-1 为准
 - **R-28-8**｜L2 权威著作与共识｜CNCF Operator 白皮书 v1.0（TAG App Delivery）｜CNCF TAG App Delivery｜v1.0
-  - 支撑：支撑 §28.1 反模式三「控制器静默降级」；与 R-28-7 来自不同机构、无利益关联
+  - 支撑：支撑 §28.1 反模式三「控制器静默降级」；与 R-28-9（Thoughtworks）来自不同机构、无利益关联
   - 链接：https://tag-app-delivery.cncf.io/whitepapers/operator/ ｜ 访问日期 2026-11-11
   - 备注：支撑「控制器静默降级」这一反模式的判定：Operator 白皮书把可观测性与状态上报列为能力项而非可选项；适用边界：白皮书给能力清单，落地强度按团队运维能力裁剪
 - **R-28-9**｜L2 权威著作与共识｜Thoughtworks Technology Radar｜Thoughtworks｜在线版

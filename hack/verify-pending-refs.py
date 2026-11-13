@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""把 16 条 pending_url 引用核验结果写回 references/chNN.yaml。
+"""把 15 条 pending_url 引用核验结果写回 references/chNN.yaml。
 
 核验口径（2026-11-11，P6 出书面 / D-45）：
   - 能定位到发布方官方入口的 → url 填真实链接、status=verified、accessed 更新；
   - 原发布方已下线（Weaveworks 停止运营、KubeCon 录播入口随年份迁移）→ status=offline，
     保留文献名称与作者，不提供易失效链接，note 写明原因与替代来源；
   - 不编造 URL：查不到就写 offline，宁缺毋滥。
+
+D-53（2026-11-13）：R-28-7 已改由 Kubernetes《Controllers》官方文档支撑
+（L1 / verified），不再是本批核验对象，故从 UPDATES 移除；保留会让重跑把新条目
+覆盖回 offline。本脚本为一次性迁移工具，已执行完毕，不应重跑。
 
 用法：python hack/verify-pending-refs.py [--dry-run]
 """
@@ -105,14 +109,6 @@ UPDATES: dict[str, dict[str, str]] = {
         "version_or_date": "v1.0",
         "status": "verified",
         "note": "定义 Operator 的能力模型、设计模式与常见反模式；适用边界：面向通用 Operator，具体实现选型仍以本章 27.2 的决策树为准",
-    },
-    "R-28-7": {
-        "title": "KubeCon 控制器实践演讲（会议录播）",
-        "author_or_org": "KubeCon / CNCF",
-        "url": "",
-        "version_or_date": "KubeCon 演讲，年份随会议届次变化",
-        "status": "offline",
-        "note": "会议录播入口随年份迁移，稳定链接不可长期依赖；本条按名称引用其结论，不提供易失效链接。同类最佳实践以 R-28-1（Kubebuilder Book）与 R-28-2（controller-runtime）的官方文档为准",
     },
     "R-28-8": {
         "title": "CNCF Operator 白皮书 v1.0（TAG App Delivery）",

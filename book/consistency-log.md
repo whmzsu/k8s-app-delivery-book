@@ -504,3 +504,41 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - **结论**：D-51 记的「根治方案留待统稿」继续有效，但已降级为**可选**，不是欠债。
   若未来要做，触发条件应是「检查清单命令需要被 CI 自动执行或审计」，而不是「为了对齐
   行业排版惯例」；届时再评估是否值得新增编号体系。
+
+## D-53 · P0 三条落地：ch24 SHA 锁定 / README 防漂移 / ch28 弱 L2 替换（2026-11-13）
+
+依据 19:25「出版统筹」诊断 + 20:57 逐条复核修订，执行三条低风险修复；**技术论断、配置值、命令文本零改动**。
+
+1. **ch24 示范 workflow 三个 `uses:` 按 SHA 锁定**。真实 commit 由联网 `git ls-remote` 取得并核对具体 tag：
+   `actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2`（与 ch12 完全一致）、
+   `docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0`、
+   `actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2`。
+   此前用 `@v4/@v3/@v4`，与 ch12 反模式二、`CL-12-02` 判空命令自相矛盾且闸门抓不到（不在检查路径）。
+   标注行补一句教学说明。**踩坑**：说明里写 `` `hack/pin-actions.sh` `` 行内路径会被物化器记成新的
+   skip 记录、改变 `_manifest.md`，实测触发闸门第 6 步不一致；改写为「第 12 章的 Action 锁定流程」后
+   恢复 7 条 skip / 149 文件。仓库自身 `.github/workflows/` 的 5 个 `uses:` 仍按前轮裁决单独 PR，本轮不动。
+2. **README 版本漂移 + 防漂移闸门**。下载表 v1.2.0 / 460 页 / 6 图 → v1.4.0；插图说明改为
+   **14 处**（13 张 SVG，图 1-1 在 ch31 复用）。**不写页数与文件大小**：每次装配都会变、不入库、
+   闸门无法校验，改为指向 Release 的 `build-report.md`，从源头消掉一个漂移点。新增根目录 `VERSION`
+   （`1.4.0`）为版本唯一真相，`check-consistency.sh` 增第 9 步：校验「下载表三行版本 == VERSION、
+   段内无残留旧版本号、README 声明插图数 == 全书 SVG 引用数」；脚本注释同步为九项。
+   发版顺序：先改 `VERSION` → README → 装配 → 打 tag。`ci.yml` 的 step 名仍写「八项横扫」，
+   留待仓库 CI 单独 PR 时一并改，不混进内容版本。
+3. **ch28 `R-28-7` 弱 L2 替换**。原「KubeCon 控制器实践演讲（会议录播）」无讲者 / 届次 / 标题、
+   `url: ""`、`status: offline`，是全书两条 offline 中唯一缺文献要素的一条。改为 Kubernetes
+   《Controllers（控制循环）》官方文档（L1 / verified，`https://kubernetes.io/docs/concepts/architecture/controller/`，
+   2026-11-13 实测 HTTP 200，且已在 `references/_verified.md` 池中）。`note` 只写适用边界，
+   替换理由记在本裁决、不进成品附录 I。
+   - **连锁同步**：`references/ch28.yaml`（R-28-7 整条 + R-28-8 的 `supports` 改指向 R-28-9）、
+     `chapters/ch28.md` 章末依据两行、`appendices/附录I-参考文献.md`（`book_tools.py appendix` 重生成）、
+     `hack/verify-pending-refs.py`（从 `UPDATES` 移除 R-28-7，否则该一次性迁移脚本重跑会把新条目
+     覆盖回 offline；docstring 16→15 并注明已执行完毕、不应重跑）。
+   - **分级影响**：ch28 由 L1=6 / L2=3 变 **L1=7 / L2=2**，仍满足「≥1 L1 + ≥2 L2」，且两条 L2
+     （CNCF TAG App Delivery、Thoughtworks）来自不同机构；R-28-8 的「不同机构」论证改指向 R-28-9。
+     全书 offline 由 2 条降到 1 条（仅剩 ch14 R-14-9 Weaveworks，停运事实无法消除，保留）。
+     `book/cards/ch28.md` 属历史写作留档，按 D-52「保留原貌不篡改」不回改；落地状态以 yaml 与附录 I 为准。
+
+**验收**：九步闸门 exit 0（含新增第 9 步）、`materialize --check` 149 文件 / 28 章零差异、
+`verify-pending-refs.py --dry-run` 15 条且不再触碰 R-28-7、EPUB 装配冒烟 exit 0
+（601 代码块 / 423 表 / 298 引用 / 298 附录 I 条目不变，2.6 MB）。
+**回滚**：`git revert` 本改动即可；但 `VERSION` 与第 9 步闸门必须一并回退，否则旧版 README 会被新闸门判失败。

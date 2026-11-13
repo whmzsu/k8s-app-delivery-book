@@ -73,16 +73,16 @@
   status: "verified"
 
 - id: R-28-7
-  title: "KubeCon 控制器实践演讲（会议录播）"
-  author_or_org: "KubeCon / CNCF"
-  level: "L2"
-  url: ""
-  version_or_date: "KubeCon 演讲，年份随会议届次变化"
-  accessed: "2026-11-11"
+  title: "Kubernetes《Controllers（控制循环）》"
+  author_or_org: "Kubernetes 项目"
+  level: "L1"
+  url: "https://kubernetes.io/docs/concepts/architecture/controller/"
+  version_or_date: "适用版本 v1.32"
+  accessed: "2026-11-13"
   archive_url: ""
-  supports: "支撑 §28.1 反模式一/二、§28.2 reconcile 反模式清单"
-  status: "offline"
-  note: "会议录播入口随年份迁移，稳定链接不可长期依赖；本条按名称引用其结论，不提供易失效链接。同类最佳实践以 R-28-1（Kubebuilder Book）与 R-28-2（controller-runtime）的官方文档为准"
+  supports: "支撑 §28.1 反模式一/二、§28.2 reconcile 反模式清单与幂等判据、§28.4 测试矩阵 C 组判据"
+  status: "verified"
+  note: "只覆盖控制循环的通用语义：观察实际状态 → 与期望状态比较 → 修正，故可推得「被打断后能从零重来」；Reconciler API 与 RequeueAfter 的具体用法以 R-28-2 为准，控制器实现以 R-28-1 为准"
 
 - id: R-28-8
   title: "CNCF Operator 白皮书 v1.0（TAG App Delivery）"
@@ -92,7 +92,7 @@
   version_or_date: "v1.0"
   accessed: "2026-11-11"
   archive_url: ""
-  supports: "支撑 §28.1 反模式三「控制器静默降级」；与 R-28-7 来自不同机构、无利益关联"
+  supports: "支撑 §28.1 反模式三「控制器静默降级」；与 R-28-9（Thoughtworks）来自不同机构、无利益关联"
   status: "verified"
   note: "支撑「控制器静默降级」这一反模式的判定：Operator 白皮书把可观测性与状态上报列为能力项而非可选项；适用边界：白皮书给能力清单，落地强度按团队运维能力裁剪"
 
