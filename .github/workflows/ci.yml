@@ -26,8 +26,8 @@ jobs:
     name: 一致性 / 引用 / 物化 / 装配
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
         with:
           python-version: '3.13'
           cache: pip
@@ -35,7 +35,7 @@ jobs:
       - name: 安装锁定的校验依赖
         run: pip install -r hack/requirements.txt
 
-      - name: 全书一致性闸门（八项横扫 + 附录 I 新鲜度 + 脚本语法）
+      - name: 全书一致性闸门（九项横扫 + 附录 I 新鲜度 + 脚本语法）
         run: bash hack/check-consistency.sh
 
       - name: 章节代码块与可复制产物一致
@@ -56,7 +56,7 @@ jobs:
       - name: 装配全书单一 Markdown
         run: python hack/build_book.py --out dist
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: book-manuscript
           path: dist/
@@ -70,8 +70,8 @@ jobs:
       matrix:
         k8s: ['1.32.0', '1.33.0', '1.34.0', '1.37.0']
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
         with:
           python-version: '3.13'
           cache: pip
@@ -131,8 +131,8 @@ jobs:
     name: 示例应用构建与容器冒烟
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-go@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: '1.27'
           cache: false  # 示例只有标准库依赖，无 go.sum，不启用缓存
@@ -170,15 +170,15 @@ jobs:
     name: 模板与 overlay 渲染（软报告）
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
         with:
           python-version: '3.13'
           cache: pip
           cache-dependency-path: hack/requirements.txt
       - run: pip install -r hack/requirements.txt
       # @v4 默认装「最新」Helm，版本随上游漂；显式钉住并按需升级，见 D-38
-      - uses: azure/setup-helm@v5
+      - uses: azure/setup-helm@2f5e7bc67f1f9972ab16657bb795f36d8f04de0e # v5
         with:
           version: v4.3.1
 
