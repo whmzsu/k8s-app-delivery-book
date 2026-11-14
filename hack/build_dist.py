@@ -601,19 +601,19 @@ def build_docx(docs: list[dict], dest: str) -> dict:
 CSS = """
 @page { size: A4; margin: 20mm 18mm 18mm 18mm; }
 html { -webkit-print-color-adjust: exact; }
-body { font-family: "Songti SC", "SimSun", "宋体", serif; font-size: 10.5pt;
+body { font-family: "Songti SC", "SimSun", "宋体", "Noto Serif CJK SC", "WenQuanYi Zen Hei", serif; font-size: 10.5pt;
        line-height: 1.62; color: #1a1a1a; }
-h1 { font-family: "Heiti SC", "SimHei", "黑体", sans-serif; font-size: 21pt;
+h1 { font-family: "Heiti SC", "SimHei", "黑体", "Noto Sans CJK SC", "WenQuanYi Zen Hei", sans-serif; font-size: 21pt;
      text-align: center; margin: 0 0 14pt; page-break-before: always;
      page-break-after: avoid;
      bookmark-level: 1; bookmark-label: content(text); }
 h1.first { page-break-before: avoid; }
-h2 { font-family: "Heiti SC", "SimHei", "黑体", sans-serif; font-size: 14pt;
+h2 { font-family: "Heiti SC", "SimHei", "黑体", "Noto Sans CJK SC", "WenQuanYi Zen Hei", sans-serif; font-size: 14pt;
      margin: 16pt 0 8pt; page-break-after: avoid;
      bookmark-level: 2; bookmark-label: content(text); }
-h3 { font-family: "Heiti SC", "SimHei", "黑体", sans-serif; font-size: 12pt;
+h3 { font-family: "Heiti SC", "SimHei", "黑体", "Noto Sans CJK SC", "WenQuanYi Zen Hei", sans-serif; font-size: 12pt;
      margin: 12pt 0 6pt; page-break-after: avoid; }
-h4 { font-family: "Heiti SC", "SimHei", "黑体", sans-serif; font-size: 11pt;
+h4 { font-family: "Heiti SC", "SimHei", "黑体", "Noto Sans CJK SC", "WenQuanYi Zen Hei", sans-serif; font-size: 11pt;
      margin: 10pt 0 4pt; page-break-after: avoid; }
 p { margin: 0 0 5pt; text-align: justify; text-indent: 2em; }
 h1 + p, h2 + p, h3 + p, h4 + p, blockquote p, li p { text-indent: 0; }
@@ -628,7 +628,7 @@ table { border-collapse: collapse; width: 100%; font-size: 8.8pt; margin: 6pt 0 
         page-break-inside: auto; }
 th, td { border: 0.5pt solid #b9b9c2; padding: 3pt 4pt; vertical-align: top;
          text-align: left; text-indent: 0; }
-th { background: #ececf1; font-family: "Heiti SC", "SimHei", "黑体", sans-serif; }
+th { background: #ececf1; font-family: "Heiti SC", "SimHei", "黑体", "Noto Sans CJK SC", "WenQuanYi Zen Hei", sans-serif; }
 tr { page-break-inside: avoid; }
 blockquote { margin: 6pt 0 8pt; padding: 2pt 0 2pt 9pt; border-left: 2.5pt solid #d8d8e0;
              color: #3f3f46; font-size: 9.6pt; }
@@ -644,7 +644,7 @@ ul, ol { margin: 4pt 0 8pt 1.4em; padding: 0; }
 li { margin: 0 0 2.5pt; text-align: justify; }
 hr { display: none; }
 .cover { text-align: center; page-break-after: always; }
-.cover .t { font-family: "Heiti SC", "SimHei", "黑体", sans-serif; font-size: 34pt;
+.cover .t { font-family: "Heiti SC", "SimHei", "黑体", "Noto Sans CJK SC", "WenQuanYi Zen Hei", sans-serif; font-size: 34pt;
             margin: 150pt 0 10pt; letter-spacing: 2pt; }
 .cover .s { font-size: 15pt; color: #3a3a42; margin-bottom: 60pt; }
 .cover .m { font-size: 10.5pt; color: #55555f; line-height: 2; }

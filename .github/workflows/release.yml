@@ -30,11 +30,15 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install headless Chromium for PDF
+      # ubuntu runner 默认无中文字体：Chromium 打印时中文会变豆腐块。
+      # 必须安装 CJK 字体，且 CSS 字体栈要列出对应字体名（见 build_dist.CSS），
+      # 二者缺一不可。Noto CJK 同时提供 Serif（宋体观感）与 Sans（黑体观感）。
+      - name: Install headless Chromium + CJK fonts for PDF
         run: |
           sudo apt-get update
-          sudo apt-get install -y chromium
+          sudo apt-get install -y chromium fonts-noto-cjk
           sudo ln -sf "$(command -v chromium)" /usr/local/bin/chrome
+          fc-cache -fv >/dev/null 2>&1 || true
 
       - name: Install build dependencies
         run: pip install -r hack/requirements.txt

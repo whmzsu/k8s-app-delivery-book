@@ -620,6 +620,27 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - **来源**：用户要求「跑一下资产构建 workflow」→ 选 A（打 v1.4.1 tag 触发 release.yml）。
 - **首跑失败（run 43555653485）**：`Build all formats` 步骤 `build_pdf` 调 `/usr/bin/microsoft-edge --headless=new --no-pdf-header-footer --print-to-pdf` 以 **SIGABRT** 崩溃。Chromium 安装步骤本身通过（D-57 的未知项已消除）；崩溃根因是 CI 容器以 root 跑 headless 缺 `--no-sandbox`。
 - **修复（commit 5ba8b33）**：`build_dist.build_pdf` 的 cmd 补 `--no-sandbox` 与 `--disable-dev-shm-usage`，对本地桌面构建无副作用（仅关闭进程隔离，渲染一致）。本地复跑 PDF 仍 469 页/34.4MB。
-- **重跑成功（run 43556017482）**：删旧 tag `v1.4.1` 重建重触发，三步全绿（Install Chromium → Build all formats → Publish release assets）。Release `v1.4.1` 已建，5 资产命名统一为 `journey-of-a-change-v1.4.1.{pdf,epub,docx,html,build-report.md}`（与 v1.4.0 既有命名一致）。PDF 在 CI 为 48.9MB（本地 34.4MB），差异来自 Linux runner 嵌入完整 CJK 字体，页数同为 469，无质量问题。
+- **重跑成功（run 43556017482）**：删旧 tag `v1.4.1` 重建重触发，三步全绿（Install Chromium → Build all formats → Publish release assets）。Release `v1.4.1` 已建，5 资产命名统一为 `journey-of-a-change-v1.4.1.{pdf,epub,docx,html,build-report.md}`（与 v1.4.0 既有命名一致）。PDF 在 CI 为 48.9MB（本地 34.4MB），**当时误判「差异来自 Linux runner 嵌入完整 CJK 字体」——该判断错误，见 D-60**：实测该 PDF 完全无 CJK 字体、中文为豆腐块。
 - **版本同步**：为与 tag 一致，VERSION 升 1.4.1、README 下载表三处文件名同步（`e083366`）；九步闸门第 9 步校验通过。
-- **收口结论**：release.yml 完成「首跑即绿」验证，资产构建链路闭合，可后续直接打 tag 发布。
+- **收口结论**：release.yml 完成「首跑即绿」验证，资产构建链路闭合；但**PDF 中文渲染缺陷（D-60）当时未被发现**，因本地 Windows 构建有系统中文宋体/黑体、渲染正常，掩盖了 CI 缺字体的问题。
+
+## D-60 ｜ 致命缺陷：Release PDF 中文变豆腐块（2026-11-14，修复已落地工作区）
+
+- **现象**：用户下载 `journey-of-a-change-v1.4.1.pdf`（CI 产物）后中文全为豆腐块/乱码；英文、数字、版权行正常。
+- **实证排查**：
+  - `pdffonts` 类扫描：嵌入字体仅 11 个拉丁子集（DejaVu*/Liberation*）+ NotoColorEmoji，**CIDFontType0=0、FontFile3(cid)=0**——无任何 CJK 字体。
+  - 文本抽取：正文英文可抽（"Kubernetes"、"31"、"A–I"、"© 2026 whmzsu"），**所有中文字符在抽取结果中直接变为空格**——证明中文在「Chromium 打印」阶段就未画出字形，而非仅缺嵌入。
+  - 页数 433、体积 48.9MB（与 D-59 所述 469 页/34.4MB 不符，提示本地与 CI 内容/字体子集状态本就不同，非本次关注点）。
+- **根因（两层叠加）**：
+  1. `release.yml` 仅 `apt-get install chromium`，**未装任何 CJK 字体**；ubuntu runner 无 Songti/SimSun/Heiti/SimHei（这些本是 macOS/Windows 字体）。
+  2. `build_dist.CSS` 字体栈只列 macOS/Windows 中文字体名（`"Songti SC","SimSun","宋体"` 正文；`"Heiti SC","SimHei","黑体"` 标题/表头/封面）。Chromium 在 Ubuntu 上找不到匹配字体，回退到 `serif`/`sans-serif`＝Liberation（纯拉丁）→ 中文画成豆腐块。
+  - 注：本地 Windows 构建因系统自带宋体/黑体而正常，故此前本地验证（含 D-59 复跑）从未暴露此缺陷；**Release 产物由 CI ubuntu 构建，故下载即烂**。这是「本地能过 ≠ CI 能过」的典型坑，与 D-57 已提示的「Chromium 步骤未实测」同源。
+- **修复（工作区已改，待重新发布生效）**：
+  1. `release.yml`：安装步骤改为 `apt-get install -y chromium fonts-noto-cjk`，并 `fc-cache -fv`；Noto CJK 同时提供 Serif（宋体观感）与 Sans（黑体观感）。
+  2. `build_dist.CSS`：所有中文字体栈在平台专用名之后、generic 之前补 `"Noto Serif CJK SC"`（正文）/ `"Noto Sans CJK SC"`（标题/表头/封面）+ `"WenQuanYi Zen Hei"` 兜底。即：
+     - 正文：`"Songti SC","SimSun","宋体","Noto Serif CJK SC","WenQuanYi Zen Hei",serif`
+     - 标题/表头/封面：`"Heiti SC","SimHei","黑体","Noto Sans CJK SC","WenQuanYi Zen Hei",sans-serif`
+     - 顺序保证：macOS→Songti/Heiti、Windows→SimSun/SimHei、CI/Ubuntu→Noto CJK、其他 Linux→WenQuanYi，全部有真实字形。
+  3. EPUB/DOCX：EPUB 用通用 `serif`（阅读器自动中文替换，无需改）；DOCX 由 python-docx 写 rFonts，Word 有东亚字体替换，中文正常。仅 PDF 为硬嵌入，必须装字体。
+- **验证计划**：本地 Windows 重跑 `build_dist.py` 应仍正常（Windows 字体兜底，中文嵌入 SimSun/Songti，证明打印链路内容完整）；**真正修复只能在 CI 重跑确认**（ubuntu + Noto CJK）。需 bump 版本（建议 1.4.2）+ 打 tag 重触发 release.yml 重新发布，覆盖 v1.4.1 的坏 PDF。
+- **教训（沉淀）**：凡涉及「headless 浏览器打印含非拉丁文字的 PDF」，CI 必须显式安装对应字体并写入 CSS 字体栈；本地能过不等于 CI 能过，字体可用性应作为 release 产物抽检项。
