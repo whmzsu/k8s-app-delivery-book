@@ -2,6 +2,8 @@ name: Release（四格式构建与发布资产）
 
 # 仅在本仓库打 tag（v*.*.*）时触发，把 build_dist.py 产出的
 # HTML / PDF / EPUB / DOCX / build-report.md 上传为该 tag 的 Release 资产。
+# 上传前统一重命名为 `journey-of-a-change-v<ver>.*`（<ver> 为去 v 前缀的 tag），
+# 与既有 v1.4.0 等 Release 资产命名一致，避免中文书名文件名与既有资产割裂。
 # DOCX/EPUB 为纯 Python（python-docx）离线可跑；PDF 经 headless 浏览器打印
 # （与本地 Edge 行为一致），ubuntu runner 无预装浏览器，故先装 Chromium 并
 # 软链为 `chrome` 供 build_dist.find_edge() 识别。
@@ -11,7 +13,6 @@ on:
   push:
     tags:
       - 'v*.*.*'
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -45,7 +46,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="${GITHUB_REF_NAME:-draft}"
+          TAG="${GITHUB_REF_NAME}"
+          VER="${TAG#v}"                        # 1.4.0
+          SLUG="journey-of-a-change-v${VER}"   # journey-of-a-change-v1.4.0
+          cd dist
+          # build_dist 产出中文书名，上传前统一改为发布 slug 命名，避免与既有资产割裂
+          [ -f "一次变更的旅程.pdf" ]  && mv "一次变更的旅程.pdf"  "${SLUG}.pdf"
+          [ -f "一次变更的旅程.epub" ] && mv "一次变更的旅程.epub" "${SLUG}.epub"
+          [ -f "一次变更的旅程.docx" ] && mv "一次变更的旅程.docx" "${SLUG}.docx"
+          [ -f "_book.html" ]              && mv "_book.html"       "${SLUG}.html"
+          [ -f "build-report.md" ]        && mv "build-report.md"  "${SLUG}-build-report.md"
+          cd ..
           gh release create "${TAG}" dist/* \
             --title "Release ${TAG}" \
             --generate-notes || \
