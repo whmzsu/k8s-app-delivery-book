@@ -38,6 +38,11 @@ jobs:
       - name: 全书一致性闸门（九项横扫 + 附录 I 新鲜度 + 脚本语法）
         run: bash hack/check-consistency.sh
 
+      # D-62：一个永远通过的闸门等于没有闸门。这里每次 push 都自检一次，
+      # 确认 PDF 字体闸门仍然会拦下坏件（构造纯拉丁字体 PDF 与截断 PDF）。
+      - name: PDF 字体闸门自检（确认闸门未退化成永远绿灯）
+        run: python hack/check-pdf-fonts.py --self-test
+
       - name: 章节代码块与可复制产物一致
         run: python hack/materialize.py --check
 

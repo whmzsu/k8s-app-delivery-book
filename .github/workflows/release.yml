@@ -52,6 +52,8 @@ jobs:
       # 本步骤不通过则整条流水线失败，Release 不会被创建。
       - name: Assert PDF renders Chinese (font embedding gate)
         run: |
+          # 先自检：确认闸门本身还会拦人（永远绿的闸门等于没有闸门）
+          python hack/check-pdf-fonts.py --self-test
           python hack/check-pdf-fonts.py \
             --pdf "dist/一次变更的旅程.pdf" \
             --report "dist/pdf-font-report.md"

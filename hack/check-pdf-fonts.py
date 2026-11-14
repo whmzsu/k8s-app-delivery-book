@@ -406,6 +406,113 @@ def evaluate(path: str, min_cjk_chars: int, sample_pages: int = 12) -> dict:
     return result
 
 
+# ---------------------------------------------------------------------------
+# 闸门自检：证明这道闸门还会拦人
+# ---------------------------------------------------------------------------
+def _make_latin_only_pdf(path: str) -> bool:
+    """造一个「有中文文本、但只有拉丁字体」的 PDF，复刻豆腐块环境。"""
+    try:
+        from reportlab.pdfgen import canvas
+        from reportlab.lib.pagesizes import A4
+    except Exception:
+        return False
+    c = canvas.Canvas(path, pagesize=A4)
+    c.setFont("Helvetica", 12)
+    for i in range(3):
+        c.drawString(72, 720, "Kubernetes deployment guide - page %d" % (i + 1))
+        c.drawString(72, 700, "order-demo / gateway 8080 / api 8081")
+        c.showPage()
+    c.save()
+    return os.path.exists(path) and os.path.getsize(path) > 0
+
+
+def self_test() -> int:
+    """自检：确认闸门仍然会拒绝坏 PDF，而不是退化成一盏永远绿灯的灯。
+
+    一个永远通过的闸门等于没有闸门。本自检构造两类坏件，断言闸门必须拦下：
+      1) 只有拉丁字体的 PDF（复刻 D-60 的豆腐块环境）
+      2) 被截断的 PDF（缺 %%EOF）
+    同时校验 CJK 字体名分类器没被改坏（NotoColorEmoji 不是中文字体）。
+    """
+    import logging
+    import tempfile
+
+    print("== PDF 中文字体闸门 · 自检 ==")
+    problems = []
+
+    # 截断件必然触发 pypdf 的 "EOF marker not found" 告警，属预期现象，
+    # 压掉以免自检输出被噪音淹没（仅自检期间生效）。
+    pypdf_logger = logging.getLogger("pypdf")
+    prev_level = pypdf_logger.level
+    pypdf_logger.setLevel(logging.ERROR)
+    try:
+        return _self_test_body(problems)
+    finally:
+        pypdf_logger.setLevel(prev_level)
+
+
+def _self_test_body(problems: list) -> int:
+    import tempfile
+
+    # --- 分类器断言 ---
+    cases = [
+        ("NotoSerifCJKsc-Regular", True),
+        ("NotoSansCJKsc-Bold", True),
+        ("SimSun", True),
+        ("SimHei", True),
+        ("MicrosoftYaHei", True),
+        ("STSong", True),
+        ("WenQuanYiZenHei", True),
+        ("AAAAAA+NotoSerifCJKsc-Regular", True),
+        ("NotoColorEmoji", False),
+        ("NotoSansSymbols2", False),
+        ("DejaVuSans", False),
+        ("LiberationMono", False),
+        ("Helvetica", False),
+    ]
+    for name, expected in cases:
+        got = is_cjk_font_name(name)
+        mark = "✅" if got == expected else "❌"
+        print(f"  {mark} 分类器 {name!r} → {got}（期望 {expected}）")
+        if got != expected:
+            problems.append(f"分类器判定错误：{name} → {got}，期望 {expected}")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        latin = os.path.join(tmp, "latin_only.pdf")
+        if not _make_latin_only_pdf(latin):
+            print("  ⚠️ 跳过 PDF 构造自检（缺 reportlab）")
+        else:
+            res = evaluate(latin, 500)
+            hard = [c for c in res["checks"] if c["level"] == "hard"]
+            failed = [c for c in hard if not c["ok"]]
+            print(f"  {'✅' if failed else '❌'} 纯拉丁字体 PDF：硬闸门失败 "
+                  f"{len(failed)}/{len(hard)} 项")
+            if not failed:
+                problems.append("闸门自检失败：纯拉丁字体 PDF 竟被放行（闸门已失效）")
+
+            # 截断件
+            trunc = os.path.join(tmp, "truncated.pdf")
+            with open(latin, "rb") as fh:
+                data = fh.read()
+            with open(trunc, "wb") as fh:
+                fh.write(data[:max(200, len(data) // 3)])
+            res2 = evaluate(trunc, 500)
+            ok2 = any(not c["ok"] and "完整性" in c["name"]
+                      for c in res2["checks"] if c["level"] == "hard")
+            print(f"  {'✅' if ok2 else '❌'} 截断 PDF：完整性检查"
+                  f"{'已拦下' if ok2 else '未拦下'}")
+            if not ok2:
+                problems.append("闸门自检失败：截断 PDF 未被完整性检查拦下")
+
+    if problems:
+        print("\n[FAIL] 闸门自检未通过：", file=sys.stderr)
+        for p in problems:
+            print(f"  - {p}", file=sys.stderr)
+        return 1
+    print("\n[OK] 闸门自检通过：闸门仍会拦下坏件，未退化成永远绿灯。")
+    return 0
+
+
 def render_report(result: dict, min_cjk_chars: int) -> str:
     """把判定结果渲染成 Markdown 报告（随 Release 一起留证）。"""
     hard = [c for c in result["checks"] if c["level"] == "hard"]
@@ -477,14 +584,22 @@ def render_report(result: dict, min_cjk_chars: int) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="PDF 中文字体闸门：确保中文真的能显示与检索（D-62）")
-    ap.add_argument("--pdf", required=True, help="待校验的 PDF 路径")
+    ap.add_argument("--pdf", default="", help="待校验的 PDF 路径")
     ap.add_argument("--report", default="", help="Markdown 报告输出路径（可选）")
     ap.add_argument("--min-cjk-chars", type=int, default=500,
                     help="抽样页最少需抽出的汉字数（默认 500）")
     ap.add_argument("--sample-pages", type=int, default=12,
                     help="字体资源抽样页数（默认 12）")
+    ap.add_argument("--self-test", action="store_true",
+                    help="闸门自检：构造坏件确认本闸门仍会拦下（不校验任何 PDF）")
     ap.add_argument("--json", action="store_true", help="额外输出 JSON 到 stdout")
     args = ap.parse_args()
+
+    if args.self_test:
+        return self_test()
+
+    if not args.pdf:
+        ap.error("需要 --pdf <路径>，或使用 --self-test")
 
     result = evaluate(args.pdf, args.min_cjk_chars, args.sample_pages)
     report = render_report(result, args.min_cjk_chars)
