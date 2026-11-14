@@ -271,7 +271,8 @@ LEVEL_LABEL = {"L1": "L1 规范与官方", "L2": "L2 权威著作与共识", "L3
 def appendix():
     out = ["# 附录 I　参考文献与来源登记", "",
            "> 本附录由全书统一的章级引用登记表生成，不在别处手工维护第二份。",
-           "> 每条给出编号、级别、标题、机构、版本、访问日期与支撑的论断位置。",
+           "> 每条只保留可快速查阅的精简表：编号、级别、标题、机构、版本与链接。",
+           "> 每条**支撑的论断位置**与**备注**不在此印出，完整登记见 `references/` 下按章的 YAML（全书唯一真相源）。",
            "> 原站已下线的条目按名称引用，只登记文献信息、不提供失效链接。", ""]
     for path in sorted(glob.glob(os.path.join(REF_DIR, "ch*.yaml"))):
         n = os.path.basename(path)[2:4]
@@ -282,7 +283,6 @@ def appendix():
                 e["id"], LEVEL_LABEL.get(e["level"], e["level"]), e["title"],
                 e["author_or_org"], e["version_or_date"] or "—")
             out.append(line)
-            out.append("  - 支撑：%s" % (e["supports"] or "—"))
             if e["url"]:
                 out.append("  - 链接：%s ｜ 访问日期 %s%s" % (
                     e["url"], e["accessed"] or "—",
@@ -291,8 +291,6 @@ def appendix():
                 out.append("  - 链接：**原站已下线**（访问日期 %s，按名称引用，不提供链接）" % (e["accessed"] or "—"))
             else:
                 out.append("  - 链接：**待核验**（%s，访问日期 %s）" % (e["status"], e["accessed"] or "—"))
-            if e.get("note"):
-                out.append("  - 备注：%s" % e["note"])
         out.append("")
     return "\n".join(out)
 

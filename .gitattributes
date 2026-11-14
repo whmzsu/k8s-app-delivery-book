@@ -14,6 +14,9 @@ Dockerfile  text eol=lf
 
 # 依赖清单等纯文本同样锁 LF，避免 CI diff 噪音（D-47）。
 *.txt       text eol=lf
+# 版本唯一真相（无扩展名，D-25 的 LF 锁定哲学同样适用）：防 Windows 工作区
+# core.autocrlf 把 VERSION 写成 CRLF，导致闸门第 9 步读取时与声明值产生字节差。
+/VERSION   text eol=lf
 
 # 插图 SVG：构建期被内联进 HTML、并转 PNG 供 DOCX 使用。CRLF 不会让 XML 报错，
 # 但会让「本地生成的图」与「CI 生成的图」产生字节差，diff 噪音没有价值。

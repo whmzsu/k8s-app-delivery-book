@@ -11,7 +11,10 @@
     只覆盖本书实际用到的子集：标题、段落、代码块、管道表格、列表、引用块、分隔线。
   - PDF 用本机 Edge 的 headless 打印（Chromium 内核，CJK 与表格排版可靠），
     再用 pypdf + reportlab 盖页码——Chromium 的 @page 不支持 CSS 计数器。
-  - 书内 `.md` 链接在装配时降级为「只留文字」：单文件形态里跨文件路径没有意义。
+  - 书内 `.md` 相对链接仍降级为「只留文字」（单文件形态里跨文件路径没有意义）；
+    http(s) 外链与「详见/参见/回扣/回到 第 N 章」在装配期转成真链接：
+    HTML/PDF 用 #chNN、EPUB 用 chNN.xhtml、DOCX 用章标题书签 + w:hyperlink。
+    正文 .md 不写链接标记，避免污染物化与角标闸门。
 
 用法：
   python hack/build_dist.py [--only docx|pdf|epub] [--keep-html]
@@ -99,48 +102,79 @@ def split_table_cells(line: str) -> list[str]:
     return [c.strip() for c in cells]
 
 
-def inline(text: str, _bold: bool = False) -> list[tuple[str, str]]:
-    """把一段文字切成 (样式, 文本) 序列；样式 ∈ plain/bold/code/boldcode。
+# 章级显式交叉引用：只认带引导词的形态。全书「第 N 章」字面提及 2300+ 处，
+# 大量是标题、目录、叙述和代码块字符串；全量转链必然误伤，故收窄到 4 个引导词。
+# 命中后产出逻辑目标 `chNN`，由各形态自己拼 #chNN / chNN.xhtml / Word 书签。
+CHAPTER_REF = re.compile(r"(?:详见|参见|回扣|回到)\s*第?\s*(\d{1,2})\s*章")
+VALID_CHAPTERS = set(range(1, 32))
 
-    支持嵌套：**加粗里带 `代码`** 会被拆成 bold + boldcode 两段，
-    否则反引号会原样漏到版面上（章首固定块就是这种形态）。
+
+def _emit_plain(buf: str, bold: bool, out: list) -> None:
+    """把一段普通文字按章引用切开，未命中部分保持原样。"""
+    if not buf:
+        return
+    pos = 0
+    for m in CHAPTER_REF.finditer(buf):
+        num = int(m.group(1))
+        if num not in VALID_CHAPTERS:
+            continue  # 拼错/越界的章号不转链，留给闸门报错
+        if m.start() > pos:
+            out.append(("bold" if bold else "plain", buf[pos:m.start()], None))
+        out.append(("boldlink" if bold else "link", m.group(0), "ch%02d" % num))
+        pos = m.end()
+    if pos < len(buf):
+        out.append(("bold" if bold else "plain", buf[pos:], None))
+
+
+def inline(text: str, _bold: bool = False) -> list[tuple[str, str, str | None]]:
+    """把一段文字切成 (样式, 文本, 链接目标) 序列。
+
+    样式 ∈ plain/bold/code/boldcode/link/boldlink；第三项仅链接样式非 None，
+    值为逻辑章号 `chNN` 或外链 URL。支持嵌套：**加粗里带 `代码`** 会拆成
+    bold + boldcode 两段，否则反引号会原样漏到版面上。
     """
-    out: list[tuple[str, str]] = []
+    out: list[tuple[str, str, str | None]] = []
     buf = ""
     i, n = 0, len(text)
     while i < n:
         if text.startswith("**", i):
             j = text.find("**", i + 2)
             if j > 0:
-                if buf:
-                    out.append(("bold" if _bold else "plain", buf))
-                    buf = ""
-                for style, chunk in inline(text[i + 2:j], True):
-                    out.append(("boldcode" if style in ("code", "boldcode") else "bold", chunk))
+                _emit_plain(buf, _bold, out)
+                buf = ""
+                for style, chunk, href in inline(text[i + 2:j], True):
+                    if style in ("code", "boldcode"):
+                        out.append(("boldcode", chunk, None))
+                    elif style in ("link", "boldlink"):
+                        out.append(("boldlink", chunk, href))
+                    else:
+                        out.append(("bold", chunk, None))
                 i = j + 2
                 continue
         if text[i] == "`":
             j = text.find("`", i + 1)
             if j > i + 1:
-                if buf:
-                    out.append(("bold" if _bold else "plain", buf))
-                    buf = ""
-                out.append(("boldcode" if _bold else "code", text[i + 1:j]))
+                _emit_plain(buf, _bold, out)
+                buf = ""
+                out.append(("boldcode" if _bold else "code", text[i + 1:j], None))
                 i = j + 1
                 continue
         if text[i] == "[":
             m = re.match(r"\[([^\]]+)\]\(([^)]+)\)", text[i:])
             if m:
-                if buf:
-                    out.append(("bold" if _bold else "plain", buf))
-                    buf = ""
-                out.append(("bold" if _bold else "plain", m.group(1)))
+                _emit_plain(buf, _bold, out)
+                buf = ""
+                label, url = m.group(1), m.group(2)
+                if url.startswith(("http://", "https://")):
+                    out.append(("boldlink" if _bold else "link", label, url))
+                else:
+                    # 书内 .md / 相对路径链接在单文件形态里没有意义，按原设计只留文字
+                    out.append(("bold" if _bold else "plain", label, None))
                 i += m.end()
                 continue
         buf += text[i]
         i += 1
-    if buf:
-        out.append(("bold" if _bold else "plain", buf))
+    _emit_plain(buf, _bold, out)
     return [x for x in out if x[1]]
 
 
@@ -290,6 +324,7 @@ def build_docx(docs: list[dict], dest: str) -> dict:
     from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
+    from docx.opc.constants import RELATIONSHIP_TYPE as RT
     from docx.shared import Cm, Pt, RGBColor
 
     doc = Document()
@@ -385,8 +420,56 @@ def build_docx(docs: list[dict], dest: str) -> dict:
 
     stats = {"code": 0, "table": 0, "para": 0, "image": 0}
 
+    bookmark_seq = [0]
+
+    def add_bookmark(par, name):
+        """给章标题打书签，供正文 w:hyperlink w:anchor 跳转。"""
+        bookmark_seq[0] += 1
+        bid = str(bookmark_seq[0])
+        start = OxmlElement("w:bookmarkStart")
+        start.set(qn("w:id"), bid)
+        start.set(qn("w:name"), name)
+        end = OxmlElement("w:bookmarkEnd")
+        end.set(qn("w:id"), bid)
+        # pPr 必须是段落首个子元素，书签起点插在它后面
+        ppr = par._p.find(qn("w:pPr"))
+        par._p.insert(1 if ppr is not None else 0, start)
+        par._p.append(end)
+
+    def add_link(par, chunk, href, size, bold):
+        """内部书签链接 / 外部 URL 链接（python-docx 无原生 hyperlink API）。"""
+        h = OxmlElement("w:hyperlink")
+        if href.startswith(("http://", "https://")):
+            rid = par.part.relate_to(href, RT.HYPERLINK, is_external=True)
+            h.set(qn("r:id"), rid)
+        else:
+            h.set(qn("w:anchor"), href)
+        r = OxmlElement("w:r")
+        rpr = OxmlElement("w:rPr")
+        color = OxmlElement("w:color")
+        color.set(qn("w:val"), "0563C1")
+        rpr.append(color)
+        u = OxmlElement("w:u")
+        u.set(qn("w:val"), "single")
+        rpr.append(u)
+        if bold:
+            rpr.append(OxmlElement("w:b"))
+        if size:
+            sz = OxmlElement("w:sz")
+            sz.set(qn("w:val"), str(int(size * 2)))
+            rpr.append(sz)
+        r.append(rpr)
+        t = OxmlElement("w:t")
+        t.text = chunk
+        r.append(t)
+        h.append(r)
+        par._p.append(h)
+
     def add_runs(par, text, size=None):
-        for style, chunk in inline(text):
+        for style, chunk, href in inline(text):
+            if style in ("link", "boldlink"):
+                add_link(par, chunk, href or "", size, style == "boldlink")
+                continue
             run = par.add_run(chunk)
             if size:
                 run.font.size = Pt(size)
@@ -404,6 +487,9 @@ def build_docx(docs: list[dict], dest: str) -> dict:
         h1 = doc.add_heading(level=1)
         h1.alignment = WD_ALIGN_PARAGRAPH.CENTER
         h1.add_run(d["title"])
+        # 章级交叉引用的目标只有 chNN；附录/目录不打书签，避免非 ASCII 书签名
+        if d["kind"] == "chapter":
+            add_bookmark(h1, d["id"])
         if docs.index(d):
             h1.paragraph_format.page_break_before = True
 
@@ -492,7 +578,9 @@ def build_docx(docs: list[dict], dest: str) -> dict:
                 continue
             elif k in ("h2", "h3", "h4"):
                 lvl = int(k[1])
-                doc.add_heading(level=lvl).add_run(b["text"])
+                # 标题同样过 add_runs：否则标题里的章引用只在 HTML/EPUB 可点，
+                # Word 里退化成纯文本，三形态不一致。
+                add_runs(doc.add_heading(level=lvl), b["text"])
             else:
                 par = doc.add_paragraph()
                 par.paragraph_format.first_line_indent = Pt(21)
@@ -607,7 +695,13 @@ def svg_to_png(svg_path: str, png_path: str) -> bool:
     return os.path.exists(png_abs) and os.path.getsize(png_abs) > 2048
 
 
-def render_html_body(blocks: list[dict], first_h1: str | None, cls: str = "") -> str:
+def render_html_body(blocks: list[dict], first_h1: str | None, cls: str = "",
+                     link_prefix: str = "#", link_suffix: str = "") -> str:
+    # HTML/PDF 是单文件（#chNN）；EPUB 每章一个 xhtml（chNN.xhtml）。
+    # 逻辑目标统一由 inline() 产出，这里只负责拼目标，解析逻辑不重复。
+    def ih(text: str) -> str:
+        return inline_html(text, link_prefix, link_suffix)
+
     out = []
     if first_h1:
         out.append(f'<h1 class="{cls}">{html.escape(first_h1)}</h1>')
@@ -616,7 +710,7 @@ def render_html_body(blocks: list[dict], first_h1: str | None, cls: str = "") ->
         if k == "image":
             svg = load_diagram(b["src"])
             if svg:
-                cap = f"<figcaption>{inline_html(b['alt'])}</figcaption>" if b["alt"] else ""
+                cap = f"<figcaption>{ih(b['alt'])}</figcaption>" if b["alt"] else ""
                 out.append(f'<figure class="diagram">{svg}{cap}</figure>')
             else:
                 # 缺失必须显式可见：静默忽略会让「Markdown 正常、成品没有图」重演
@@ -625,31 +719,39 @@ def render_html_body(blocks: list[dict], first_h1: str | None, cls: str = "") ->
             out.append("<pre><code>%s</code></pre>" % html.escape(b["text"]))
         elif k == "table":
             out.append("<table><thead><tr>")
-            out += [f"<th>{inline_html(c)}</th>" for c in b["head"]]
+            out += [f"<th>{ih(c)}</th>" for c in b["head"]]
             out.append("</tr></thead><tbody>")
             for row in b["rows"]:
-                out.append("<tr>" + "".join(f"<td>{inline_html(c)}</td>" for c in row) + "</tr>")
+                out.append("<tr>" + "".join(f"<td>{ih(c)}</td>" for c in row) + "</tr>")
             out.append("</tbody></table>")
         elif k in ("ul", "ol"):
             tag = "ul" if k == "ul" else "ol"
-            out.append(f"<{tag}>" + "".join(f"<li>{inline_html(x)}</li>" for x in b["items"]) + f"</{tag}>")
+            out.append(f"<{tag}>" + "".join(f"<li>{ih(x)}</li>" for x in b["items"]) + f"</{tag}>")
         elif k == "quote":
-            paras = "".join(f"<p>{inline_html(x)}</p>" for x in b["text"].split("\n") if x.strip())
+            paras = "".join(f"<p>{ih(x)}</p>" for x in b["text"].split("\n") if x.strip())
             out.append(f"<blockquote>{paras}</blockquote>")
         elif k == "hr":
             continue
         elif k in ("h2", "h3", "h4"):
             tag = k
-            out.append(f"<{tag}>{inline_html(b['text'])}</{tag}>")
+            out.append(f"<{tag}>{ih(b['text'])}</{tag}>")
         else:
-            out.append(f"<p>{inline_html(b['text'])}</p>")
+            out.append(f"<p>{ih(b['text'])}</p>")
     return "\n".join(out)
 
 
-def inline_html(text: str) -> str:
+def inline_html(text: str, prefix: str = "#", suffix: str = "") -> str:
     out = []
-    for style, chunk in inline(text):
-        if style == "bold":
+    for style, chunk, href in inline(text):
+        if style in ("link", "boldlink"):
+            esc = html.escape(chunk)
+            if href and href.startswith(("http://", "https://")):
+                url = html.escape(href, quote=True)
+            else:
+                url = html.escape(prefix + (href or "") + suffix, quote=True)
+            a = f'<a href="{url}">{esc}</a>'
+            out.append(f"<strong>{a}</strong>" if style == "boldlink" else a)
+        elif style == "bold":
             out.append(f"<strong>{html.escape(chunk)}</strong>")
         elif style == "boldcode":
             out.append(f"<strong><code>{html.escape(chunk)}</code></strong>")
@@ -824,7 +926,9 @@ def build_epub(docs: list[dict], dest: str) -> None:
     items = []
     for d in docs:
         blocks = parse_md(d["body"])
-        items.append((d["id"] + ".xhtml", d["title"], render_html_body(blocks, d["title"])))
+        items.append((d["id"] + ".xhtml", d["title"],
+                      render_html_body(blocks, d["title"],
+                                       link_prefix="", link_suffix=".xhtml")))
 
     with zipfile.ZipFile(dest, "w") as z:
         z.writestr("mimetype", "application/epub+zip", zipfile.ZIP_STORED)
