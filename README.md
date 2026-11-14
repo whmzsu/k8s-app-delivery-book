@@ -10,9 +10,9 @@
 
 | 形态 | 适合 | 文件 |
 |---|---|---|
-| PDF | 通读 / 打印 / 评审 | `journey-of-a-change-v1.4.1.pdf`，带页脚页码与章节书签 |
-| EPUB | 手机 / 电纸书 / 平板 | `journey-of-a-change-v1.4.1.epub`，可重排、带章级目录导航 |
-| Word | 写批注 / 摘录 / 改编内训 | `journey-of-a-change-v1.4.1.docx`，含 14 处矢量插图 |
+| PDF | 通读 / 打印 / 评审 | `journey-of-a-change-v1.4.2.pdf`，带页脚页码与章节书签 |
+| EPUB | 手机 / 电纸书 / 平板 | `journey-of-a-change-v1.4.2.epub`，可重排、带章级目录导航 |
+| Word | 写批注 / 摘录 / 改编内训 | `journey-of-a-change-v1.4.2.docx`，含 14 处矢量插图 |
 
 > 正文带 **14 处矢量插图**（13 张图，图 1-1 在第 31 章复用）：总论坐标系、控制循环、三环境凭据轮换、工具链七层、基线加固链、镜像三跳存储、摘流竞态、双凭据三段式、三环境晋升、排障判读、SLO 与预算、四层证据链、凭据生命周期。源文件在 `assets/diagrams/`，PDF / EPUB / Word 三形态同源渲染。
 >
