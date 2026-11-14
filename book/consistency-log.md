@@ -646,3 +646,10 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - **执行（2026-11-14，用户确认方案 A）**：修复已提交 `f88b968`；VERSION 升 `1.4.2`、README 下载表三处同步（`cdf0304`）；打 annotated tag `v1.4.2` 推送 origin 触发 release.yml（**run 43557315562 成功**，含新步骤「Install headless Chromium + CJK fonts for PDF」，四格式构建 + 发布全绿）。当前 HEAD 仅比 v1.4.1 多「字体修复 + D-59 日志备注」两个提交，**书稿内容零变更**，故 1.4.2 与 1.4.1 内容一致、仅中文修复。
 - **CI 产物实证（v1.4.2.pdf，46.8MB）**：字体扫描确认嵌入 `NotoSansCJKsc-Regular/Bold` 与 `NotoSerifCJKsc-Regular/Bold`（`CIDFontType2: 8`）——相对 v1.4.1「零中文字体」为决定性修复。本地 `dist/一次变更的旅程.pdf`（469 页，Windows 字体）亦验证中文正常，可临时取用。D-59 原「页数同为 469」对 CI 版并不成立（CI v1.4.1 实测 433 页），系 Windows/Linux Chromium 排版度量差异，与字体缺陷无关。注：首次 `gh release download` 因超时截断为 34.8MB 半截文件（缺 `%%EOF`），已用 `curl` 重拉完整 46.8MB 核验。完整文件复验：尾随 `%%EOF`、**459 页**、抽样 5 页中文抽出 5155 字且 **U+FFFD 替换符=0**——中文渲染彻底修复，闭环。
 - **教训（沉淀）**：凡涉及「headless 浏览器打印含非拉丁文字的 PDF」，CI 必须显式安装对应字体并写入 CSS 字体栈；本地能过不等于 CI 能过，字体可用性应作为 release 产物抽检项。
+
+## D-61 ｜ 下线含豆腐块 PDF 的 v1.4.1 Release（2026-11-14）
+
+- **背景**：v1.4.1 是 D-60 缺陷（CI 未装中文字体，PDF 中文为豆腐块）的受害版本。用户确认删除该 Release，避免有人下载到坏件。
+- **执行**：`gh release delete v1.4.1 --yes --cleanup-tag`，同时删除本地 tag。Release API 复查返回 `404 Not Found`；`git ls-remote --tags origin` 确认远端仅剩 `v1.4.0`、`v1.4.2`（`v1.4.1` 及其 `^{}` 解引用条目均已消失）。
+- **保留说明**：v1.4.1 指向的提交 `5ba8b33` 仍在 main 历史中，删除 tag 不影响任何提交与分支；`book/consistency-log.md` 中 D-59/D-60 对 v1.4.1 的历史记述**保留不改**——那是缺陷发现与修复过程的事实链，不是发布索引。README 下载表指向 v1.4.2，无需同步修改。
+- **现行发布线**：最新可用版本为 **v1.4.2**（PDF 46.8MB，459 页，嵌入 Noto CJK SC 四款字体子集，中文抽取正常且 U+FFFD=0）。自 v1.4.2 起，Release 产物抽检项正式包含「PDF 字体嵌入检查」。
