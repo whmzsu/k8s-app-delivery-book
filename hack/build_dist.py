@@ -416,6 +416,10 @@ def build_docx(docs: list[dict], dest: str) -> dict:
         pc.alignment = WD_ALIGN_PARAGRAPH.CENTER
         rr = pc.add_run(line)
         rr.font.size = Pt(11)
+    cp = doc.add_paragraph()
+    cp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    cr = cp.add_run("© 2026 whmzsu（本书作者）。保留所有权利。本书仅供个人与技术交流，未经书面授权不得转载、摘编或用于商业用途。")
+    cr.font.size = Pt(9)
     doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
     stats = {"code": 0, "table": 0, "para": 0, "image": 0}
@@ -644,6 +648,7 @@ hr { display: none; }
             margin: 150pt 0 10pt; letter-spacing: 2pt; }
 .cover .s { font-size: 15pt; color: #3a3a42; margin-bottom: 60pt; }
 .cover .m { font-size: 10.5pt; color: #55555f; line-height: 2; }
+.cover .cp { font-size: 9pt; color: #55555f; margin-top: 36pt; }
 """
 
 
@@ -768,6 +773,7 @@ def build_html(docs: list[dict], dest: str) -> None:
              '<div class="cover">'
              f'<div class="t">{TITLE}</div><div class="s">—— {SUBTITLE}</div>'
              '<div class="m">七篇 31 章 + 附录 A–I<br>贯穿案例 order-demo ｜ 版本基线 Kubernetes 1.32+</div>'
+             '<div class="cp">© 2026 whmzsu（本书作者）。保留所有权利。本书仅供个人与技术交流，未经书面授权不得转载、摘编或用于商业用途。</div>'
              "</div>"]
     for d in docs:
         blocks = parse_md(d["body"])

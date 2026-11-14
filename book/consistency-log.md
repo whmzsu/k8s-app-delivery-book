@@ -589,10 +589,28 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - **驱动**：用户要求「整体按图书出版要求最后检查一遍」。
 - **静态质检（全绿）**：九步闸门 exit 0；`materialize --check` 149 文件零差异；`book_tools.py check` problem=0；`check-references.sh` 角标闭环 + **pending_url 待核验 0 条**（早前 26 条已清零，日志旧「未决」条目为过期记录）；版本矩阵本地因缺 kubectl 跳过（CI 模式会真失败、非假通过）。
 - **内容一致性**：① 全书目录.md 与章题权威稿原 5 处不符（ch23/28/29/30/31，目录为起草标题），已改目录链接文字对齐章 H1，**现零差异**；② 七篇 + 九附录齐全；③ `[R-NN-x]` 角标 298 ↔ references YAML 298，双向零悬空/零孤儿；④ 钩子 H1–H8 全定义且章内均有引用（H1×68…H8×51）；⑤ case-evolution 31 章 tag 表与章首「复现」行一致；⑥ 章节内无 TODO/待写/TBD 等印刷硬伤（命中项均为合法规内容）。
-- **真实四格式构建（本地实测通过）**：依赖纯 Python（reportlab 5.1.0 + python-docx 1.2.0 + PyYAML + pypdf），**无需 pandoc/weasyprint/latex**。结果：PDF **469 页 / 34.4MB**、DOCX 2.8MB、EPUB 2.5MB；汉字 **378,575**（已超 30–35 万终稿目标）、代码块 601、表格 423、检查清单 172（CL-*）、角标 298；**章号连贯、结构完整性通过**。
+- **真实四格式构建（本地实测通过）**：DOCX/EPUB 为纯 Python（python-docx 1.2.0 + PyYAML + pypdf）离线可跑；**PDF 经 headless 浏览器打印**（`build_pdf` 调 `find_edge()`，本机有 Edge 故成功，requirements 含 reportlab 但 PDF 主体不走它）。结果：PDF **469 页 / 34.4MB**、DOCX 2.8MB、EPUB 2.5MB；汉字 **378,575**（已超 30–35 万终稿目标）、代码块 601、表格 423、检查清单 172（CL-*）、角标 298；**章号连贯、结构完整性通过**。
 - **缺陷（已修）**：仅目录 5 处章题不符，本轮已修；无其他内容缺陷。
 - **建议（非阻断，待决策）**：
   1. **CI 未接四格式构建**：`ci.yml` 仅 `build_book.py` 装配单一 Markdown 并跑校验，从不调用 `build_dist.py`；仓库无 release 工作流。建议新增 `release.yml`（tag 触发）跑 `build_dist.py` 并上传四格式为 release 资产——构建自包含，接入口成本低。
   2. **版权/许可声明偏弱**：README「许可与反馈」为口语化说明，无显式 `© 年份 作者` 与许可证（CC-BY / 内部发行等）字样，出版前需作者定稿。
   3. **终稿残留项**：第 1 章终稿润色（对齐 H1–H8 钩子）仍开放；O-9 清单母版引用抽查封（P2）未做；二者不阻断当前出版就绪度。
   4. **评审报告**：`book/review-{architecture,readability,technical-accuracy,handoff-architecture}.md` 四份存在，技术准确性报告建议出版前由人审终过一遍。
+
+---
+
+## D-57 ｜ 出版前补强：release.yml + 版权声明（2026-11-14，本轮落地）
+
+- **来源**：D-56 建议项 1（CI 未接四格式）、2（版权声明偏弱）；用户确认「两处需补强-继续做」。
+- **release.yml（新增）**：`.github/workflows/release.yml`，`on: push tags v*.*.*`（兼 `workflow_dispatch`）。步骤：checkout（SHA 钉死 `3d3c42e5…` v7.0.1）→ setup-python（SHA 钉死 `6d4fd22b…` v7，3.13）→ `apt-get install chromium` 并软链 `/usr/local/bin/chrome`（供 `build_dist.find_edge()` 识别）→ `pip install -r hack/requirements.txt` → `python hack/build_dist.py --keep-html --out dist` → `gh release create/upload dist/*`。沿用 D-53 钉 SHA；gh CLI 为 runner 自带，不引入新 Action。
+- **D-56 第 592 行误述修正**：PDF **不**走 reportlab，而是经 **headless 浏览器打印**（`build_pdf` 调 `find_edge()`，无 Edge/Chromium 即抛错）；reportlab 在 requirements 但 PDF 主体由浏览器渲染。故 release.yml 必须装 Chromium，否则 PDF 在 ubuntu runner 构建失败。本沙箱 Windows 有 Edge，早前本地实测 PDF 成功不说明 CI 可过——此点已由 Chromium 步骤覆盖。
+- **版权声明（四处补齐）**：① README「许可与反馈」后新增「版权声明」段（© 2026 whmzsu，保留所有权利，仅供技术交流）；② `全书目录.md` 头部加版权行；③ `hack/build_dist.py` docx 封面末段加版权（Pt(9)）；④ 同文件 HTML 封面 `.cover .cp` div + CSS。作者署名暂用仓库 owner `whmzsu`，**待用户定稿真名**（改 README 一行 + build_dist 两处常量即可）。
+- **验证**：`build_dist.py` `py_compile` 通过；实跑 `--only docx` / `--keep-html --only epub`，DOCX 与 HTML 封面版权文本均命中（各 2 处）。release.yml 的 Chromium 步骤未在 ubuntu runner 实测，首次 tag 触发后需在 Actions 观察。
+- **留白**：许可证沿用「保留所有权利 + 仅供技术交流」（最保守，不绑定 CC）；若需 CC-BY-NC 等明示协议，替换 README 与 build_dist 版权文案即可。
+
+## D-58 ｜ 终检开放项收口确认（2026-11-14）
+
+- **O-9 清单母版引用抽查封（P2，已闭环）**：脚本比对 `book/checklist-master.md` 16 项母版（CL-G-01~12、CL-S-01~04）与各章引用。结果：**章内 CL-G/CL-S 引用零悬空**（全部在母版定义）、**母版 16 项全部被至少一章引用（零孤儿）**、**各章安全项 CL-S-xx ≥2 条**。无需改文件，仅记录。
+- **技术准确度 TA-01~08（已闭环，非遗留缺陷）**：`review-technical-accuracy.md` 第六节「v0.2 闭环」载明 TA-01~08 已于 2026-11-11 由运维专家修复并验证（problem=0、materialize 144 文件）；本轮实测 ch14/29/18/04/26 均对齐「Vault 路径含 `/`、K8s Secret 对象名连字符」权威口径，确认无回归。报告「待续维度」为后续自查建议（HPA behavior、kuttl 命令、观测指标名），非确证缺陷，出版前人审可顺带关注。
+- **第 1 章终稿对齐 H1–H8（已满足）**：1.1 事故引子表格逐条标注 H1–H8，含时刻列（14:33~15:05）与「详见第 X 章」；章末七段齐全（含检查清单 CL-01-01~04 + CL-S-01/04、依据与延伸阅读 R-01-1~8 + 本书观点）；hooks.md 明确导论章不要求「回到第1章」回扣。无需改动。
+- **结论**：D-56 所列「终稿残留项」三项（ch01 润色 / O-9 / 评审人审）至此——ch01 已确认对齐、O-9 已闭环、TA 报告已闭环；仅「评审报告出版前人审终过」属人工动作，不在自动化范围，已于本节标注。
