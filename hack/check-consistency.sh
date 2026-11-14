@@ -37,6 +37,22 @@ fi
 echo "== 4. 脚本语法 =="
 # 物化产物也算：by-chapter 的片段若被误当脚本，bash -n 会当场暴露
 for s in examples/order-demo/hack/*.sh hack/*.sh $(find examples/by-chapter -name '*.sh'); do bash -n "$s"; done
+# Python 侧同样要查：D-62 的 PDF 字体闸门（hack/check-pdf-fonts.py）若语法坏了，
+# release.yml 的发布闸门会在 CI 里才炸，排查成本高。ast.parse 不落 .pyc。
+python - <<'PY'
+import ast, glob, sys
+files = sorted(glob.glob('hack/*.py'))
+bad = 0
+for f in files:
+    try:
+        with open(f, encoding='utf-8') as fh:
+            ast.parse(fh.read(), filename=f)
+    except SyntaxError as e:
+        print(f"!! 语法错误 {f}:{e.lineno}: {e.msg}")
+        bad += 1
+print(f"Python 脚本语法检查：{len(files)} 个文件，问题 {bad}")
+sys.exit(1 if bad else 0)
+PY
 echo "全部脚本语法通过"
 
 echo "== 5. 物化产物自检（Chart 元数据） =="

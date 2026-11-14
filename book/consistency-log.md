@@ -653,3 +653,31 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - **执行**：`gh release delete v1.4.1 --yes --cleanup-tag`，同时删除本地 tag。Release API 复查返回 `404 Not Found`；`git ls-remote --tags origin` 确认远端仅剩 `v1.4.0`、`v1.4.2`（`v1.4.1` 及其 `^{}` 解引用条目均已消失）。
 - **保留说明**：v1.4.1 指向的提交 `5ba8b33` 仍在 main 历史中，删除 tag 不影响任何提交与分支；`book/consistency-log.md` 中 D-59/D-60 对 v1.4.1 的历史记述**保留不改**——那是缺陷发现与修复过程的事实链，不是发布索引。README 下载表指向 v1.4.2，无需同步修改。
 - **现行发布线**：最新可用版本为 **v1.4.2**（PDF 46.8MB，459 页，嵌入 Noto CJK SC 四款字体子集，中文抽取正常且 U+FFFD=0）。自 v1.4.2 起，Release 产物抽检项正式包含「PDF 字体嵌入检查」。
+
+## D-62 ｜ PDF 中文字体闸门：把「豆腐块」变成可自动拦截的发布硬条件（2026-11-14）
+
+- **问题**：D-60 已修复 PDF 中文豆腐块，但**修复本身没有防线**——当时的验收只查「文件生成成功 + 页数/体积没变」，坏件照样能发布出去。发布仍是「人肉看结果」，而非「机器判对错」。
+- **产出**：新增 `hack/check-pdf-fonts.py`，作为 Release 的发布闸门（四项硬检查，任一不过则流水线失败、Release 不会被创建）：
+  1. **文件完整性**：`%PDF-` 头 + `%%EOF` 尾 + 非空 → 顺带拦下被超时截断的下载件（D-60 排查时遇到的 34.8MB 半截文件）。
+  2. **文本层中文可抽取**：抽样 16 页统计汉字数（阈值 500）→ 直接对应读者诉求「中文看得见、搜得到、复制得出」，也是豆腐块最可靠的检测信号（坏件汉字会被抽成空格，实测为 0）。
+  3. **中文字形来源存在**：内嵌 CJK 字体程序（`/FontName`、`/BaseFont`、`/FontFamily`）**或** Type3 字形程序且 ToUnicode 命中 CJK 码位。
+  4. **字体承载结构合理**：存在复合编码（CIDFontType0/2、Identity-H）或 Type3 字形程序。
+- **关键技术发现（判定逻辑的设计依据）**：同一本书在两条平台路径上的 PDF 结构完全不同，单看「有没有 CJK 字体名」会误判——
+  - **Windows / macOS**：Chromium 直接子集化嵌入宋体/黑体 → 出现 `CIDFontType2` + `/BaseFont /SimSun`、`/SimHei`、`/MicrosoftYaHei`。
+  - **Linux（CI runner）**：`fonts-noto-cjk` 提供的是 CID-keyed OTF，Chromium 的 PDF 后端改用 **Type3 字形程序逐段描摹字形**（抽样页共 530 个 Type3 字体，每个带 `/CharProcs` 与 `/ToUnicode`，ToUnicode 把单字节码映射回 CJK 码位，如 `<1C> <767B>`=登、`<75> <9A73>`=究）。此时页面 `/Resources /Font` 里**没有可读的 CJK BaseFont**（只有 Type3 与 Helvetica/Liberation），但文件内仍存在 `NotoSerifCJKsc` / `NotoSansCJKsc` 的 FontDescriptor。**第一版检查器只认 BaseFont，把好的 CI 产物误判为失败**——据此重写为「pypdf 遍历 + 全文件字节扫描」双通道，并补上 Type3 路径。
+- **验证矩阵（4 例，均为真实文件实测）**：
+
+  | 样本 | 期望 | 实测 |
+  |---|---|---|
+  | CI 产物 `v1.4.2.pdf`（459 页 / 46.8MB / Noto CJK） | 通过 | ✅ 4 项全绿；抽样 16 页抽出 11402 汉字；CJK 字体程序 6 个 + Type3 命中 CJK 1360 个 |
+  | 本地 Windows 产物（469 页 / 34.4MB / SimSun+SimHei+YaHei） | 通过 | ✅ 4 项全绿；抽出 9642 汉字；CJK 字体程序 5 个 |
+  | 纯拉丁字体 PDF（reportlab 造，模拟无中文字体环境） | 拦下 | ❌ 第 2/3/4 项失败，退出码 1 |
+  | 截断 PDF（缺 `%%EOF`） | 拦下 | ❌ 第 1 项失败，退出码 1 |
+
+- **接线**：
+  - `.github/workflows/release.yml` 在「Build all formats」之后、「Publish release assets」之前插入步骤 `Assert PDF renders Chinese (font embedding gate)`；失败即整条流水线失败，**Release 不会被创建**（不是发布后再撤）。
+  - 校验报告随 Release 资产一起留证，命名 `${SLUG}-pdf-font-report.md`，与 `build-report.md` 同级。
+  - `hack/check-consistency.sh` 第 4 步「脚本语法」原只查 `.sh`，现补 `hack/*.py` 的 `ast.parse` 检查（15 个文件）——闸门脚本本身语法坏了若等到 CI 才炸，排查成本高。
+  - `README.md` 补本地用法与背景（曾有一次发布因 runner 缺中文字体发出豆腐块，而验收只看文件大小与页数）。
+- **降级策略**：pypdf 不可用时退化为全文件字节扫描，此时第 2 项自动降为告警并在报告中显式标注「降级」——宁可显式降级，也不假装通过。
+- **边界（明确不做什么）**：本闸门只验「中文能显示、能检索」，**不替代人工版式审阅**（分页、图表位置、页眉页脚仍需人看）；也不校验 PDF/A 归档合规。

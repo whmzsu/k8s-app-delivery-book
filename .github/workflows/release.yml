@@ -46,6 +46,16 @@ jobs:
       - name: Build all formats (HTML/PDF/EPUB/DOCX + build-report)
         run: python hack/build_dist.py --keep-html --out dist
 
+      # D-62 硬闸门：中文必须真的能显示、能检索。
+      # D-60 的教训：v1.4.1 的 PDF 因为 runner 缺中文字体，中文全是豆腐块，
+      # 但当时只校验「文件生成成功 + 体积没变」，坏件照样发布。
+      # 本步骤不通过则整条流水线失败，Release 不会被创建。
+      - name: Assert PDF renders Chinese (font embedding gate)
+        run: |
+          python hack/check-pdf-fonts.py \
+            --pdf "dist/一次变更的旅程.pdf" \
+            --report "dist/pdf-font-report.md"
+
       - name: Publish release assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,6 +70,8 @@ jobs:
           [ -f "一次变更的旅程.docx" ] && mv "一次变更的旅程.docx" "${SLUG}.docx"
           [ -f "_book.html" ]              && mv "_book.html"       "${SLUG}.html"
           [ -f "build-report.md" ]        && mv "build-report.md"  "${SLUG}-build-report.md"
+          # D-62 校验报告随 Release 一起留证：可回溯每个版本的字体嵌入证据
+          [ -f "pdf-font-report.md" ]     && mv "pdf-font-report.md" "${SLUG}-pdf-font-report.md"
           cd ..
           gh release create "${TAG}" dist/* \
             --title "Release ${TAG}" \

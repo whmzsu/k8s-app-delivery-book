@@ -20,6 +20,8 @@
 
 自己重新生成：`pip install -r hack/requirements.txt` 后跑 `python hack/build_dist.py --out dist/<版本>`（不需要 pandoc；PDF 走本机 Edge headless 打印，`--out` 可避开被阅读器占用的旧文件）。
 
+装完顺手验一遍中文渲染：`python hack/check-pdf-fonts.py --pdf dist/<版本>/一次变更的旅程.pdf`。它检查四件事——文件完整（`%PDF-` 头 / `%%EOF` 尾）、中文能否被抽出、内嵌了中文字体或字形程序、字体承载结构是否合理。**任何一项不过就退出码非零**，因为「PDF 生成成功」不等于「中文能看」：曾有一次发布因为 runner 缺中文字体，中文全成豆腐块，而当时的验收只看文件大小与页数，坏件照样发出去了。现在这条检查是 Release 的发布闸门，每个版本的 `*-pdf-font-report.md` 随资产一起留证。
+
 ## 快速开始
 
 | 想做什么 | 去哪里 |
