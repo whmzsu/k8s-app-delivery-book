@@ -807,7 +807,11 @@ def build_pdf(html_path: str, dest: str) -> int:
     if os.path.exists(tmp_pdf):
         os.remove(tmp_pdf)
     url = "file:///" + os.path.abspath(html_path).replace("\\", "/")
-    cmd = [edge, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
+    # CI/容器环境以 root 运行 headless 时，缺 --no-sandbox 会直接 SIGABRT；
+    # --disable-dev-shm-usage 避开 /dev/shm 过小导致的崩溃。两者对本地
+    # 桌面构建无副作用（仅关闭进程隔离，PDF 渲染结果一致）。
+    cmd = [edge, "--headless=new", "--disable-gpu", "--no-sandbox",
+           "--disable-dev-shm-usage", "--no-pdf-header-footer",
            f"--print-to-pdf={tmp_pdf}", url]
     subprocess.run(cmd, check=True, timeout=600,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
