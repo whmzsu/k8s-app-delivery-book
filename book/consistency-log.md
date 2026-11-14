@@ -614,3 +614,12 @@ U-01（书名）、U-02（事故是否改编真实案例）、U-03（第 6 章�
 - **技术准确度 TA-01~08（已闭环，非遗留缺陷）**：`review-technical-accuracy.md` 第六节「v0.2 闭环」载明 TA-01~08 已于 2026-11-11 由运维专家修复并验证（problem=0、materialize 144 文件）；本轮实测 ch14/29/18/04/26 均对齐「Vault 路径含 `/`、K8s Secret 对象名连字符」权威口径，确认无回归。报告「待续维度」为后续自查建议（HPA behavior、kuttl 命令、观测指标名），非确证缺陷，出版前人审可顺带关注。
 - **第 1 章终稿对齐 H1–H8（已满足）**：1.1 事故引子表格逐条标注 H1–H8，含时刻列（14:33~15:05）与「详见第 X 章」；章末七段齐全（含检查清单 CL-01-01~04 + CL-S-01/04、依据与延伸阅读 R-01-1~8 + 本书观点）；hooks.md 明确导论章不要求「回到第1章」回扣。无需改动。
 - **结论**：D-56 所列「终稿残留项」三项（ch01 润色 / O-9 / 评审人审）至此——ch01 已确认对齐、O-9 已闭环、TA 报告已闭环；仅「评审报告出版前人审终过」属人工动作，不在自动化范围，已于本节标注。
+
+## D-59 ｜ 资产构建 workflow 首跑修复（2026-11-14）
+
+- **来源**：用户要求「跑一下资产构建 workflow」→ 选 A（打 v1.4.1 tag 触发 release.yml）。
+- **首跑失败（run 43555653485）**：`Build all formats` 步骤 `build_pdf` 调 `/usr/bin/microsoft-edge --headless=new --no-pdf-header-footer --print-to-pdf` 以 **SIGABRT** 崩溃。Chromium 安装步骤本身通过（D-57 的未知项已消除）；崩溃根因是 CI 容器以 root 跑 headless 缺 `--no-sandbox`。
+- **修复（commit 5ba8b33）**：`build_dist.build_pdf` 的 cmd 补 `--no-sandbox` 与 `--disable-dev-shm-usage`，对本地桌面构建无副作用（仅关闭进程隔离，渲染一致）。本地复跑 PDF 仍 469 页/34.4MB。
+- **重跑成功（run 43556017482）**：删旧 tag `v1.4.1` 重建重触发，三步全绿（Install Chromium → Build all formats → Publish release assets）。Release `v1.4.1` 已建，5 资产命名统一为 `journey-of-a-change-v1.4.1.{pdf,epub,docx,html,build-report.md}`（与 v1.4.0 既有命名一致）。PDF 在 CI 为 48.9MB（本地 34.4MB），差异来自 Linux runner 嵌入完整 CJK 字体，页数同为 469，无质量问题。
+- **版本同步**：为与 tag 一致，VERSION 升 1.4.1、README 下载表三处文件名同步（`e083366`）；九步闸门第 9 步校验通过。
+- **收口结论**：release.yml 完成「首跑即绿」验证，资产构建链路闭合，可后续直接打 tag 发布。
