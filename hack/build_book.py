@@ -3,7 +3,7 @@
 """装配全书单一 Markdown 稿件（CI 上传为 artifact）。
 
 章节与附录保持仓库里的原文件不变，这里只做拼接，不改动任何正文：
-  前言/目录 → 第 1–31 章 → 附录 A–I → 生成说明
+  前言/目录 → 第 1–31 章 → 附录 A–J → 生成说明
 用法：python hack/build_book.py [--out dist]
 """
 import argparse

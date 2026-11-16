@@ -411,7 +411,7 @@ def build_docx(docs: list[dict], dest: str) -> dict:
     r2.font.size = Pt(16)
     cjk(r2, "黑体", "Times New Roman")
     doc.add_paragraph()
-    for line in ("七篇 31 章 + 附录 A–I", "贯穿案例 order-demo ｜ 版本基线 Kubernetes 1.32+"):
+    for line in ("七篇 31 章 + 附录 A–J", "贯穿案例 order-demo ｜ 版本基线 Kubernetes 1.32+"):
         pc = doc.add_paragraph()
         pc.alignment = WD_ALIGN_PARAGRAPH.CENTER
         rr = pc.add_run(line)
@@ -772,7 +772,7 @@ def build_html(docs: list[dict], dest: str) -> None:
              f"<title>{TITLE}</title><style>{CSS}</style></head><body>",
              '<div class="cover">'
              f'<div class="t">{TITLE}</div><div class="s">—— {SUBTITLE}</div>'
-             '<div class="m">七篇 31 章 + 附录 A–I<br>贯穿案例 order-demo ｜ 版本基线 Kubernetes 1.32+</div>'
+             '<div class="m">七篇 31 章 + 附录 A–J<br>贯穿案例 order-demo ｜ 版本基线 Kubernetes 1.32+</div>'
              '<div class="cp">© 2026 whmzsu（本书作者）。保留所有权利。本书仅供个人与技术交流，未经书面授权不得转载、摘编或用于商业用途。</div>'
              "</div>"]
     for d in docs:

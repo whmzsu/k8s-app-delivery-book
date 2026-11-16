@@ -20,7 +20,7 @@
 │       ├── ch01/ … ch31/
 │       └── _manifest.md          # 逐章文件清单与来源小节
 ├── chapters/ch01.md … ch31.md    # 全书正文
-├── appendices/                   # 附录 A–I
+├── appendices/                   # 附录 A–J
 └── .github/workflows/            # 示例配置的自动化验证（见 D.7）
 ```
 
