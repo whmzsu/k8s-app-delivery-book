@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1680" viewBox="0 0 1240 1680" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="1240" height="1680" fill="#ffffff"/>
+
+  <!-- ============ 页眉 ============ -->
+  <rect x="0" y="0" width="1240" height="92" fill="#1e293b"/>
+  <text x="40" y="49" font-size="27" font-weight="bold" fill="#ffffff">故障症状速查卡</text>
+  <text x="40" y="76" font-size="13" fill="#cbd5e1">第 23 章 · §23.2 / §23.2.1 · 七类症状 × 一眼判据 × 首步止血</text>
+  <rect x="1080" y="26" width="120" height="40" rx="20" fill="#334155" stroke="#475569"/>
+  <text x="1140" y="53" text-anchor="middle" font-size="15" font-weight="bold" fill="#e2e8f0">v1.4.3</text>
+  <rect x="0" y="92" width="1240" height="20" fill="#f1f5f9"/>
+  <text x="40" y="106" font-size="10.5" fill="#64748b">命令可直接复制；&lt;pod&gt; 用实际 Pod 名替换。命名空间除最后一行外均为 order-demo-prod。</text>
+
+  <!-- ============ 五步法 ============ -->
+  <rect x="20" y="124" width="1200" height="96" rx="8" fill="#f0f9ff" stroke="#bae6fd"/>
+  <text x="40" y="149" font-size="13" font-weight="bold" fill="#0369a1">任何症状都走的五步（先确认范围，比先确认原因省时间）</text>
+  <g font-size="11.5">
+    <rect x="40" y="158" width="214" height="48" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="52" y="177" font-weight="bold" fill="#0c4a6e">① 定对象与范围</text>
+    <text x="52" y="195" font-size="10" fill="#475569">get pods -o wide</text>
+
+    <rect x="272" y="158" width="214" height="48" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="284" y="177" font-weight="bold" fill="#0c4a6e">② 拉事件不看日志</text>
+    <text x="284" y="195" font-size="10" fill="#475569">events --sort-by=.lastTimestamp</text>
+
+    <rect x="504" y="158" width="214" height="48" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="516" y="177" font-weight="bold" fill="#0c4a6e">③ 对齐同时刻变更</text>
+    <text x="516" y="195" font-size="10" fill="#475569">git log / argocd app history</text>
+
+    <rect x="736" y="158" width="214" height="48" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="748" y="177" font-weight="bold" fill="#0c4a6e">④ 判据成立再动手</text>
+    <text x="748" y="195" font-size="10" fill="#475569">先念判据 → 第二人核证据</text>
+
+    <rect x="968" y="158" width="214" height="48" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="980" y="177" font-weight="bold" fill="#0c4a6e">⑤ 止血后立刻固化</text>
+    <text x="980" y="195" font-size="10" fill="#475569">命令与判据回写 runbook</text>
+  </g>
+  <text x="40" y="242" font-size="11" fill="#64748b">判据不成立就退回第 2 步——猜出来的动作，往往正是 23.1.1 那三次误判中的一个。</text>
+
+  <!-- ============ 行 1：Pending ============ -->
+  <g>
+    <rect x="20" y="266" width="1200" height="170" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="266" width="6" height="170" rx="3" fill="#3b82f6"/>
+    <text x="40" y="296" font-size="17" font-weight="bold" fill="#0f172a">Pending</text>
+    <text x="40" y="315" font-size="10" fill="#71717a">根因 17、18 · runbook pod-pending.md</text>
+    <rect x="290" y="272" width="914" height="46" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="304" y="301" font-size="10.5" font-weight="bold" fill="#92400e">一眼判据</text>
+    <text x="380" y="301" font-size="12.5" fill="#78350f">Events 第一行必有 FailedScheduling；ImagePullBackOff 不是 Pending</text>
+    <rect x="36" y="324" width="1168" height="52" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="356" font-size="10.5" font-weight="bold" fill="#64748b">定位命令</text>
+    <text x="118" y="356" font-size="11" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">kubectl -n order-demo-prod describe pod &lt;pod&gt; | grep -A8 Events</text>
+    <rect x="36" y="382" width="1168" height="50" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="48" y="413" font-size="10.5" font-weight="bold" fill="#b91c1c">首步止血</text>
+    <text x="118" y="413" font-size="11.5" fill="#7f1d1d">资源不足 → scale deploy/api --replicas=&lt;上一版&gt;；污点/PVC 转第 18、16 章，现场不改调度字段</text>
+  </g>
+
+  <!-- ============ 行 2：CrashLoopBackOff ============ -->
+  <g>
+    <rect x="20" y="442" width="1200" height="170" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="442" width="6" height="170" rx="3" fill="#ef4444"/>
+    <text x="40" y="472" font-size="17" font-weight="bold" fill="#0f172a">CrashLoopBackOff</text>
+    <text x="40" y="491" font-size="10" fill="#71717a">根因 8、21 · runbook crashloop-backoff.md</text>
+    <rect x="290" y="448" width="914" height="46" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="304" y="477" font-size="10.5" font-weight="bold" fill="#92400e">一眼判据</text>
+    <text x="380" y="477" font-size="12.5" fill="#78350f">Liveness probe failed + 无 panic 栈 = 探针误杀，不是进程崩溃</text>
+    <rect x="36" y="500" width="1168" height="52" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="532" font-size="10.5" font-weight="bold" fill="#64748b">定位命令</text>
+    <text x="118" y="532" font-size="11" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">kubectl -n order-demo-prod logs &lt;pod&gt; --previous</text>
+    <rect x="36" y="558" width="1168" height="50" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="48" y="589" font-size="10.5" font-weight="bold" fill="#b91c1c">首步止血</text>
+    <text x="118" y="589" font-size="11.5" fill="#7f1d1d">先判 liveness 误杀 → rollout undo deployment/api 退回上一版探针配置，而非调大重启次数</text>
+  </g>
+
+  <!-- ============ 行 3：OOMKilled ============ -->
+  <g>
+    <rect x="20" y="618" width="1200" height="170" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="618" width="6" height="170" rx="3" fill="#f97316"/>
+    <text x="40" y="648" font-size="17" font-weight="bold" fill="#0f172a">OOMKilled</text>
+    <text x="40" y="667" font-size="10" fill="#71717a">根因 17 · runbook oomkilled.md</text>
+    <rect x="290" y="624" width="914" height="46" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="304" y="653" font-size="10.5" font-weight="bold" fill="#92400e">一眼判据</text>
+    <text x="380" y="653" font-size="12.5" fill="#78350f">lastState.terminated.reason 是判决书，top 只是抽样；冲突时信前者</text>
+    <rect x="36" y="676" width="1168" height="52" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="708" font-size="10.5" font-weight="bold" fill="#64748b">定位命令</text>
+    <text x="118" y="708" font-size="10.5" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">kubectl -n order-demo-prod get pod &lt;pod&gt; -o jsonpath='{.status.containerStatuses[0].lastState.terminated.reason}'</text>
+    <rect x="36" y="734" width="1168" height="50" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="48" y="765" font-size="10.5" font-weight="bold" fill="#b91c1c">首步止血</text>
+    <text x="118" y="765" font-size="11.5" fill="#7f1d1d">短时先 rollout undo deployment/api；确属容量不足再按第 17 章调 limits，禁现场改生产 requests</text>
+  </g>
+
+  <!-- ============ 行 4：5xx 突增 ============ -->
+  <g>
+    <rect x="20" y="794" width="1200" height="170" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="794" width="6" height="170" rx="3" fill="#dc2626"/>
+    <text x="40" y="824" font-size="17" font-weight="bold" fill="#0f172a">5xx 突增</text>
+    <text x="40" y="843" font-size="10" fill="#71717a">根因 15、20、22 · runbook http-5xx-spike.md</text>
+    <rect x="290" y="800" width="914" height="46" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="304" y="829" font-size="10.5" font-weight="bold" fill="#92400e">一眼判据</text>
+    <text x="380" y="829" font-size="12.5" fill="#78350f">先按 route 拆，再抓一条 trace_id；没有 trace 的定位都是猜</text>
+    <rect x="36" y="852" width="1168" height="52" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="884" font-size="10.5" font-weight="bold" fill="#64748b">定位命令</text>
+    <text x="118" y="884" font-size="11" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">sli:order_demo_http_success:ratio_rate5m → exemplar trace_id（Tempo / Loki）</text>
+    <rect x="36" y="910" width="1168" height="50" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="48" y="941" font-size="10.5" font-weight="bold" fill="#b91c1c">首步止血</text>
+    <text x="118" y="941" font-size="11.5" fill="#7f1d1d">按第 22 章 paging runbook 认领 → rollout undo deployment/gateway；预算耗尽走第 20 章冻结</text>
+  </g>
+
+  <!-- ============ 行 5：证书过期 ============ -->
+  <g>
+    <rect x="20" y="970" width="1200" height="170" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="970" width="6" height="170" rx="3" fill="#8b5cf6"/>
+    <text x="40" y="1000" font-size="17" font-weight="bold" fill="#0f172a">证书过期</text>
+    <text x="40" y="1019" font-size="10" fill="#71717a">根因 19 · runbook cert-expired.md</text>
+    <rect x="290" y="976" width="914" height="46" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="304" y="1005" font-size="10.5" font-weight="bold" fill="#92400e">一眼判据</text>
+    <text x="380" y="1005" font-size="12.5" fill="#78350f">Certificate Ready=False 时先读 Events；Not After 只说明现状不说明原因</text>
+    <rect x="36" y="1028" width="1168" height="52" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="1060" font-size="10.5" font-weight="bold" fill="#64748b">定位命令</text>
+    <text x="118" y="1060" font-size="11" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">kubectl -n order-demo-prod get certificate</text>
+    <rect x="36" y="1086" width="1168" height="50" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="48" y="1117" font-size="10.5" font-weight="bold" fill="#b91c1c">首步止血</text>
+    <text x="118" y="1117" font-size="11.5" fill="#7f1d1d">delete secret &lt;tls-secret&gt; 由 cert-manager 1.x 重签，核对 renewBefore；按第 19 章查入口链路</text>
+  </g>
+
+  <!-- ============ 行 6：配置漂移 ============ -->
+  <g>
+    <rect x="20" y="1146" width="1200" height="170" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="1146" width="6" height="170" rx="3" fill="#f59e0b"/>
+    <text x="40" y="1176" font-size="17" font-weight="bold" fill="#0f172a">配置漂移</text>
+    <text x="40" y="1195" font-size="10" fill="#71717a">根因 14 · runbook config-drift.md</text>
+    <rect x="290" y="1152" width="914" height="46" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="304" y="1181" font-size="10.5" font-weight="bold" fill="#92400e">一眼判据</text>
+    <text x="380" y="1181" font-size="12.5" fill="#78350f">每个字段都要能回答「来自哪个提交」；答不上来就不是纠漂移，而是再漂移</text>
+    <rect x="36" y="1204" width="1168" height="52" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="1236" font-size="10.5" font-weight="bold" fill="#64748b">定位命令</text>
+    <text x="118" y="1236" font-size="11" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">argocd app diff order-demo</text>
+    <rect x="36" y="1262" width="1168" height="50" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="48" y="1293" font-size="10.5" font-weight="bold" fill="#b91c1c">首步止血</text>
+    <text x="118" y="1293" font-size="11.5" fill="#7f1d1d">argocd app sync order-demo 由 Git 唯一真相收敛；不手工 kubectl edit 改回去</text>
+  </g>
+
+  <!-- ============ 行 7：finalizer 卡住 ============ -->
+  <g>
+    <rect x="20" y="1322" width="1200" height="170" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="1322" width="6" height="170" rx="3" fill="#64748b"/>
+    <text x="40" y="1352" font-size="17" font-weight="bold" fill="#0f172a">finalizer 卡住</text>
+    <text x="40" y="1371" font-size="10" fill="#71717a">根因 27 · 详见第 27 章（本章只给止血）</text>
+    <rect x="290" y="1328" width="914" height="46" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="304" y="1357" font-size="10.5" font-weight="bold" fill="#92400e">一眼判据</text>
+    <text x="380" y="1357" font-size="12.5" fill="#78350f">finalizer 名字里的域名就是负责人；先找它，再决定能不能移除</text>
+    <rect x="36" y="1380" width="1168" height="52" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="1412" font-size="10.5" font-weight="bold" fill="#64748b">定位命令</text>
+    <text x="118" y="1412" font-size="10.5" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">kubectl -n &lt;namespace&gt; get &lt;custom-resource&gt; &lt;name&gt; -o jsonpath='{.metadata.finalizers}'</text>
+    <rect x="36" y="1438" width="1168" height="50" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="48" y="1469" font-size="10.5" font-weight="bold" fill="#b91c1c">首步止血</text>
+    <text x="118" y="1469" font-size="11.5" fill="#7f1d1d">先确认外部依赖已清理，再由 owner 移除；禁 delete --force --grace-period=0</text>
+  </g>
+
+  <!-- ============ 三条共性 ============ -->
+  <rect x="20" y="1504" width="1200" height="106" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="40" y="1528" font-size="13" font-weight="bold" fill="#6d28d9">三条共性，比七条细节更值得记</text>
+  <text x="40" y="1550" font-size="11" fill="#4c1d95">① 先事件、后日志、再配置——events 是唯一能排出「谁先动」的视角  ② 每类症状的一句话判据写在 runbook 第一行</text>
+  <text x="40" y="1570" font-size="11" fill="#4c1d95">③ 误判成本不对称：多花 5 分钟查证，通常省下 15 分钟返工（23.1.1 三次误判共吃掉 16 分钟）</text>
+  <text x="40" y="1594" font-size="11" font-weight="bold" fill="#b91c1c">判据口头关卡：值班先念判据，第二人核证据；念不出或证据不成立，不许执行止血动作。</text>
+
+  <!-- ============ 页脚 ============ -->
+  <text x="40" y="1640" font-size="10" fill="#94a3b8">《一次变更的旅程》第 23 章 §23.2 / §23.2.1 · v1.4.3 · 命令原文与定位序列见书稿正文</text>
+  <text x="1200" y="1640" text-anchor="end" font-size="10" fill="#94a3b8">速查附件 · 不进正文插图计数</text>
+</svg>
