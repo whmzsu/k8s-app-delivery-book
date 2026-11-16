@@ -209,4 +209,8 @@ if bad:
 print('下载表版本 v%s 与 VERSION 一致，插图数与全书 SVG 引用一致' % ver)
 PY
 
+# 速查图是附件（不进上面的插图计数），但页脚 VERSION 必须随版本同步；
+# 几何退化（文本溢出 / viewBox 改小 / 页脚丢失）也要在发版前挡住。
+python hack/check-cheatsheet.py book/cards/cheatsheets/*.svg || exit 1
+
 echo "== 全书一致性闸门：通过 =="

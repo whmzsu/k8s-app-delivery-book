@@ -54,4 +54,9 @@
 | 卡片 | 文件 | 状态 |
 |---|---|---|
 | ② 故障症状速查卡（ch23 §23.2 / §23.2.1） | `cheatsheets/ch23-incident-symptom-card.svg` | ✅ 已产出 |
-| ① 发布与回滚卡 / ③ 告警分级卡 / ④ 选型决策卡 / ⑤ 反模式自查卡 | — | 骨架已定，待填（见 `appendices/附录J-速查手册页.md` J.4–J.8） |
+| ① 发布与回滚卡（ch13） | `cheatsheets/ch13-deploy-rollback.svg` | ✅ 已产出 |
+| ③ 告警分级矩阵卡（ch22） | `cheatsheets/ch22-alert-matrix.svg` | ✅ 已产出 |
+| ④ 选型与引入决策卡（ch27/29） | `cheatsheets/ch27-operator-decision.svg` | ✅ 已产出 |
+| ⑤ 反模式自查与改造路线卡（ch31） | `cheatsheets/ch31-antipattern-audit.svg` | ✅ 已产出 |
+
+五张卡统一 v1.4.4 页脚；静态校验：`python hack/check-cheatsheet.py book/cards/cheatsheets/*.svg`。版式规范见 `appendices/附录J-速查手册页.md`。

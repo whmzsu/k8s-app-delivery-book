@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1680" viewBox="0 0 1240 1680" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="1240" height="1680" fill="#ffffff"/>
+
+  <!-- ============ 页眉 ============ -->
+  <rect x="0" y="0" width="1240" height="92" fill="#1e293b"/>
+  <text x="40" y="49" font-size="27" font-weight="bold" fill="#ffffff">反模式自查与改造路线卡</text>
+  <text x="40" y="76" font-size="13" fill="#cbd5e1">第 31 章 · §31.4.1 / §31.5 / §31.6 · 30 条速查 × ROI 排序 × 停手判据</text>
+  <rect x="1080" y="26" width="120" height="40" rx="20" fill="#334155" stroke="#475569"/>
+  <text x="1140" y="53" text-anchor="middle" font-size="15" font-weight="bold" fill="#e2e8f0">v1.4.4</text>
+  <rect x="0" y="92" width="1240" height="20" fill="#f1f5f9"/>
+  <text x="40" y="106" font-size="10.5" fill="#64748b">每季用一次。本卡收产物与流程类反模式；运行时故障类（AP-05/06 等）见卡②故障症状卡。完整命令见 §31.4.1。</text>
+
+  <!-- ============ 八环节自评 ============ -->
+  <rect x="20" y="124" width="1200" height="100" rx="8" fill="#f0f9ff" stroke="#bae6fd"/>
+  <text x="40" y="147" font-size="13" font-weight="bold" fill="#0369a1">八环节自评：给每个环节填当前级别 L0 手工 / L1 自动化 / L2 GitOps / L3 自助平台</text>
+  <g font-size="10.5">
+    <rect x="40" y="156" width="140" height="56" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="110" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="#0c4a6e">定义</text>
+    <text x="110" y="197" text-anchor="middle" fill="#475569">latest → SHA 标签</text>
+
+    <rect x="188" y="156" width="140" height="56" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="258" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="#0c4a6e">校验</text>
+    <text x="258" y="197" text-anchor="middle" fill="#475569">上线才发现 → CI</text>
+
+    <rect x="336" y="156" width="140" height="56" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="406" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="#0c4a6e">打包</text>
+    <text x="406" y="197" text-anchor="middle" fill="#475569">每环境改 → 同源</text>
+
+    <rect x="484" y="156" width="140" height="56" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="554" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="#0c4a6e">晋升</text>
+    <text x="554" y="197" text-anchor="middle" fill="#475569">手工 apply → PR</text>
+
+    <rect x="632" y="156" width="140" height="56" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="702" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="#0c4a6e">发布</text>
+    <text x="702" y="197" text-anchor="middle" fill="#475569">全量替 → 回滚先行</text>
+
+    <rect x="780" y="156" width="140" height="56" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="850" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="#0c4a6e">运行</text>
+    <text x="850" y="197" text-anchor="middle" fill="#475569">无基线 → 策略即代码</text>
+
+    <rect x="928" y="156" width="140" height="56" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="998" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="#0c4a6e">观测</text>
+    <text x="998" y="197" text-anchor="middle" fill="#475569">看 CPU → SLO 冻结</text>
+
+    <rect x="1076" y="156" width="124" height="56" rx="5" fill="#ffffff" stroke="#bae6fd"/>
+    <text x="1138" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="#0c4a6e">响应</text>
+    <text x="1138" y="197" text-anchor="middle" fill="#475569">靠猜 → 可行动</text>
+  </g>
+
+  <!-- ============ 行 1：定义 / 打包（9 条） ============ -->
+  <g>
+    <rect x="20" y="236" width="1200" height="130" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="236" width="6" height="130" rx="3" fill="#3b82f6"/>
+    <text x="40" y="262" font-size="15" font-weight="bold" fill="#0f172a">定义 / 打包 · 9 条</text>
+    <text x="200" y="262" font-size="10.5" fill="#71717a">产物与配置：可追溯、同源、无敏感数据</text>
+    <text x="40" y="288" font-size="11" fill="#334155">AP-01 latest 标签　AP-02 环境参数入镜像　AP-03 只写 Deployment　AP-04 裸 Pod　AP-07 ConfigMap 原地改</text>
+    <text x="40" y="307" font-size="11" fill="#334155">AP-08 密钥入 Git/镜像　AP-09 values 爆炸不审渲染　AP-10 无离线校验/版本矩阵　AP-11 每环境各构建镜像</text>
+    <rect x="36" y="318" width="1168" height="40" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="344" font-size="10.5" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">git grep -n 'PASSWORD' -- .   # 应零命中；有命中即 AP-08</text>
+    <text x="560" y="344" font-size="10.5" fill="#64748b">对应章 3、6、9–12；渲染产物必审（AP-09）</text>
+  </g>
+
+  <!-- ============ 行 2：发布与回滚（6 条） ============ -->
+  <g>
+    <rect x="20" y="376" width="1200" height="130" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="376" width="6" height="130" rx="3" fill="#dc2626"/>
+    <text x="40" y="402" font-size="15" font-weight="bold" fill="#0f172a">发布与回滚 · 6 条</text>
+    <text x="200" y="402" font-size="10.5" fill="#71717a">顺序错了会出事故的一组</text>
+    <text x="40" y="428" font-size="11" fill="#334155">AP-05 无 readiness / 探针判错　AP-06 liveness 误杀级联　AP-16 没有回滚方案就发布　AP-17 容量账没算</text>
+    <text x="40" y="447" font-size="11" fill="#334155">AP-18 发布时执行破坏性 DDL　AP-20 schema 不兼容强行回滚　（AP-05/06 的现场处置见卡②）</text>
+    <rect x="36" y="458" width="1168" height="40" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="484" font-size="10.5" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">kubectl -n order-demo-prod rollout history deployment/gateway</text>
+    <text x="560" y="484" font-size="10.5" fill="#64748b">对应章 8、13、16、23；回滚方案先于发布</text>
+  </g>
+
+  <!-- ============ 行 3：晋升与治理（4 条） ============ -->
+  <g>
+    <rect x="20" y="516" width="1200" height="130" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="516" width="6" height="130" rx="3" fill="#8b5cf6"/>
+    <text x="40" y="542" font-size="15" font-weight="bold" fill="#0f172a">晋升与治理 · 4 条</text>
+    <text x="200" y="542" font-size="10.5" fill="#71717a">Git 是不是唯一真相</text>
+    <text x="40" y="568" font-size="11" fill="#334155">AP-12 把 kubectl edit 当改期望状态　AP-13 分不清命名空间隔离与硬隔离</text>
+    <text x="40" y="587" font-size="11" fill="#334155">AP-14 Operator 万能化　AP-15 GitOps 与手工变更并存</text>
+    <rect x="36" y="598" width="1168" height="40" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="624" font-size="10.5" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">argocd app diff order-demo-prod   # 应为空；非空即 AP-15 漂移</text>
+    <text x="620" y="624" font-size="10.5" fill="#64748b">对应章 2、5、14、27、30</text>
+  </g>
+
+  <!-- ============ 行 4：运行（4 条） ============ -->
+  <g>
+    <rect x="20" y="656" width="1200" height="130" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="656" width="6" height="130" rx="3" fill="#f59e0b"/>
+    <text x="40" y="682" font-size="15" font-weight="bold" fill="#0f172a">运行 · 4 条</text>
+    <text x="200" y="682" font-size="10.5" fill="#71717a">资源、弹性、网络、备份</text>
+    <text x="40" y="708" font-size="11" fill="#334155">AP-19 只做备份从不恢复　AP-21 requests/limits 缺失或拍脑袋　AP-22 HPA 无稳定窗口反复抖动</text>
+    <text x="40" y="727" font-size="11" fill="#334155">AP-23 NetworkPolicy 未默认拒绝（任一 Pod 可达 db:5432）</text>
+    <rect x="36" y="738" width="1168" height="40" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="764" font-size="10.5" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">kubectl -n order-demo-prod get networkpolicy</text>
+    <text x="560" y="764" font-size="10.5" fill="#64748b">对应章 16–19、25；limits.cpu 是唯一可不设的字段</text>
+  </g>
+
+  <!-- ============ 行 5：观测（3 条） ============ -->
+  <g>
+    <rect x="20" y="796" width="1200" height="130" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="796" width="6" height="130" rx="3" fill="#14b8a6"/>
+    <text x="40" y="822" font-size="15" font-weight="bold" fill="#0f172a">观测 · 3 条</text>
+    <text x="200" y="822" font-size="10.5" fill="#71717a">信号、窗口、阈值都要有出处</text>
+    <text x="40" y="848" font-size="11" fill="#334155">AP-24 用 CPU 使用率当 SLI（CPU 告警常绿，用户仍在报障）　AP-25 SLO 只写百分比不写窗口与冻结规则</text>
+    <text x="40" y="867" font-size="11" fill="#334155">AP-26 告警阈值拍脑袋、无预算依据（风暴或关键故障漏报）</text>
+    <rect x="36" y="878" width="1168" height="40" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="904" font-size="10.5" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">kubectl -n monitoring get prometheusrule -o yaml   # 逐条问阈值来自哪条 SLO</text>
+    <text x="760" y="904" font-size="10.5" fill="#64748b">对应章 20–22</text>
+  </g>
+
+  <!-- ============ 行 6：响应 / 供应链（4 条） ============ -->
+  <g>
+    <rect x="20" y="936" width="1200" height="130" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="936" width="6" height="130" rx="3" fill="#64748b"/>
+    <text x="40" y="962" font-size="15" font-weight="bold" fill="#0f172a">响应 / 供应链 · 4 条</text>
+    <text x="200" y="962" font-size="10.5" fill="#71717a">能不能救、敢不敢信</text>
+    <text x="40" y="988" font-size="11" fill="#334155">AP-27 告警响了没有 runbook　AP-28 混沌演练 / runbook 从没跑过　AP-29 未签名镜像进生产</text>
+    <text x="40" y="1007" font-size="11" fill="#334155">AP-30 特权容器 / root / ServiceAccount 过权</text>
+    <rect x="36" y="1018" width="1168" height="40" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="1044" font-size="10.5" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">cosign verify --key cosign.pub registry.example.com/order-demo/api:git-1a2b3c4</text>
+    <text x="760" y="1044" font-size="10.5" fill="#64748b">对应章 6、22–26</text>
+  </g>
+
+  <!-- ============ ROI 路线 ============ -->
+  <g>
+    <rect x="20" y="1078" width="1200" height="286" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="1078" width="6" height="286" rx="3" fill="#22c55e"/>
+    <text x="40" y="1106" font-size="16" font-weight="bold" fill="#0f172a">按 ROI 排序的改造路线（成本 / 收益 / 前置 / 验证动作）</text>
+    <g font-size="10.5">
+      <rect x="40" y="1118" width="280" height="72" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
+      <text x="52" y="1138" font-size="11.5" font-weight="bold" fill="#166534">1　SHA 标签 + 不可变镜像</text>
+      <text x="52" y="1157" fill="#334155">低 / 极高 · 前置：无</text>
+      <text x="52" y="1177" fill="#15803d">image 中无 latest（H1）</text>
+
+      <rect x="334" y="1118" width="280" height="72" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
+      <text x="346" y="1138" font-size="11.5" font-weight="bold" fill="#166534">2　回滚方案先行 + 演练</text>
+      <text x="346" y="1157" fill="#334155">低 / 极高 · 前置：1</text>
+      <text x="346" y="1177" fill="#15803d">staging 带时限回滚演练（H5）</text>
+
+      <rect x="628" y="1118" width="280" height="72" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
+      <text x="640" y="1138" font-size="11.5" font-weight="bold" fill="#166534">3　探针与优雅上下线</text>
+      <text x="640" y="1157" fill="#334155">低 / 高 · 前置：1</text>
+      <text x="640" y="1177" fill="#15803d">滚动期间连续请求零 5xx</text>
+
+      <rect x="922" y="1118" width="278" height="72" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
+      <text x="934" y="1138" font-size="11.5" font-weight="bold" fill="#166534">4　配置密钥分离 + 外部注入</text>
+      <text x="934" y="1157" fill="#334155">中 / 高 · 前置：1</text>
+      <text x="934" y="1177" fill="#15803d">轮换凭据无需重建镜像（H6）</text>
+
+      <rect x="40" y="1198" width="280" height="72" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+      <text x="52" y="1218" font-size="11.5" font-weight="bold" fill="#92400e">5　Git 唯一真相 + 漂移纠正</text>
+      <text x="52" y="1237" fill="#334155">中 / 高 · 前置：1、2</text>
+      <text x="52" y="1257" fill="#a16207">edit 被自愈、app diff 为空（H7/H2）</text>
+
+      <rect x="334" y="1198" width="280" height="72" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+      <text x="346" y="1218" font-size="11.5" font-weight="bold" fill="#92400e">6　SLO / 预算 + 告警 runbook</text>
+      <text x="346" y="1237" fill="#334155">中 / 高 · 前置：5</text>
+      <text x="346" y="1257" fill="#a16207">每条告警 100% 带 runbook（H8）</text>
+
+      <rect x="628" y="1198" width="280" height="72" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="640" y="1218" font-size="11.5" font-weight="bold" fill="#475569">7　渐进式交付</text>
+      <text x="640" y="1237" fill="#334155">中高 / 中 · 前置：1–6</text>
+      <text x="640" y="1257" fill="#64748b">5% 流量注入错误后自动回退</text>
+
+      <rect x="922" y="1198" width="278" height="72" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="934" y="1218" font-size="11.5" font-weight="bold" fill="#475569">8　平台化 / 黄金路径 / 多集群</text>
+      <text x="934" y="1237" fill="#334155">高 / 中（随规模）· 前置：1–7</text>
+      <text x="934" y="1257" fill="#64748b">一次变更发两集群、模板带护栏</text>
+    </g>
+    <text x="40" y="1292" font-size="10.5" fill="#64748b">档位：立即止血 AP-01/05/06/16/20/30（不可后置）；尽快两周～一月 AP-02/07/08/11/12/15/17/18/19/21/23/27/28/29。</text>
+    <text x="40" y="1312" font-size="10.5" fill="#64748b">「尽快」档可后置的唯一条件：对应环节从未复现、且已有护栏兜底，最多延后一个季度。</text>
+    <text x="40" y="1334" font-size="10.5" fill="#64748b">其余 AP-03/04/09/10/13/14/22/24/25/26 按环节就近排期；每条都要有可复制定位命令。</text>
+  </g>
+
+  <!-- ============ 共性条 ============ -->
+  <rect x="20" y="1376" width="1200" height="82" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="40" y="1400" font-size="13" font-weight="bold" fill="#6d28d9">共性：30 条反模式，每条都能落到章、落到命令</text>
+  <text x="40" y="1424" font-size="11.5" fill="#4c1d95">① 每条都有可复制的定位命令（CL-31-01），命令写在 §31.4.1；本卡只放每组的代表命令</text>
+  <text x="40" y="1446" font-size="11.5" fill="#4c1d95">② 运行时故障类（AP-05/06 等）现场处置走卡②，本卡只负责发现「流程与产物」是否失守</text>
+
+  <!-- ============ 关卡条 ============ -->
+  <rect x="20" y="1470" width="1200" height="94" rx="8" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="40" y="1494" font-size="13" font-weight="bold" fill="#b91c1c">关卡：不要一次性全改</text>
+  <text x="40" y="1518" font-size="11.5" fill="#7f1d1d">先做「地基」档（1–4）与「地基 + 演进轴」档（5–6），为 ROI 排序提供停手判据：低代价极高收益的做完之前，不启动渐进式交付与平台化。</text>
+  <text x="40" y="1542" font-size="11.5" fill="#7f1d1d">自评表每格都要写实证（命令 / 演练记录），空白不算通过；每季度复评一次，命中「立即止血」档的新反模式直接插队。</text>
+
+  <!-- ============ 页脚 ============ -->
+  <text x="40" y="1640" font-size="10" fill="#94a3b8">《一次变更的旅程》第 31 章 §31.4.1 / §31.5 / §31.6 · v1.4.4 · 详见第 31 章；运行时故障见卡②</text>
+  <text x="1200" y="1640" text-anchor="end" font-size="10" fill="#94a3b8">速查附件 · 不进正文插图计数</text>
+</svg>

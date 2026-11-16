@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1680" viewBox="0 0 1240 1680" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <rect width="1240" height="1680" fill="#ffffff"/>
+
+  <!-- ============ 页眉 ============ -->
+  <rect x="0" y="0" width="1240" height="92" fill="#1e293b"/>
+  <text x="40" y="49" font-size="27" font-weight="bold" fill="#ffffff">选型与引入决策卡</text>
+  <text x="40" y="76" font-size="13" fill="#cbd5e1">第 27 章 §27.2.1 / 第 29 章 §29.3 · 自建三判据 × 八维加权 × 四条否决</text>
+  <rect x="1080" y="26" width="120" height="40" rx="20" fill="#334155" stroke="#475569"/>
+  <text x="1140" y="53" text-anchor="middle" font-size="15" font-weight="bold" fill="#e2e8f0">v1.4.4</text>
+  <rect x="0" y="92" width="1240" height="20" fill="#f1f5f9"/>
+  <text x="40" y="106" font-size="10.5" fill="#64748b">本卡只给「怎么算」；「选哪条」的树见附录 G.G.2.7。评估结论与证据一律归档到 ADR / 评估 PR。</text>
+
+  <!-- ============ 前置判据 ============ -->
+  <rect x="20" y="124" width="1200" height="116" rx="8" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="40" y="149" font-size="13" font-weight="bold" fill="#b91c1c">先答一句：它挂了，业务会不会挂？答不出就停在评估，禁止装</text>
+  <text x="40" y="172" font-size="11" fill="#7f1d1d">多数 Operator 把数据面与控制面解耦：控制器停掉后实例继续跑，监控是绿的——但故障转移、备份、升级、漂移纠正全停摆。</text>
+  <text x="40" y="193" font-size="11" font-weight="bold" fill="#991b1b">业务没挂，恢复能力归零。</text>
+  <text x="360" y="193" font-size="10.5" font-family="'Cascadia Mono','Consolas','DejaVu Sans Mono',monospace" fill="#1e293b">kubectl -n order-demo-eval scale deploy/&lt;operator&gt; --replicas=0</text>
+  <text x="40" y="214" font-size="10" fill="#9f1239">上面命令仅在演练集群执行；缩到 0 后确认实例继续服务、主库故障是否无人接管，再决定降级预案分级。</text>
+
+  <!-- ============ 行 1：年化工时 ============ -->
+  <g>
+    <rect x="20" y="252" width="1200" height="150" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="252" width="6" height="150" rx="3" fill="#3b82f6"/>
+    <text x="40" y="280" font-size="17" font-weight="bold" fill="#0f172a">① 年化手工工时 H</text>
+    <text x="40" y="299" font-size="10" fill="#71717a">有多少重复劳动值得自动化</text>
+    <rect x="330" y="258" width="874" height="42" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="344" y="285" font-size="10.5" font-weight="bold" fill="#92400e">阈值</text>
+    <text x="400" y="285" font-size="12" fill="#78350f">H ≥ 40 人时/年，才够资格考虑自己写</text>
+    <rect x="36" y="308" width="1168" height="46" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="329" font-size="10.5" font-weight="bold" fill="#64748b">证据落在哪</text>
+    <text x="146" y="329" font-size="11" fill="#334155">ADR 里写实测频率 f 与单次耗时 t，不写「很频繁」</text>
+    <text x="48" y="347" font-size="10" fill="#64748b">f × t = H；口径要能被第二人复算</text>
+    <rect x="36" y="360" width="1168" height="34" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="48" y="382" font-size="10.5" font-weight="bold" fill="#b91c1c">不通过 → 停在</text>
+    <text x="146" y="382" font-size="11" fill="#7f1d1d">原生资源（K8s 1.32 内置），或轻量 CI 脚本 / CronJob 形态</text>
+  </g>
+
+  <!-- ============ 行 2：漂移窗口 ============ -->
+  <g>
+    <rect x="20" y="412" width="1200" height="150" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="412" width="6" height="150" rx="3" fill="#a855f7"/>
+    <text x="40" y="440" font-size="17" font-weight="bold" fill="#0f172a">② 漂移窗口 T_tol</text>
+    <text x="40" y="459" font-size="10" fill="#71717a">业务能容忍多久「偏了没人管」</text>
+    <rect x="330" y="418" width="874" height="42" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="344" y="445" font-size="10.5" font-weight="bold" fill="#92400e">阈值</text>
+    <text x="400" y="445" font-size="12" fill="#78350f">T_tol ≥ T_script 就停在③的轻量形态；T_tol &lt; T_script 才进自建</text>
+    <rect x="36" y="468" width="1168" height="46" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="489" font-size="10.5" font-weight="bold" fill="#64748b">证据落在哪</text>
+    <text x="146" y="489" font-size="11" fill="#334155">一次真实漂移的「发生到发现」时长，不是设想中的 SLA</text>
+    <text x="48" y="507" font-size="10" fill="#64748b">T_script = 脚本/CronJob 的检测与收敛周期</text>
+    <rect x="36" y="520" width="1168" height="34" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="48" y="542" font-size="10.5" font-weight="bold" fill="#b91c1c">不通过 → 停在</text>
+    <text x="146" y="542" font-size="11" fill="#7f1d1d">CI 脚本 / CronJob：周期够用时，不需要常驻控制器</text>
+  </g>
+
+  <!-- ============ 行 3：负债承载率 ============ -->
+  <g>
+    <rect x="20" y="572" width="1200" height="150" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="572" width="6" height="150" rx="3" fill="#f59e0b"/>
+    <text x="40" y="600" font-size="17" font-weight="bold" fill="#0f172a">③ 负债承载率 R</text>
+    <text x="40" y="619" font-size="10" fill="#71717a">平台组还养得起九项长期负债吗</text>
+    <rect x="330" y="578" width="874" height="42" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="344" y="605" font-size="10.5" font-weight="bold" fill="#92400e">阈值</text>
+    <text x="400" y="605" font-size="12" fill="#78350f">R ≥ 1 才进自建；L1–L9 负债项必须逐条有名有主</text>
+    <rect x="36" y="628" width="1168" height="46" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="48" y="649" font-size="10.5" font-weight="bold" fill="#64748b">证据落在哪</text>
+    <text x="146" y="649" font-size="11" fill="#334155">平台组工时台账 + 现有 CRD 清单；九项负债：版本迁移、备份恢复、卸载残留、大版本兼容、RBAC 轮换、可观测、文档 runbook、责任人、退出路径</text>
+    <text x="48" y="667" font-size="10" fill="#64748b">失守症状：集群升级后存量对象读不出 / 命名空间卡 Terminating / bus factor = 1</text>
+    <rect x="36" y="680" width="1168" height="34" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="48" y="702" font-size="10.5" font-weight="bold" fill="#b91c1c">不通过 → 停在</text>
+    <text x="146" y="702" font-size="11" fill="#7f1d1d">评估④之后写「暂不引入」，把负债清单留给下一轮复评</text>
+  </g>
+
+  <!-- ============ 八维加权 ============ -->
+  <g>
+    <rect x="20" y="734" width="1200" height="340" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="734" width="6" height="340" rx="3" fill="#22c55e"/>
+    <text x="40" y="762" font-size="17" font-weight="bold" fill="#0f172a">八维度加权评估（满分 34）</text>
+    <text x="330" y="762" font-size="10.5" fill="#64748b">每一项都要有结论（含不通过）才允许算总分；权重来自第 29 章 §29.3</text>
+    <g font-size="10.5">
+      <rect x="40" y="774" width="280" height="68" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="52" y="794" font-size="11.5" font-weight="bold" fill="#0f172a">维护活跃度　<tspan fill="#b91c1c">5</tspan></text>
+      <text x="52" y="813" fill="#334155">持续 release、issue 有响应</text>
+      <text x="52" y="832" fill="#64748b">不该用：无 release／无人回</text>
+
+      <rect x="334" y="774" width="280" height="68" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="346" y="794" font-size="11.5" font-weight="bold" fill="#0f172a">升级策略 / CRD 迁移　<tspan fill="#b91c1c">5</tspan></text>
+      <text x="346" y="813" fill="#334155">兼容矩阵 + 转换 webhook 路径</text>
+      <text x="346" y="832" fill="#64748b">不该用：单版本 CRD 要手改存量</text>
+
+      <rect x="628" y="774" width="280" height="68" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="640" y="794" font-size="11.5" font-weight="bold" fill="#0f172a">备份恢复　<tspan fill="#b91c1c">5</tspan></text>
+      <text x="640" y="813" fill="#334155">声明式 Backup，能恢复到新集群</text>
+      <text x="640" y="832" fill="#64748b">不该用：只能原地覆盖、无演练</text>
+
+      <rect x="922" y="774" width="278" height="68" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="934" y="794" font-size="11.5" font-weight="bold" fill="#0f172a">卸载残留　<tspan fill="#c2410c">4</tspan></text>
+      <text x="934" y="813" fill="#334155">CR → finalizer 清空 → PVC → CRD</text>
+      <text x="934" y="832" fill="#64748b">不该用：从没演练过卸载</text>
+
+      <rect x="40" y="850" width="280" height="68" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="52" y="870" font-size="11.5" font-weight="bold" fill="#0f172a">自身可观测　<tspan fill="#c2410c">4</tspan></text>
+      <text x="52" y="889" fill="#334155">暴露控制器指标 + 告警 + runbook</text>
+      <text x="52" y="908" fill="#64748b">不该用：无指标、告警无 runbook</text>
+
+      <rect x="334" y="850" width="280" height="68" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="346" y="870" font-size="11.5" font-weight="bold" fill="#0f172a">降级预案　<tspan fill="#b91c1c">5</tspan></text>
+      <text x="346" y="889" fill="#334155">「停用控制器」演练 + 分级动作</text>
+      <text x="346" y="908" fill="#64748b">不该用：答不出业务会不会挂</text>
+
+      <rect x="628" y="850" width="280" height="68" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="640" y="870" font-size="11.5" font-weight="bold" fill="#0f172a">社区治理　<tspan fill="#64748b">3</tspan></text>
+      <text x="640" y="889" fill="#334155">治理文件、贡献流程、成熟度</text>
+      <text x="640" y="908" fill="#64748b">不该用：单人维护、项目停更</text>
+
+      <rect x="922" y="850" width="278" height="68" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text x="934" y="870" font-size="11.5" font-weight="bold" fill="#0f172a">云厂绑定　<tspan fill="#64748b">3</tspan></text>
+      <text x="934" y="889" fill="#334155">存储/网络用可移植抽象</text>
+      <text x="934" y="908" fill="#64748b">不该用：强绑定专有能力无退出</text>
+    </g>
+    <rect x="40" y="926" width="1160" height="42" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="52" y="952" font-size="11" fill="#78350f">复评节奏：每次控制器大版本升级前复评一次；每季度复评「维护活跃度」与「社区治理」。</text>
+    <text x="52" y="968" font-size="10" fill="#92400e">回头看：权重加总 5+5+5+4+4+5+3+3 = 34，别把满分记成别的数。</text>
+
+    <!-- 计分档 -->
+    <text x="40" y="992" font-size="12" font-weight="bold" fill="#0f172a">计分档：三条同时满足才是满分</text>
+    <g font-size="10.5">
+      <rect x="40" y="1000" width="376" height="60" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
+      <text x="52" y="1020" font-size="11.5" font-weight="bold" fill="#166534">满分 = 权重</text>
+      <text x="52" y="1039" fill="#334155">证据齐备 + 演练过至少一次</text>
+      <text x="52" y="1055" fill="#334155">+ 责任人有名有姓</text>
+
+      <rect x="432" y="1000" width="376" height="60" rx="5" fill="#fffbeb" stroke="#fde68a"/>
+      <text x="444" y="1020" font-size="11.5" font-weight="bold" fill="#92400e">半分 = 权重 ÷ 2</text>
+      <text x="444" y="1039" fill="#334155">证据齐备但未演练过</text>
+      <text x="444" y="1055" fill="#334155">或演练过但责任人挂空</text>
+
+      <rect x="824" y="1000" width="376" height="60" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+      <text x="836" y="1020" font-size="11.5" font-weight="bold" fill="#991b1b">0 分</text>
+      <text x="836" y="1039" fill="#334155">无证据 / 证据过期</text>
+      <text x="836" y="1055" fill="#334155">或命中该项「何时不该用」</text>
+    </g>
+  </g>
+
+  <!-- ============ 四条否决 ============ -->
+  <rect x="20" y="1086" width="1200" height="140" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="40" y="1110" font-size="13" font-weight="bold" fill="#6d28d9">四条否决项：命中任意一条即不引入（与加权分无关）</text>
+  <text x="40" y="1134" font-size="11.5" fill="#4c1d95">① CRD 只有单一版本且无迁移路径</text>
+  <text x="640" y="1134" font-size="11.5" fill="#4c1d95">② 备份无法恢复到新集群，或没做过恢复演练</text>
+  <text x="40" y="1158" font-size="11.5" fill="#4c1d95">③ 卸载演练出现 finalizer 卡住且无处置方案</text>
+  <text x="640" y="1158" font-size="11.5" fill="#4c1d95">④ 答不出「控制器挂了业务会不会挂」</text>
+  <text x="40" y="1184" font-size="11" fill="#6d28d9">否决项优先于总分：一条命中，加权分再高也不引入。这是「停手」判据，不是打分项。</text>
+  <text x="40" y="1206" font-size="11" fill="#6d28d9">自评表每格都要填实证（命令 / 演练记录），空格视同 0 分。</text>
+
+  <!-- ============ 关卡条 ============ -->
+  <rect x="20" y="1238" width="1200" height="110" rx="8" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="40" y="1262" font-size="13" font-weight="bold" fill="#b91c1c">关卡：加权分未过线就换候选或自建，不许「先装上再说」</text>
+  <text x="40" y="1286" font-size="11.5" fill="#7f1d1d">装一个 Operator 就是签下九项长期负债（L1–L9）：版本迁移、CR 备份恢复、卸载残留、大版本兼容、RBAC 轮换、控制器可观测、领域文档与 runbook、责任人含备份人、退出路径。</text>
+  <text x="40" y="1310" font-size="11.5" fill="#7f1d1d">「先装上再说」的代价不是磁盘，是下次集群升级时无人能升、无人能退；退出路径没写清的工具，会从「选择」变成「既成事实」（第 5 章）。</text>
+  <text x="40" y="1334" font-size="11" font-weight="bold" fill="#991b1b">每条结论都要能回答「证据在哪」；答不上来的通过，不算通过。</text>
+
+  <!-- ============ 页脚 ============ -->
+  <text x="40" y="1640" font-size="10" fill="#94a3b8">《一次变更的旅程》第 27 章 §27.2.1 / 第 29 章 §29.3 · v1.4.4 · 详见第 27、29 章；树见附录 G.G.2.7</text>
+  <text x="1200" y="1640" text-anchor="end" font-size="10" fill="#94a3b8">速查附件 · 不进正文插图计数</text>
+</svg>
