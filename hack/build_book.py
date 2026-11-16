@@ -35,7 +35,11 @@ def main():
     chapters = sorted(glob.glob(os.path.join(ROOT, "chapters", "ch*.md")))
     appendices = sorted(glob.glob(os.path.join(ROOT, "appendices", "*.md")))
     assert len(chapters) == 31, "章节数应为 31，实际 %d" % len(chapters)
-    assert len(appendices) == 9, "附录数应为 9，实际 %d" % len(appendices)
+    # 不硬编码附录数量：校验字母从 A 连续且无缺号，既能抓漏文件，
+    # 又不会在新增附录（如 J）时把 CI 卡死。D-66 的教训。
+    letters = [os.path.basename(p)[2] for p in appendices]
+    expected = [chr(ord("A") + i) for i in range(len(letters))]
+    assert letters == expected, "附录字母应从 A 连续，实际 %s" % "".join(letters)
 
     parts = [
         "# 一次变更的旅程：Kubernetes 应用部署与管理运维最佳实践",
